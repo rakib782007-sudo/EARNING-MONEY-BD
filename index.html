@@ -83,32 +83,129 @@ label{display:block;color:#e2d3f5;font-size:13px;font-weight:600;margin-top:13px
 /* Premium bottom navigation */
 .bottom-nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(560px,100%);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;gap:2px;padding:11px 8px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#241536f5,#100a1cfb);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border:1px solid #a66bdb77;border-bottom:0;border-radius:27px 27px 0 0;box-shadow:0 -10px 35px #000b,0 -3px 22px #9c55e52b;z-index:20}
 .bottom-nav:before{content:"";position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,#b77aff,#f0d9ff,#b77aff,transparent);box-shadow:0 0 15px #b77aff}
-.nav-btn{position:relative;isolation:isolate;min-width:0;min-height:59px;padding:5px 1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1px solid transparent;border-radius:16px;background:transparent;color:#bcaed0;font-family:'Hind Siliguri',Poppins,sans-serif;font-size:10px;font-weight:600;transition:.2s}
-.nav-btn b{width:30px;height:29px;display:flex;align-items:center;justify-content:center;font-size:24px;line-height:1;font-weight:500;filter:drop-shadow(0 2px 6px #0008)}
-.nav-btn span{white-space:nowrap;line-height:1.1}
-.nav-btn.active:not(.center-nav){color:#fff;background:linear-gradient(180deg,#71439b66,#3a205322);border-color:#c08aff55;box-shadow:inset 0 0 15px #a45bff22}
-.nav-btn.active:not(.center-nav):after{content:"";position:absolute;bottom:1px;left:22%;right:22%;height:3px;border-radius:5px;background:linear-gradient(90deg,#a45bff,#e5caff);box-shadow:0 0 12px #b77aff}
-.nav-btn:active{transform:scale(.92)}
+
+/* NEW ULTRA PREMIUM 3D NAV BUTTONS */
+.nav-btn{
+ position:relative;
+ isolation:isolate;
+ min-width:0;
+ min-height:66px;
+ padding:5px 1px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ gap:5px;
+ border:1px solid transparent;
+ border-radius:20px;
+ background:transparent;
+ color:#aa9bbf;
+ font-family:'Hind Siliguri',Poppins,sans-serif;
+ font-size:10px;
+ font-weight:600;
+ transition:all .28s ease;
+}
+
+.nav-btn b{
+ width:43px;
+ height:40px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ border-radius:14px;
+ font-size:25px;
+ line-height:1;
+ font-weight:500;
+ color:#e5d3ff;
+ background:linear-gradient(145deg,#39234f,#171020);
+ border:1px solid #bd8aff55;
+ box-shadow:
+  0 6px 12px #0009,
+  inset 0 2px 5px #ffffff22,
+  inset 0 -4px 8px #0006;
+ filter:drop-shadow(0 0 5px #a45bff33);
+ transition:all .28s ease;
+}
+
+.nav-btn span{
+ white-space:nowrap;
+ line-height:1.1;
+ font-size:10px;
+ font-weight:700;
+ color:#bba9d2;
+ transition:all .28s ease;
+}
+
+.nav-btn.active:not(.center-nav){
+ color:#fff;
+ background:linear-gradient(145deg,#542d7c55,#21112f99);
+ border:1px solid #c18aff88;
+ box-shadow:
+  0 0 18px #a45bff25,
+  inset 0 1px 8px #ffffff12;
+}
+
+.nav-btn.active:not(.center-nav) b{
+ background:linear-gradient(145deg,#c18aff,#7135a8 65%,#381653);
+ border:1px solid #ead3ff;
+ color:#fff;
+ box-shadow:
+  0 0 8px #d1a3ff,
+  0 0 22px #a45bff99,
+  inset 0 3px 8px #ffffff77,
+  inset 0 -5px 8px #32104f66;
+ transform:translateY(-3px) scale(1.06);
+}
+
+.nav-btn.active:not(.center-nav) span{
+ color:#f0d9ff;
+ text-shadow:0 0 9px #b77aff99;
+}
+
+.nav-btn[data-page="homePage"] b{text-shadow:0 0 12px #b78aff}
+.nav-btn[data-page="tasksPage"] b{text-shadow:0 0 12px #8ee9ff}
+.nav-btn[data-page="historyPage"] b{text-shadow:0 0 12px #d6a2ff}
+.nav-btn[data-page="profilePage"] b{text-shadow:0 0 12px #ffc1ec}
+
+.nav-btn:not(.center-nav):active{transform:scale(.88)}
+
+.nav-btn.active:not(.center-nav):after{
+ content:"";
+ position:absolute;
+ bottom:1px;
+ left:22%;
+ right:22%;
+ height:3px;
+ border-radius:10px;
+ background:linear-gradient(90deg,#a45bff,#e5caff);
+ box-shadow:0 0 12px #c18aff;
+}
+
+/* Center Daily Bonus button — unchanged design */
 .nav-btn.center-nav{width:84px;height:84px;min-height:84px;margin-top:-42px;justify-self:center;align-self:center;border:2px solid #e5c5ff;border-radius:50%;gap:2px;color:#fff;background:radial-gradient(circle at 30% 20%,#e5c4ff 0%,#b16be8 28%,#7134b1 65%,#321450 100%);box-shadow:0 0 0 5px #9b5bd633,0 0 0 9px #c18aff18,0 9px 30px #000b,0 0 28px #a45bff99,inset 0 3px 12px #ffffff99;font-weight:700}
-.nav-btn.center-nav b{width:37px;height:37px;font-size:32px}
+.nav-btn.center-nav b{width:37px;height:37px;font-size:32px;background:transparent;border:0;box-shadow:none}
 .nav-btn.center-nav span{font-size:10px;color:#fff}
 .nav-btn.center-nav.active{box-shadow:0 0 0 5px #a45bff55,0 0 0 9px #d2a3ff22,0 0 35px #b16be8cc,inset 0 3px 13px #ffffffaa}
+
 .toast{position:fixed;bottom:125px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#49266b,#211432);border:1px solid #bd8aff88;padding:11px 16px;border-radius:15px;font-size:13px;display:none;z-index:30;max-width:90%;text-align:center;box-shadow:0 8px 30px #0008}
 .empty{text-align:center;color:var(--muted);font-size:13px;padding:22px 5px}
 .logout{width:100%;padding:12px;border:1px solid #b66bba55;background:linear-gradient(120deg,#442044,#2b1a35);color:white;border-radius:15px;margin-top:16px}
 .notice{font-size:12px;color:#f4d9ff;background:linear-gradient(120deg,#392448,#2b1d36);border:1px solid #c18aff30;padding:11px;border-radius:14px;margin-top:12px;line-height:1.7}
 #profilePhoto{border:3px solid #b77aff;box-shadow:0 0 0 5px #a45bff20,0 0 25px #a45bff55}
+
 @media(max-width:390px){
  .app-shell{padding-left:11px;padding-right:11px}
  .feature-grid{gap:10px}.feature{min-height:132px;border-radius:19px}.feature span{font-size:13px}
  .balance{grid-template-columns:60px 1fr;padding:17px 12px;gap:8px}.wallet-icon{font-size:47px}.balance h2{font-size:29px}
- .nav-btn{font-size:9px;min-height:55px}.nav-btn b{font-size:21px}
+ .nav-btn:not(.center-nav) b{width:39px;height:37px;font-size:23px}
+ .nav-btn:not(.center-nav){min-height:60px}
  .nav-btn.center-nav{width:74px;height:74px;min-height:74px;margin-top:-36px}.nav-btn.center-nav b{font-size:27px}
  .invite p{font-size:11px}.invite p strong{font-size:14px}.invite button{font-size:10px;padding:8px}
 }
 </style>
 </head>
 <body>
+
 <!-- ORIGINAL LOGIN HTML — unchanged -->
 <div id="loginScreen" class="screen">
  <div class="brand"><h1>EARNING <span>MONEY BD</span></h1><p>Your earning journey starts here</p></div>
