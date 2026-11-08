@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#080b18">
+<title>Earning Money BD</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+ font-family:Poppins,sans-serif;
+ background:#080b18;
+ color:white;
+ min-height:100vh;
+}
+
+button{cursor:pointer;font-family:inherit}
+
+.screen{
+ max-width:500px;
+ margin:auto;
+ padding:25px 18px;
+}
+
+#loginScreen{
+ min-height:100vh;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+}
+
+.brand{
+ text-align:center;
+ margin-bottom:35px;
+}
+
+.brand h1{
+ font-size:29px;
+ font-weight:800;
+ letter-spacing:1px;
+}
+
+.brand h1 span{color:#a78bfa}
+
+.brand p{
+ color:#929bb2;
+ font-size:12px;
+ margin-top:8px;
+}
+
+.login-card{
+ background:linear-gradient(145deg,#171e34,#101528);
+ border:1px solid #ffffff15;
+ border-radius:28px;
+ padding:32px 22px;
+ text-align:center;
+ box-shadow:0 15px 45px #0006;
+}
+
+.login-card h2{
+ font-size:21px;
+ margin-bottom:10px;
+}
+
+.login-card p{
+ font-size:12px;
+ color:#9ba5bd;
+ margin-bottom:27px;
+}
+
+.google-btn{
+ width:100%;
+ padding:15px;
+ border:0;
+ border-radius:15px;
+ background:white;
+ color:#252525;
+ font-size:14px;
+ font-weight:700;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ gap:12px;
+ transition:.2s;
+}
+
+.google-btn:active{transform:scale(.97)}
+.google-btn:disabled{opacity:.5}
+
+.google-logo{
+ width:21px;
+ height:21px;
+ flex-shrink:0;
+}
+
+#status{
+ font-size:11px;
+ color:#c4b5fd;
+ margin-top:17px;
+ min-height:18px;
+ overflow-wrap:anywhere;
+}
+
+#appScreen{
+ display:none;
+ padding-bottom:100px;
+}
+
+header{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:25px;
+}
+
+.logo{font-size:19px;font-weight:800}
+.logo span{color:#a78bfa}
+
+.user-info{
+ display:flex;
+ align-items:center;
+ gap:9px;
+}
+
+.user-info img{
+ width:42px;
+ height:42px;
+ border-radius:50%;
+ object-fit:cover;
+}
+
+.user-info span{
+ font-size:11px;
+ color:#c4c9d8;
+ max-width:120px;
+ overflow:hidden;
+}
+
+.balance{
+ padding:27px 22px;
+ border-radius:26px;
+ background:linear-gradient(135deg,#5424c8,#8b42e9,#bd5cff);
+ box-shadow:0 15px 40px #8b42e944;
+}
+
+.balance p{font-size:12px;color:#eadfff}
+.balance h1{font-size:38px;margin:10px 0}
+
+.stats{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:13px;
+ margin-top:18px;
+}
+
+.stat{
+ background:#141a2c;
+ padding:19px 14px;
+ border-radius:18px;
+ border:1px solid #ffffff12;
+}
+
+.stat p{font-size:11px;color:#9ba5bd}
+.stat h3{font-size:20px;margin-top:8px}
+
+.heading{margin:28px 0 15px;font-size:17px}
+
+.features{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:12px;
+}
+
+.features button{
+ height:100px;
+ border:1px solid #ffffff12;
+ border-radius:19px;
+ background:linear-gradient(145deg,#1b2340,#111629);
+ color:white;
+ font-size:25px;
+ transition:.2s;
+}
+
+.features button:active{transform:scale(.94)}
+
+.features button span{
+ display:block;
+ font-size:10px;
+ margin-top:8px;
+}
+
+.logout{
+ margin-top:25px;
+ padding:12px 18px;
+ background:#302044;
+ border:1px solid #7444a5;
+ color:white;
+ border-radius:12px;
+}
+
+#toast{
+ position:fixed;
+ bottom:25px;
+ left:50%;
+ transform:translateX(-50%);
+ background:#252b43;
+ padding:12px 18px;
+ border-radius:12px;
+ font-size:12px;
+ display:none;
+ z-index:10;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="screen">
+
+ <div class="brand">
+  <h1>EARNING <span>MONEY BD</span></h1>
+  <p>Your earning journey starts here</p>
+ </div>
+
+ <div class="login-card">
+
+  <h2>Welcome Earning Money BD!</h2>
+
+  <p>Login or create your account with Google</p>
+
+  <button class="google-btn" id="googleBtn" onclick="googleLogin()">
+
+   <svg class="google-logo" viewBox="0 0 48 48">
+    <path fill="#4285F4" d="M43.6 24.5c0-1.5-.1-3-.4-4.4H24v8.3h11a9.4 9.4 0 0 1-4.1 6.2v5.4h6.6c3.9-3.6 6.1-9 6.1-15.5z"/>
+    <path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.9l-6.6-5.4c-1.8 1.2-4 1.9-6.9 1.9-5.3 0-9.8-3.6-11.4-8.5H5.8v5.5C9.2 39.4 16.1 44 24 44z"/>
+    <path fill="#FBBC05" d="M12.6 27.1a12 12 0 0 1 0-7.2v-5.5H5.8a20 20 0 0 0 0 18.2z"/>
+    <path fill="#EA4335" d="M24 11.4c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 5.3 29.5 3.5 24 3.5c-7.9 0-14.8 4.6-18.2 10.9l6.8 5.5c1.6-4.9 6.1-8.5 11.4-8.5z"/>
+   </svg>
+
+   Continue with Google
+
+  </button>
+
+  <div id="status"></div>
+
+ </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="appScreen" class="screen">
+
+ <header>
+  <div class="logo">EARNING <span>MONEY BD</span></div>
+
+  <div class="user-info">
+   <img id="userPhoto" src="https://via.placeholder.com/100" alt="Profile">
+   <span id="userName">User</span>
+  </div>
+ </header>
+
+ <section class="balance">
+  <p>💎 TOTAL BALANCE</p>
+  <h1>৳ <span id="balance">0.00</span></h1>
+  <p>Your earning journey starts here!</p>
+ </section>
+
+ <section class="stats">
+  <div class="stat">
+   <p>Today's Earning</p>
+   <h3>৳ 0.00</h3>
+  </div>
+
+  <div class="stat">
+   <p>Total Tasks</p>
+   <h3>0</h3>
+  </div>
+ </section>
+
+ <h3 class="heading">⚡ Explore Features</h3>
+
+ <section class="features">
+  <button onclick="showMessage('Daily Bonus')">🎁<span>Daily Bonus</span></button>
+  <button onclick="showMessage('Watch Ads')">▶️<span>Watch Ads</span></button>
+  <button onclick="showMessage('Tasks')">📋<span>Tasks</span></button>
+  <button onclick="showMessage('Referral')">👥<span>Referral</span></button>
+  <button onclick="showMessage('Withdraw')">💸<span>Withdraw</span></button>
+  <button onclick="showMessage('History')">📜<span>History</span></button>
+ </section>
+
+ <button class="logout" onclick="logout()">Log Out</button>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+const firebaseConfig = {
+ apiKey: "AIzaSyDDDwkjIa7NecN7CnpyQxPja4KH0vLqCJ4",
+ authDomain: "earning-bd-1e902.firebaseapp.com",
+ projectId: "earning-bd-1e902",
+ storageBucket: "earning-bd-1e902.firebasestorage.app",
+ messagingSenderId: "504547016236",
+ appId: "1:504547016236:web:8c5b2cfc733aaf16175b89",
+ measurementId: "G-JYN5BL9RJV"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth=firebase.auth();
+const db=firebase.firestore();
+const provider=new firebase.auth.GoogleAuthProvider();
+
+async function googleLogin(){
+
+ const btn=document.getElementById('googleBtn');
+ const status=document.getElementById('status');
+
+ btn.disabled=true;
+ status.innerText='Connecting to Google...';
+
+ try{
+  await auth.signInWithPopup(provider);
+ }catch(error){
+  console.error(error);
+  status.innerText='Login Error: '+error.message;
+  btn.disabled=false;
+ }
+}
+
+auth.onAuthStateChanged(async user=>{
+
+ if(!user){
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('googleBtn').disabled=false;
+  return;
+ }
+
+ try{
+  const userRef=db.collection('users').doc(user.uid);
+  const userDoc=await userRef.get();
+
+  if(!userDoc.exists){
+   await userRef.set({
+    name:user.displayName||'User',
+    email:user.email,
+    photoURL:user.photoURL||'',
+    balance:0,
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+   });
+  }
+
+  const savedData=await userRef.get();
+
+  document.getElementById('balance').innerText=
+   Number(savedData.data().balance||0).toFixed(2);
+
+  document.getElementById('userName').innerText=
+   user.displayName||'User';
+
+  document.getElementById('userPhoto').src=
+   user.photoURL||'https://via.placeholder.com/100';
+
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('appScreen').style.display='block';
+
+ }catch(error){
+  console.error(error);
+  document.getElementById('status').innerText=
+   'Database Error: '+error.message;
+ }
+});
+
+async function logout(){
+ await auth.signOut();
+}
+
+function showMessage(name){
+ const t=document.getElementById('toast');
+ t.innerText=name+' Coming Soon';
+ t.style.display='block';
+ setTimeout(()=>t.style.display='none',2000);
+}
+</script>
+
+</body>
+</html>
