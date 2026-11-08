@@ -1,1100 +1,916 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#08030f">
-<title>Earning Money BD</title>
-
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-:root{
- --bg:#08030f;
- --purple:#a900ff;
- --purple2:#d36aff;
- --gold:#ffd329;
- --green:#25e79b;
- --muted:#b8a7d0;
- --panel:#170b27;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{
- background:
- radial-gradient(ellipse at 50% -5%,#6415a955,transparent 42%),
- radial-gradient(ellipse at 0% 55%,#7900ff25,transparent 40%),
- #08030f;
- background-attachment:fixed;
- color:#fff;
- font-family:'Hind Siliguri',sans-serif;
- min-height:100vh;
-}
-button,input,select{font:inherit}
-button{cursor:pointer;-webkit-tap-highlight-color:transparent}
-button:active{transform:scale(.97)}
-.screen{max-width:520px;margin:auto;padding:20px 16px 120px}
-
-/* LOGIN */
-#loginScreen{
- min-height:100vh;display:flex;flex-direction:column;
- justify-content:center;padding:22px
-}
-.brand{text-align:center;margin-bottom:30px}
-.brand-icon{font-size:55px;filter:drop-shadow(0 0 15px #ae31ff)}
-.brand h1{font:800 27px Poppins;line-height:1.2}
-.brand h1 span{color:#d02bff}
-.brand p{color:#bba5d6;font-size:12px;margin-top:8px}
-.login-card{
- background:linear-gradient(145deg,#29103f,#100819);
- border:1px solid #b55cff;
- border-radius:27px;padding:28px 20px;text-align:center;
- box-shadow:0 0 30px #a100ff44,inset 0 0 20px #ffffff09
-}
-.login-card h2{font-size:21px}
-.login-card p{color:var(--muted);font-size:13px;margin:9px 0 22px}
-.google-btn{
- width:100%;padding:15px;border:0;border-radius:15px;
- background:white;color:#222;font-weight:700;
- display:flex;justify-content:center;align-items:center;gap:12px
-}
-.google-btn:disabled{opacity:.5}
-.google-logo{width:22px;height:22px}
-#status{color:#d6a7ff;font-size:12px;margin-top:14px;overflow-wrap:anywhere}
-
-/* MAIN */
-.app-shell{max-width:560px;margin:auto;padding:10px 15px 115px}
-header{
- display:flex;align-items:center;justify-content:space-between;
- gap:10px;padding:12px 3px 19px;margin-bottom:18px;
- border-bottom:1px solid #9e3dff77
-}
-.header-left{display:flex;align-items:center;gap:11px;min-width:0}
-.menu-btn{
- width:51px;height:51px;flex-shrink:0;border-radius:16px;
- border:1px solid #c05bff;background:linear-gradient(145deg,#46116d,#180726);
- color:white;font-size:27px;
- box-shadow:0 0 16px #a000ff77,inset 0 2px 8px #fff2
-}
-.logo h1{font:800 19px Poppins;line-height:1.2;letter-spacing:-.6px}
-.logo h1 span{color:#d000ff}
-.logo p{font-size:10px;color:#d5c4e8;margin-top:4px}
-.header-right{display:flex;align-items:center;gap:12px}
-.bell-btn{
- position:relative;border:0;background:transparent;color:white;
- font-size:29px;padding:5px
-}
-.bell-count{
- position:absolute;right:-3px;top:-3px;
- background:#f32646;color:white;font:700 11px Poppins;
- width:20px;height:20px;border-radius:50%;
- display:grid;place-items:center
-}
-.avatar{
- width:53px;height:53px;border-radius:50%;object-fit:cover;
- border:3px solid #d06aff;box-shadow:0 0 17px #b200ff
-}
-.page{display:none;animation:fade .2s ease}
-.page.active{display:block}
-@keyframes fade{from{opacity:.4;transform:translateY(5px)}to{opacity:1;transform:none}}
-
-/* WALLET */
-.balance{
- position:relative;overflow:hidden;
- display:grid;grid-template-columns:120px minmax(0,1fr);
- align-items:center;gap:10px;
- min-height:210px;padding:19px 15px;
- border:1px solid #c26aff;border-radius:28px;
- background:
- radial-gradient(circle at 0% 50%,#a300ff66,transparent 55%),
- radial-gradient(circle at 100% 0%,#7a16e655,transparent 50%),
- linear-gradient(135deg,#260b42,#11051f 65%,#08030f);
- box-shadow:0 0 20px #b000ff66,inset 0 0 25px #ffffff0c
-}
-.balance:before{
- content:"";position:absolute;inset:5px;border:1px solid #d69aff33;
- border-radius:23px;pointer-events:none
-}
-.balance:after{
- content:"";position:absolute;width:150px;height:150px;
- right:-85px;bottom:-100px;border:15px solid #8f24ff33;
- transform:rotate(40deg);pointer-events:none
-}
-.wallet-art{
- position:relative;text-align:center;font-size:76px;
- filter:drop-shadow(0 0 15px #b200ff88);
- z-index:1
-}
-.wallet-art small{
- position:absolute;font-size:25px;right:0;bottom:4px
-}
-.balance-content{min-width:0;position:relative;z-index:2}
-.balance-label{font-size:14px;color:#f1e3ff}
-.balance h2{
- font:800 clamp(27px,7vw,39px) Poppins;
- color:var(--gold);text-shadow:0 0 15px #ffbd00;
- margin:4px 0 8px;white-space:nowrap
-}
-.balance-sub{
- display:inline-block;padding:6px 10px;border-radius:20px;
- background:#003d2c;color:#44f2a7;font-size:12px
-}
-.withdraw-shortcut{
- margin-top:12px;padding:10px 15px;border-radius:30px;
- border:1px solid #f0bdff;
- color:white;font-weight:700;
- background:linear-gradient(120deg,#d13aff,#7500da);
- box-shadow:0 0 18px #b000ff88
-}
-
-/* STATS */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:16px 0 23px}
-.stat{
- display:flex;align-items:center;gap:10px;min-height:110px;
- padding:13px;border-radius:23px;
- background:linear-gradient(145deg,#32114c,#12081e);
- border:1px solid #a84cffaa;
- box-shadow:0 0 16px #a100ff35,inset 0 1px 9px #fff2
-}
-.stat-icon{font-size:38px;filter:drop-shadow(0 0 8px #9e36ff)}
-.stat small{font-size:12px;color:#e2cbed;white-space:nowrap}
-.stat strong{display:block;font:700 21px Poppins;color:#fff;margin-top:3px}
-
-/* SECTION */
-.section-heading{
- display:flex;align-items:center;justify-content:space-between;
- margin:22px 0 13px;gap:8px
-}
-.section-heading h3{font-size:21px}
-.see-all{
- background:#160b28;border:1px solid #58217f;
- border-radius:25px;color:#fff;padding:7px 12px;font-size:12px
-}
-
-/* QUICK ACCESS */
-.feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.feature{
- position:relative;overflow:hidden;min-width:0;min-height:166px;
- display:flex;flex-direction:column;align-items:center;
- justify-content:center;gap:5px;padding:12px 4px;
- border-radius:24px;color:white;
- border:1px solid #a64bff;
- background:radial-gradient(circle at 50% 0%,#7722c466,transparent 70%),
- linear-gradient(145deg,#32104d,#10061d);
- box-shadow:0 0 15px #9700ff33,inset 0 2px 10px #ffffff18
-}
-.feature:before{
- content:"";position:absolute;top:-45px;right:-50px;
- width:100px;height:100px;border-radius:50%;
- border:12px solid #a63bff18
-}
-.feature-icon{
- width:72px;height:72px;border-radius:22px;
- display:grid;place-items:center;font-size:43px;
- background:linear-gradient(145deg,#7c27d9,#240a51);
- border:1px solid #d5aaff;
- box-shadow:0 0 19px #9d38ff88,inset 0 3px 12px #ffffff55;
- filter:drop-shadow(0 4px 5px #0008)
-}
-.feature strong{font-size:14px;color:white}
-.feature small{font-size:10px;color:#d6bce9;text-align:center}
-.feature-arrow{
- position:absolute;right:9px;bottom:10px;
- width:32px;height:32px;border-radius:50%;
- display:grid;place-items:center;
- background:linear-gradient(145deg,#d42cff,#7000ce);
- font-size:20px;box-shadow:0 0 12px #ac00ff88
-}
-
-/* REFERRAL */
-.invite{
- position:relative;overflow:hidden;
- display:flex;align-items:center;gap:10px;
- padding:17px 13px;margin-top:21px;min-height:115px;
- border-radius:24px;border:1px solid #d28aff;
- background:radial-gradient(circle at 100% 50%,#9b00ff88,transparent 55%),
- linear-gradient(110deg,#4d126f,#180725);
- box-shadow:0 0 20px #aa00ff55
-}
-.invite-icon{font-size:49px;filter:drop-shadow(0 0 10px #ffcf3b)}
-.invite-text{flex:1;min-width:0}
-.invite-text strong{font-size:17px;display:block}
-.invite-text p{font-size:12px;color:#e3c9f5}
-.invite-text em{font-style:normal;color:var(--gold)}
-.invite button{
- border:1px solid #f4caff;border-radius:25px;
- padding:9px 11px;background:linear-gradient(135deg,#c52cff,#7200d9);
- color:white;font-weight:700;font-size:11px;white-space:nowrap
-}
-
-/* ACTIVITY */
-.activity{
- margin-top:21px;padding:15px;
- border:1px solid #a956e9;border-radius:24px;
- background:linear-gradient(145deg,#241039,#0e0619);
- box-shadow:0 0 17px #9d00ff35
-}
-.activity-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.activity-head h3{font-size:18px}
-.activity-row{
- display:flex;align-items:center;gap:10px;
- padding:11px 3px;border-bottom:1px solid #ffffff13
-}
-.activity-row:last-child{border:0}
-.activity-icon{
- width:39px;height:39px;flex-shrink:0;border-radius:13px;
- display:grid;place-items:center;font-size:24px;
- background:linear-gradient(145deg,#57188b,#1c0a2d);
- border:1px solid #a952ed
-}
-.activity-info{flex:1;min-width:0}
-.activity-info strong{font-size:13px;display:block}
-.activity-info small{font-size:10px;color:#b9a6d0}
-.activity-amount{font:700 15px Poppins;color:#26e99c;white-space:nowrap}
-.activity-amount.minus{color:#ff5274}
-
-/* INNER PAGES */
-.topline{display:flex;align-items:center;gap:12px;margin:9px 0 20px}
-.back{
- width:43px;height:43px;border:1px solid #b65aff;
- border-radius:14px;background:linear-gradient(145deg,#48156d,#1c0a2b);
- color:white;font-size:23px
-}
-.page h2{font-size:22px}
-.page-desc{font-size:13px;color:var(--muted);margin:5px 0 17px}
-.card{
- background:linear-gradient(145deg,#29143d,#12091d);
- border:1px solid #a25bdc88;border-radius:23px;
- padding:19px;margin-bottom:14px;
- box-shadow:0 0 17px #8c00ff25,inset 0 1px 8px #ffffff0c
-}
-.action{
- width:100%;border:1px solid #d3a2ff;border-radius:15px;
- padding:14px;margin-top:13px;color:white;font-weight:700;
- background:linear-gradient(120deg,#c02bff,#7021ba);
- box-shadow:0 0 15px #9e24ff55
-}
-.action:disabled{opacity:.5}
-.field{
- width:100%;background:#100819;border:1px solid #8952b0;
- border-radius:13px;color:white;padding:13px;margin-top:7px;outline:none
-}
-.field:focus{border-color:#d38aff;box-shadow:0 0 0 3px #a000ff22}
-label{display:block;color:#e6d3f5;font-size:13px;margin-top:13px;font-weight:600}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.list-item{padding:13px 2px;border-bottom:1px solid #ffffff14}
-.list-item:last-child{border:0}
-.pill{
- font-size:11px;border-radius:20px;padding:5px 10px;
- background:#391c53;border:1px solid #a95be7;color:#f1dfff
-}
-.notice{
- font-size:12px;color:#e6d4f6;background:#261537;
- border:1px solid #8e50b044;padding:11px;
- border-radius:13px;margin-top:13px;line-height:1.7
-}
-.empty{text-align:center;color:var(--muted);font-size:13px;padding:20px 5px}
-.logout{
- width:100%;padding:13px;border:1px solid #c65bff;
- background:#351444;color:white;border-radius:14px;margin-top:15px
-}
-
-/* THIN PREMIUM BOTTOM NAV */
-.bottom-nav{
- position:fixed!important;
- left:50%!important;
- bottom:0!important;
- transform:translateX(-50%)!important;
- width:min(560px,100%)!important;
- height:88px;
- display:grid;
- grid-template-columns:repeat(5,1fr);
- align-items:center;
- gap:2px;
- padding:5px 7px calc(7px + env(safe-area-inset-bottom));
- background:linear-gradient(145deg,#1e0b32f7,#08030ffb)!important;
- backdrop-filter:blur(25px);
- -webkit-backdrop-filter:blur(25px);
- border:1px solid #bd69ff;
- border-bottom:0;
- border-radius:29px 29px 0 0;
- box-shadow:0 -5px 25px #a32dff55;
- z-index:100
-}
-.bottom-nav:before{
- content:"";
- position:absolute;
- top:0;
- left:15%;
- right:15%;
- height:1px;
- background:linear-gradient(90deg,transparent,#b65cff,#fff,#b65cff,transparent);
- box-shadow:0 0 10px #bd78ff
-}
-.nav-btn{
- position:relative;
- min-width:0;
- height:66px;
- display:flex;
- flex-direction:column;
- justify-content:center;
- align-items:center;
- gap:3px;
- padding:2px 1px;
- border:1px solid transparent;
- border-radius:15px;
- background:transparent;
- color:#d6b9ef;
- transition:.25s
-}
-.nav-btn b{
- width:39px;
- height:38px;
- display:grid;
- place-items:center;
- border-radius:13px;
- background:linear-gradient(145deg,#512477,#1b0b2b);
- border:1px solid #b982e6;
- box-shadow:0 3px 10px #0009,inset 0 2px 6px #ffffff33
-}
-.nav-btn b svg{
- width:24px;
- height:24px;
- stroke:#e5caff;
- fill:none;
- stroke-width:2;
- stroke-linecap:round;
- stroke-linejoin:round
-}
-.nav-btn span{
- font-size:10px;
- font-weight:700;
- color:#d6b9ef;
- white-space:nowrap
-}
-.nav-btn.active:not(.center-nav){
- background:linear-gradient(145deg,#7225bd66,#3b155c);
- border-color:#e3baff;
- box-shadow:0 0 13px #b24cff55
-}
-.nav-btn.active:not(.center-nav) b{
- background:linear-gradient(145deg,#e3baff,#8d31d8);
- box-shadow:0 0 13px #c36aff;
- transform:translateY(-2px)
-}
-.nav-btn.active:not(.center-nav) b svg{stroke:white}
-.nav-btn.active:not(.center-nav) span{color:white}
-
-/* SMALL DAILY BONUS BUTTON */
-.nav-btn.center-nav{
- width:76px;
- height:76px;
- justify-self:center;
- align-self:center;
- margin-top:-27px;
- border:2px solid #edcaff;
- border-radius:50%;
- gap:0;
- background:radial-gradient(circle at 30% 20%,#f1caff,#b14cff 48%,#6413a9);
- box-shadow:0 0 0 4px #a33cff44,0 0 23px #c05aff,inset 0 2px 10px #ffffffaa
-}
-.nav-btn.center-nav b{
- width:46px;
- height:43px;
- background:transparent;
- border:0;
- box-shadow:none;
- font-size:30px
-}
-.nav-btn.center-nav span{
- color:white;
- font-size:10px;
- font-weight:800;
- line-height:1.05
-}
-.nav-btn.center-nav.active{
- box-shadow:0 0 0 5px #a33cff66,0 0 28px #c05aff
-}
-.nav-btn:active{transform:scale(.94)}
-
-/* MENU + NOTIFICATIONS */
-.overlay{
- display:none;position:fixed;inset:0;z-index:200;
- background:#000a;backdrop-filter:blur(5px)
-}
-.overlay.show{display:block}
-.drawer{
- position:absolute;top:0;left:0;width:min(310px,85%);
- height:100%;padding:25px 18px;
- background:linear-gradient(145deg,#28103d,#0b0613);
- border-right:1px solid #b55aff;
- box-shadow:10px 0 40px #0009;
- animation:slide .2s ease
-}
-@keyframes slide{from{transform:translateX(-100%)}to{transform:none}}
-.drawer-head{display:flex;align-items:center;gap:12px;margin:20px 0 28px}
-.drawer-head img{width:57px;height:57px;border-radius:50%;border:2px solid #d16aff}
-.drawer-head strong{font-size:15px}
-.drawer-link{
- width:100%;text-align:left;padding:14px;margin:5px 0;
- border-radius:13px;border:1px solid #8c49b955;
- background:#241132;color:white;font-size:14px
-}
-.notice-panel{
- position:absolute;right:10px;top:75px;width:min(300px,90%);
- padding:18px;border-radius:20px;
- background:linear-gradient(145deg,#321249,#11071d);
- border:1px solid #bd70ff;box-shadow:0 0 25px #a000ff66
-}
-.toast{
- position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
- background:linear-gradient(135deg,#54246e,#21102e);
- border:1px solid #c58aff;padding:11px 17px;
- border-radius:14px;font-size:13px;display:none;z-index:300;
- max-width:90%;text-align:center;box-shadow:0 8px 30px #0008
-}
-#profilePhoto{
- border:3px solid #c276ff;box-shadow:0 0 20px #a45bff55
-}
-
-/* SMALL PHONE */
-@media(max-width:390px){
- .app-shell{padding-left:11px;padding-right:11px}
- .logo h1{font-size:16px}
- .menu-btn{width:45px;height:45px}
- .avatar{width:45px;height:45px}
- .header-right{gap:7px}
- .balance{grid-template-columns:85px 1fr;padding:15px 10px;min-height:190px}
- .wallet-art{font-size:61px}
- .balance h2{font-size:27px}
- .feature-grid{gap:8px}
- .feature{min-height:148px}
- .feature-icon{width:59px;height:59px;font-size:35px}
- .feature strong{font-size:12px}
- .feature small{font-size:9px}
- .stat{gap:6px;padding:10px}
- .stat-icon{font-size:29px}
- .stat strong{font-size:17px}
- .bottom-nav{
-  height:82px;
-  padding-left:4px;
-  padding-right:4px;
-  padding-bottom:calc(5px + env(safe-area-inset-bottom))
- }
- .nav-btn{height:62px}
- .nav-btn b{width:35px;height:35px}
- .nav-btn b svg{width:22px;height:22px}
- .nav-btn.center-nav{width:69px;height:69px;margin-top:-24px}
- .nav-btn.center-nav b{width:42px;height:39px;font-size:27px}
- .nav-btn span{font-size:9px}
- .invite{gap:6px;padding:13px 8px}
- .invite-icon{font-size:38px}
- .invite-text strong{font-size:14px}
- .invite-text p{font-size:10px}
- .invite button{font-size:9px;padding:8px}
-}
-</style>
-</head>
-
-<body>
-
-<!-- LOGIN -->
-<div id="loginScreen" class="screen">
- <div class="brand">
-  <div class="brand-icon">📈</div>
-  <h1>EARNING <span>MONEY BD</span></h1>
-  <p>— Play • Earn • Withdraw —</p>
- </div>
- <div class="login-card">
-  <h2>Welcome to Earning Money BD!</h2>
-  <p>Google দিয়ে Login করে তোমার Earning Journey শুরু করো।</p>
-  <button class="google-btn" id="googleBtn" onclick="googleLogin()">
-   <svg class="google-logo" viewBox="0 0 48 48">
-    <path fill="#4285F4" d="M43.6 24.5c0-1.5-.1-3-.4-4.4H24v8.3h11a9.4 9.4 0 0 1-4.1 6.2v5.4h6.6c3.9-3.6 6.1-9 6.1-15.5z"/>
-    <path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.9l-6.6-5.4c-1.8 1.2-4 1.9-6.9 1.9-5.3 0-9.8-3.6-11.4-8.5H5.8v5.5C9.2 39.4 16.1 44 24 44z"/>
-    <path fill="#FBBC05" d="M12.6 27.1a12 12 0 0 1 0-7.2v-5.5H5.8a20 20 0 0 0 0 18.2z"/>
-    <path fill="#EA4335" d="M24 11.4c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 5.3 29.5 3.5 24 3.5c-7.9 0-14.8 4.6-18.2 10.9l6.8 5.5c1.6-4.9 6.1-8.5 11.4-8.5z"/>
-   </svg>
-   Continue with Google
-  </button>
-  <div id="status"></div>
- </div>
-</div>
-
-<!-- APP -->
-<div id="appScreen" class="app-shell" style="display:none">
-
-<header>
- <div class="header-left">
-  <button class="menu-btn" onclick="showMenu()">☰</button>
-  <div class="logo">
-   <h1>EARNING<br><span>MONEY BD</span></h1>
-   <p>— Play • Earn • Withdraw —</p>
-  </div>
- </div>
- <div class="header-right">
-  <button class="bell-btn" onclick="showNotifications()">♧<span class="bell-count">2</span></button>
-  <img id="userPhoto" class="avatar" src="https://placehold.co/100x100/241039/ffffff?text=U" alt="Profile" onclick="openPage('profilePage')">
- </div>
-</header>
-
-<!-- HOME -->
-<main id="homePage" class="page active">
-
- <section class="balance">
-  <div class="wallet-art">👑<br>👛<small>🪙</small></div>
-  <div class="balance-content">
-   <div class="balance-label">👛 Your Wallet Balance</div>
-   <h2>৳ <span id="balance">0.00</span></h2>
-   <div class="balance-sub">↑ +৳ <span id="todayEarnMini">0.00</span> Today</div>
-   <br>
-   <button class="withdraw-shortcut" onclick="openPage('withdrawPage')">➤ Withdraw</button>
-  </div>
- </section>
-
- <section class="stats">
-  <div class="stat">
-   <span class="stat-icon">📈</span>
-   <div><small>আজকের আয়</small><strong>৳ <span id="todayEarn">0.00</span></strong></div>
-  </div>
-  <div class="stat">
-   <span class="stat-icon">📋</span>
-   <div><small>সম্পন্ন কাজ</small><strong id="taskCount">0</strong></div>
-  </div>
- </section>
-
- <div class="section-heading">
-  <h3>⚡ Quick Access</h3>
-  <button class="see-all" onclick="openPage('tasksPage')">See All →</button>
- </div>
-
- <section class="feature-grid">
-  <button class="feature" onclick="openPage('bonusPage')">
-   <b class="feature-icon">🎁</b><strong>Daily Bonus</strong><small>Get Free Bonus</small><span class="feature-arrow">›</span>
-  </button>
-  <button class="feature" onclick="openPage('adsPage')">
-   <b class="feature-icon">▶️</b><strong>Watch Ads</strong><small>Earn More</small><span class="feature-arrow">›</span>
-  </button>
-  <button class="feature" onclick="openPage('tasksPage')">
-   <b class="feature-icon">📋</b><strong>Tasks</strong><small>Complete & Earn</small><span class="feature-arrow">›</span>
-  </button>
-  <button class="feature" onclick="openPage('referralPage')">
-   <b class="feature-icon">👥</b><strong>Referral</strong><small>Invite Friends</small><span class="feature-arrow">›</span>
-  </button>
-  <button class="feature" onclick="openPage('withdrawPage')">
-   <b class="feature-icon">👛</b><strong>Withdraw</strong><small>Get Your Money</small><span class="feature-arrow">›</span>
-  </button>
-  <button class="feature" onclick="openPage('historyPage')">
-   <b class="feature-icon">🕘</b><strong>History</strong><small>View Details</small><span class="feature-arrow">›</span>
-  </button>
- </section>
-
- <section class="invite">
-  <span class="invite-icon">📣</span>
-  <div class="invite-text">
-   <strong>Refer Your Friends</strong>
-   <p>Get <em>10%</em> Commission</p>
-  </div>
-  <button onclick="openPage('referralPage')">Invite Now →</button>
-  <span class="invite-icon">🎁</span>
- </section>
-
- <section class="activity">
-  <div class="activity-head">
-   <h3>◷ Recent Activity</h3>
-   <button class="see-all" onclick="openPage('historyPage')">See All →</button>
-  </div>
-  <div id="recentActivity" class="empty">সাম্প্রতিক হিসাব লোড হচ্ছে...</div>
- </section>
-</main>
-
-<!-- BONUS -->
-<main id="bonusPage" class="page">
- <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>🎁 Daily Bonus</h2></div>
- <div class="card" style="text-align:center">
-  <div style="font-size:75px">🎁</div>
-  <h2 style="font:800 35px Poppins;color:#ffd329;margin:12px 0">৳ <span id="bonusAmount">10.00</span></h2>
-  <p class="page-desc">প্রতিদিন একবার বোনাস ক্লেইম করতে পারবে।</p>
-  <span class="pill">প্রতিদিন ১ বার</span>
-  <button class="action" id="claimBonusBtn" onclick="claimBonus()">🎁 আজকের বোনাস ক্লেইম</button>
-  <p class="notice">Claim করলেই বোনাস Wallet Balance-এ যোগ হবে।</p>
- </div>
-</main>
-
-<!-- ADS -->
-<main id="adsPage" class="page">
- <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>▶️ Watch Ads</h2></div>
- <div class="card">
-  <div style="font-size:65px;text-align:center">📺</div>
-  <h3>বিজ্ঞাপন দেখে আয়</h3>
-  <p class="page-desc">অ্যাড নেটওয়ার্ক যুক্ত হলে এখানে বিজ্ঞাপন দেখা ও রিওয়ার্ড পাওয়া যাবে।</p>
-  <div class="row"><span>প্রতি বিজ্ঞাপনের রিওয়ার্ড</span><strong>৳ <span id="adReward">0.00</span></strong></div>
-  <button class="action" disabled>বিজ্ঞাপন এখনো চালু হয়নি</button>
- </div>
-</main>
-
-<!-- TASKS -->
-<main id="tasksPage" class="page">
- <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>📋 Tasks</h2></div>
- <p class="page-desc">Admin-এর দেওয়া কাজগুলো এখানে দেখা যাবে।</p>
- <div id="taskList" class="card"><div class="empty">কাজ লোড হচ্ছে...</div></div>
-</main>
-
-<!-- REFERRAL -->
-<main id="referralPage" class="page">
- <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>👥 Referral</h2></div>
- <div class="card" style="text-align:center">
-  <div style="font-size:65px">📣</div>
-  <h3>Invite Your Friends</h3>
-  <p class="page-desc">বন্ধুকে আমন্ত্রণ জানাও।</p>
-  <label style="text-align:left">তোমার Referral Code</label>
-  <input class="field" id="refCode" readonly>
-  <button class="action" onclick="copyReferral()">কোড কপি করো</button>
-  <div class="notice">Referral tracking এখনো সম্পূর্ণ চালু হয়নি।</div>
- </div>
-</main>
-
-<!-- WITHDRAW -->
-<main id="withdrawPage" class="page">
- <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>💸 Withdraw</h2></div>
- <div class="card">
-  <p class="page-desc">উত্তোলনের আবেদন জমা দাও। Admin যাচাই করে প্রসেস করবে।</p>
-  <div class="row"><span>Available Balance</span><strong style="color:#ffd329">৳ <span id="withdrawBalance">0.00</span></strong></div>
-  <label>পেমেন্ট মাধ্যম</label>
-  <select class="field" id="payMethod">
-   <option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option>
-  </select>
-  <label>অ্যাকাউন্ট নম্বর</label>
-  <input class="field" id="payNumber" inputmode="numeric" placeholder="01XXXXXXXXX" maxlength="11">
-  <label>টাকার পরিমাণ</label>
-  <input class="field" id="withdrawAmount" type="number" min="1" step="1" placeholder="টাকার পরিমাণ">
-  <button class="action" onclick="submitWithdraw()">উত্তোলনের আবেদন</button>
-  <p class="notice">উত্তোলনের আবেদন Pending থাকবে যতক্ষণ Admin যাচাই না করে।</p>
- </div>
-</main>
-
-<!-- HISTORY -->
-<main id="historyPage" class="page">
- <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>📜 History</h2></div>
- <div class="card" id="historyList"><div class="empty">হিসাব লোড হচ্ছে...</div></div>
-</main>
-
-<!-- PROFILE -->
-<main id="profilePage" class="page">
- <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>👤 Profile</h2></div>
- <div class="card">
-  <div style="text-align:center">
-   <img id="profilePhoto" src="https://placehold.co/100x100/241039/ffffff?text=U" style="width:85px;height:85px;border-radius:50%;object-fit:cover" alt="">
-   <h3 id="profileName" style="margin-top:10px">User</h3>
-   <p class="muted" id="profileEmail"></p>
-  </div>
-  <div class="list-item"><span>Wallet Balance</span><strong>৳ <span id="profileBalance">0.00</span></strong></div>
-  <div class="list-item"><span>User ID</span><p id="profileUid" style="font-size:11px;overflow-wrap:anywhere"></p></div>
-  <button class="logout" onclick="logout()">Log Out</button>
- </div>
-</main>
-
-</div>
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav" id="bottomNav" style="display:none">
- <button class="nav-btn active" data-page="homePage" onclick="openPage('homePage',this)">
-  <b><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M9 21v-7h6v7"/></svg></b><span>Home</span>
- </button>
- <button class="nav-btn" data-page="tasksPage" onclick="openPage('tasksPage',this)">
-  <b><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 3V2h8v1"/><path d="M8 10l2 2 5-5"/><path d="M8 16h8"/></svg></b><span>Tasks</span>
- </button>
- <button class="nav-btn center-nav" data-page="bonusPage" onclick="openPage('bonusPage',this)">
-  <b>🎁</b><span>Daily<br>Bonus</span>
- </button>
- <button class="nav-btn" data-page="historyPage" onclick="openPage('historyPage',this)">
-  <b><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></b><span>History</span>
- </button>
- <button class="nav-btn" data-page="profilePage" onclick="openPage('profilePage',this)">
-  <b><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></b><span>Profile</span>
- </button>
-</nav>
-
-<!-- MENU DRAWER -->
-<div class="overlay" id="menuOverlay" onclick="closeMenu(event)">
- <div class="drawer">
-  <div style="text-align:right"><button class="back" onclick="hideMenu()">✕</button></div>
-  <div class="drawer-head">
-   <img id="drawerPhoto" src="https://placehold.co/100x100/241039/ffffff?text=U">
-   <div><strong id="drawerName">User</strong><p style="font-size:11px;color:#bba5d6">Earning Money BD</p></div>
-  </div>
-  <button class="drawer-link" onclick="drawerGo('homePage')">🏠 Home</button>
-  <button class="drawer-link" onclick="drawerGo('bonusPage')">🎁 Daily Bonus</button>
-  <button class="drawer-link" onclick="drawerGo('tasksPage')">📋 Tasks</button>
-  <button class="drawer-link" onclick="drawerGo('withdrawPage')">💸 Withdraw</button>
-  <button class="drawer-link" onclick="drawerGo('historyPage')">🕘 History</button>
-  <button class="drawer-link" onclick="drawerGo('profilePage')">👤 Profile</button>
-  <button class="drawer-link" onclick="logout()">↪ Logout</button>
- </div>
-</div>
-
-<!-- NOTIFICATION PANEL -->
-<div class="overlay" id="notificationOverlay" onclick="closeNotifications(event)">
- <div class="notice-panel">
-  <div class="row"><h3>🔔 Notifications</h3><button class="back" onclick="hideNotifications()">✕</button></div>
-  <div class="list-item"><strong>🎁 Daily Bonus</strong><p class="page-desc">প্রতিদিন বোনাস ক্লেইম করো।</p></div>
-  <div class="list-item"><strong>💸 Withdraw</strong><p class="page-desc">তোমার আবেদন Admin যাচাই করবে।</p></div>
- </div>
-</div>
-
-<div id="toast" class="toast"></div>
-
-<script>
-const firebaseConfig={
- apiKey:"AIzaSyDDDwkjIa7NecN7CnpyQxPja4KH0vLqCJ4",
- authDomain:"earning-bd-1e902.firebaseapp.com",
- projectId:"earning-bd-1e902",
- storageBucket:"earning-bd-1e902.firebasestorage.app",
- messagingSenderId:"504547016236",
- appId:"1:504547016236:web:8c5b2cfc733aaf16175b89",
- measurementId:"G-JYN5BL9RJV"
-};
-
-firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth();
-const db=firebase.firestore();
-const provider=new firebase.auth.GoogleAuthProvider();
-
-let currentUser=null;
-let appSettings={dailyBonus:10,adReward:0,minWithdraw:0};
-let userData={balance:0};
-
-function toast(message){
- const t=document.getElementById('toast');
- t.textContent=message;t.style.display='block';
- clearTimeout(window.toastTimer);
- window.toastTimer=setTimeout(()=>t.style.display='none',2700);
-}
-function todayKey(){
- const d=new Date();
- return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-}
-
-/* PAGE NAVIGATION */
-function openPage(id){
- document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
- const page=document.getElementById(id);
- if(!page)return;
- page.classList.add('active');
- document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
- const nav=document.querySelector('.nav-btn[data-page="'+id+'"]');
- if(nav)nav.classList.add('active');
- window.scrollTo({top:0,behavior:'smooth'});
- if(id==='historyPage')loadHistory();
- if(id==='tasksPage')loadTasks();
- if(id==='withdrawPage')updateWithdrawBalance();
-}
-function showMenu(){document.getElementById('menuOverlay').classList.add('show')}
-function hideMenu(){document.getElementById('menuOverlay').classList.remove('show')}
-function closeMenu(e){if(e.target.id==='menuOverlay')hideMenu()}
-function drawerGo(id){hideMenu();openPage(id)}
-function showNotifications(){document.getElementById('notificationOverlay').classList.add('show')}
-function hideNotifications(){document.getElementById('notificationOverlay').classList.remove('show')}
-function closeNotifications(e){if(e.target.id==='notificationOverlay')hideNotifications()}
-
-/* GOOGLE LOGIN */
-async function googleLogin(){
- const btn=document.getElementById('googleBtn');
- const status=document.getElementById('status');
- btn.disabled=true;status.textContent='Google-এর সাথে সংযোগ হচ্ছে...';
- try{await auth.signInWithPopup(provider)}
- catch(e){
-  console.error(e);
-  status.textContent='Login Error: '+e.message;
-  btn.disabled=false;
- }
-}
-
-/* AUTH */
-auth.onAuthStateChanged(async user=>{
- if(!user){
-  currentUser=null;
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('appScreen').style.display='none';
-  document.getElementById('bottomNav').style.display='none';
-  document.getElementById('googleBtn').disabled=false;
-  return;
- }
- currentUser=user;
- try{
-  const ref=db.collection('users').doc(user.uid);
-  const snap=await ref.get();
-  if(!snap.exists){
-   await ref.set({
-    name:user.displayName||'User',email:user.email,
-    photoURL:user.photoURL||'',balance:0,
-    createdAt:firebase.firestore.FieldValue.serverTimestamp()
-   });
-  }
-  const fresh=await ref.get();
-  userData=fresh.data()||{balance:0};
-  renderUserData();
-
-  const photo=user.photoURL||'https://placehold.co/100x100/241039/ffffff?text=U';
-  const name=user.displayName||'User';
-  document.getElementById('userPhoto').src=photo;
-  document.getElementById('profilePhoto').src=photo;
-  document.getElementById('drawerPhoto').src=photo;
-  document.getElementById('userPhoto').alt=name;
-  document.getElementById('drawerName').textContent=name;
-  document.getElementById('profileName').textContent=name;
-  document.getElementById('profileEmail').textContent=user.email||'';
-  document.getElementById('profileUid').textContent=user.uid;
-  document.getElementById('refCode').value=user.uid.slice(0,8).toUpperCase();
-
-  await loadSettings();
-  await loadTodayStats();
-  await loadRecentActivity();
-
-  document.getElementById('loginScreen').style.display='none';
-  document.getElementById('appScreen').style.display='block';
-  document.getElementById('bottomNav').style.display='grid';
- }catch(e){
-  console.error(e);
-  document.getElementById('status').textContent='Database Error: '+e.message;
-  toast('ডেটাবেসে সমস্যা হয়েছে');
- }
-});
-
-function renderUserData(){
- const balance=Number(userData.balance||0).toFixed(2);
- document.getElementById('balance').textContent=balance;
- document.getElementById('profileBalance').textContent=balance;
- document.getElementById('withdrawBalance').textContent=balance;
-}
-
-/* SETTINGS */
-async function loadSettings(){
- try{
-  const s=await db.collection('appConfig').doc('public').get();
-  if(s.exists)appSettings={...appSettings,...s.data()};
- }catch(e){console.error('Settings error',e)}
- document.getElementById('bonusAmount').textContent=Number(appSettings.dailyBonus??10).toFixed(2);
- document.getElementById('adReward').textContent=Number(appSettings.adReward??0).toFixed(2);
-}
-
-/* TODAY STATS */
-async function loadTodayStats(){
- try{
-  const start=new Date();start.setHours(0,0,0,0);
-  const q=await db.collection('users').doc(currentUser.uid)
-   .collection('transactions')
-   .where('createdAt','>=',firebase.firestore.Timestamp.fromDate(start)).get();
-  let total=0,count=0;
-  q.forEach(d=>{
-   const x=d.data();
-   if(x.status==='approved'&&Number(x.amount)>0){
-    total+=Number(x.amount);
-    if(x.type==='task')count++;
-   }
-  });
-  document.getElementById('todayEarn').textContent=total.toFixed(2);
-  document.getElementById('todayEarnMini').textContent=total.toFixed(2);
-  document.getElementById('taskCount').textContent=count;
- }catch(e){console.log('Stats:',e.message)}
-}
-
-/* DAILY BONUS */
-async function claimBonus(){
- if(!currentUser)return;
- const btn=document.getElementById('claimBonusBtn');
- btn.disabled=true;
- try{
-  const uid=currentUser.uid,today=todayKey();
-  const userRef=db.collection('users').doc(uid);
-  const claimRef=db.collection('bonusClaims').doc(uid+'_'+today);
-  const historyRef=userRef.collection('transactions').doc('bonus_'+today);
-
-  await db.runTransaction(async transaction=>{
-   const userSnap=await transaction.get(userRef);
-   const claimSnap=await transaction.get(claimRef);
-   const configSnap=await transaction.get(db.collection('appConfig').doc('public'));
-
-   if(!userSnap.exists)throw new Error('User account পাওয়া যায়নি');
-   if(claimSnap.exists)throw new Error('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');
-   if(!configSnap.exists)throw new Error('Admin Bonus Settings পাওয়া যায়নি');
-
-   const amount=Number(configSnap.data().dailyBonus);
-   if(!Number.isFinite(amount)||amount<=0)throw new Error('Bonus amount সঠিক নয়');
-
-   const oldBalance=Number(userSnap.data().balance||0);
-   transaction.create(claimRef,{
-    uid,email:currentUser.email||'',name:currentUser.displayName||'User',
-    amount,date:today,status:'approved',
-    createdAt:firebase.firestore.FieldValue.serverTimestamp()
-   });
-   transaction.update(userRef,{
-    balance:oldBalance+amount,
-    totalEarned:firebase.firestore.FieldValue.increment(amount),
-    lastBonusDate:today,lastBonusClaimId:uid+'_'+today
-   });
-   transaction.set(historyRef,{
-    type:'daily_bonus',amount,status:'approved',date:today,
-    createdAt:firebase.firestore.FieldValue.serverTimestamp()
-   });
-  });
-
-  const updated=await userRef.get();
-  userData=updated.data()||userData;
-  renderUserData();
-  await loadTodayStats();
-  await loadRecentActivity();
-  toast('অভিনন্দন! Daily Bonus Wallet-এ যোগ হয়েছে।');
- }catch(e){
-  console.error('Bonus:',e);
-  toast(e.message||'বোনাস যোগ হয়নি। Firestore Rules পরীক্ষা করো');
- }finally{btn.disabled=false}
-}
-
-/* WITHDRAW */
-function updateWithdrawBalance(){
- document.getElementById('withdrawBalance').textContent=Number(userData.balance||0).toFixed(2);
-}
-async function submitWithdraw(){
- if(!currentUser)return;
- const method=document.getElementById('payMethod').value;
- const number=document.getElementById('payNumber').value.trim();
- const amount=Number(document.getElementById('withdrawAmount').value);
-
- if(!/^01[0-9]{9}$/.test(number)){toast('সঠিক ১১ সংখ্যার মোবাইল নম্বর দাও');return}
- if(!Number.isFinite(amount)||amount<=0){toast('সঠিক টাকার পরিমাণ দাও');return}
- if(amount<Number(appSettings.minWithdraw||0)){toast('ন্যূনতম উত্তোলন ৳'+appSettings.minWithdraw);return}
- if(amount>Number(userData.balance||0)){toast('পর্যাপ্ত ব্যালেন্স নেই');return}
-
- try{
-  await db.collection('withdrawRequests').add({
-   uid:currentUser.uid,email:currentUser.email,method,number,amount,
-   status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()
-  });
-  toast('উত্তোলনের আবেদন জমা হয়েছে');
-  document.getElementById('payNumber').value='';
-  document.getElementById('withdrawAmount').value='';
-  loadRecentActivity();
- }catch(e){console.error(e);toast('আবেদন জমা হয়নি: Firestore Rules পরীক্ষা করো')}
-}
-
-/* REFERRAL */
-async function copyReferral(){
- const input=document.getElementById('refCode');
- try{
-  await navigator.clipboard.writeText(input.value);
-  toast('Referral code কপি হয়েছে');
- }catch(e){
-  input.select();document.execCommand('copy');toast('Referral code কপি হয়েছে');
- }
-}
-
-/* TASKS */
-async function loadTasks(){
- const box=document.getElementById('taskList');
- box.innerHTML='<div class="empty">কাজ লোড হচ্ছে...</div>';
- try{
-  const s=await db.collection('tasks').where('active','==',true).get();
-  if(s.empty){box.innerHTML='<div class="empty">এখনো কোনো কাজ যোগ করা হয়নি।</div>';return}
-  box.innerHTML='';
-  s.forEach(doc=>{
-   const d=doc.data();
-   const item=document.createElement('div');item.className='list-item';
-   const title=document.createElement('strong');title.textContent=d.title||'Task';
-   const desc=document.createElement('p');desc.className='page-desc';desc.textContent=d.description||'';
-   const meta=document.createElement('div');meta.className='row';meta.style.marginTop='8px';
-   const reward=document.createElement('span');reward.textContent='রিওয়ার্ড: ৳'+Number(d.reward||0).toFixed(2);
-   const btn=document.createElement('button');btn.className='back';btn.style.width='auto';btn.style.fontSize='13px';btn.textContent='আবেদন';
-   btn.onclick=()=>submitTask(doc.id,d);
-   meta.append(reward,btn);item.append(title,desc,meta);box.append(item);
-  });
- }catch(e){console.error(e);box.innerHTML='<div class="empty">Tasks লোড করা যায়নি। Firestore Rules পরীক্ষা করো।</div>'}
-}
-
-/* TASK SUBMISSION */
-async function submitTask(taskId,task){
- try{
-  await db.collection('taskSubmissions').add({
-   uid:currentUser.uid,email:currentUser.email,taskId,
-   title:task.title||'Task',reward:Number(task.reward||0),
-   status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()
-  });
-  toast('Task submission জমা হয়েছে');
- }catch(e){console.error(e);toast('জমা হয়নি: Firestore Rules পরীক্ষা করো')}
-}
-
-/* HISTORY */
-async function loadHistory(){
- if(!currentUser)return;
- const box=document.getElementById('historyList');
- box.innerHTML='<div class="empty">হিসাব লোড হচ্ছে...</div>';
- try{
-  const [tx,claims,withdrawals]=await Promise.all([
-   db.collection('users').doc(currentUser.uid).collection('transactions').limit(30).get(),
-   db.collection('bonusClaims').where('uid','==',currentUser.uid).limit(20).get(),
-   db.collection('withdrawRequests').where('uid','==',currentUser.uid).limit(20).get()
-  ]);
-  const rows=[];
-  tx.forEach(d=>rows.push({...d.data(),kind:d.data().type||'Transaction'}));
-  claims.forEach(d=>rows.push({...d.data(),kind:'Daily Bonus'}));
-  withdrawals.forEach(d=>rows.push({...d.data(),kind:'Withdraw'}));
-  rows.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
-  if(!rows.length){box.innerHTML='<div class="empty">এখনো কোনো হিসাব নেই।</div>';return}
-  box.innerHTML='';
-  rows.slice(0,40).forEach(r=>{
-   const el=document.createElement('div');el.className='list-item';
-   const top=document.createElement('div');top.className='row';
-   const name=document.createElement('strong');name.textContent=r.kind;
-   const status=document.createElement('span');status.className='pill';status.textContent=r.status||'approved';
-   top.append(name,status);
-   const detail=document.createElement('p');detail.className='page-desc';
-   detail.textContent='৳'+Number(r.amount||r.reward||0).toFixed(2);
-   el.append(top,detail);box.append(el);
-  });
- }catch(e){console.error(e);box.innerHTML='<div class="empty">History দেখতে Firestore Rules আপডেট করতে হবে।</div>'}
-}
-
-/* RECENT ACTIVITY */
-async function loadRecentActivity(){
- if(!currentUser)return;
- const box=document.getElementById('recentActivity');
- try{
-  const [tx,withdrawals]=await Promise.all([
-   db.collection('users').doc(currentUser.uid).collection('transactions').limit(10).get(),
-   db.collection('withdrawRequests').where('uid','==',currentUser.uid).limit(10).get()
-  ]);
-  const rows=[];
-  tx.forEach(d=>rows.push({...d.data(),kind:d.data().type||'Transaction'}));
-  withdrawals.forEach(d=>rows.push({...d.data(),kind:'Withdraw Request'}));
-  rows.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
-  if(!rows.length){box.innerHTML='<div class="empty">এখনো কোনো Activity নেই।</div>';return}
-  box.innerHTML='';
-  rows.slice(0,4).forEach(r=>{
-   const row=document.createElement('div');row.className='activity-row';
-   const icon=document.createElement('div');icon.className='activity-icon';
-   icon.textContent=r.kind==='daily_bonus'?'🎁':r.kind==='Withdraw Request'?'➤':'📋';
-   const info=document.createElement('div');info.className='activity-info';
-   const strong=document.createElement('strong');strong.textContent=r.kind==='daily_bonus'?'Daily Bonus Claimed':r.kind;
-   const small=document.createElement('small');
-   const date=r.createdAt?.toDate?.();
-   small.textContent=date?date.toLocaleString('en-BD'):'Recently';
-   info.append(strong,small);
-   const amount=document.createElement('span');
-   amount.className='activity-amount'+(r.kind==='Withdraw Request'?' minus':'');
-   amount.textContent=(r.kind==='Withdraw Request'?'-':' +')+'৳'+Number(r.amount||r.reward||0).toFixed(2);
-   row.append(icon,info,amount);box.append(row);
-  });
- }catch(e){console.log('Activity:',e.message);box.innerHTML='<div class="empty">সাম্প্রতিক হিসাব লোড করা যায়নি।</div>'}
-}
-
-/* LOGOUT */
-async function logout(){
- try{await auth.signOut();hideMenu();toast('লগআউট হয়েছে')}
- catch(e){toast('Logout করা যায়নি')}
-}
-</script>
-</body>
-</html>
+<!DOCTYPE html>  <html lang="bn">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">  
+<meta name="theme-color" content="#080511">  
+<title>Earning Money BD</title>  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>  <style>  
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');  
+  
+:root{  
+ --bg:#080511;  
+ --panel:#171027;  
+ --muted:#b7a9ce;  
+ --purple:#b58aff;  
+ --line:#ffffff19;  
+ --green:#42d6a0;  
+}  
+*{box-sizing:border-box;margin:0;padding:0}  
+body{  
+ min-height:100vh;  
+ background:  
+ radial-gradient(ellipse at 50% 0%,#53129a55,transparent 42%),  
+ radial-gradient(ellipse at 0% 55%,#6800ff22,transparent 40%),  
+ #08030f;  
+ background-attachment:fixed;  
+ color:#fff;  
+ font-family:'Hind Siliguri',Poppins,sans-serif;  
+}  
+button,input,select{font:inherit}  
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}  
+  
+/* LOGIN */  
+.screen{max-width:520px;margin:auto;padding:20px 18px 115px}  
+#loginScreen{  
+ min-height:100vh;display:flex;flex-direction:column;  
+ justify-content:center;padding:25px 18px  
+}  
+.brand{text-align:center;margin-bottom:35px}  
+.brand h1{  
+ font:800 29px Poppins;letter-spacing:-1px;  
+ text-shadow:0 5px 25px #8b55ff55  
+}  
+.brand h1 span,.logo span{color:#ffd52d}  
+.brand p{color:#929bb2;font-size:12px;margin-top:8px}  
+.login-card{  
+ background:radial-gradient(circle at 50% 0%,#8652e52a,transparent 55%),linear-gradient(145deg,#1a2340,#0d1428);  
+ border:1px solid #a879ff35;border-radius:28px;  
+ padding:32px 22px;text-align:center;  
+ box-shadow:0 20px 55px #0007,0 0 35px #8b55ff12  
+}  
+.login-card h2{font-size:21px;margin-bottom:10px}  
+.login-card p{font-size:12px;color:#9ba5bd;margin-bottom:27px}  
+.google-btn{  
+ width:100%;padding:15px;border:0;border-radius:16px;  
+ background:#fff;color:#252525;font-size:14px;font-weight:700;  
+ display:flex;align-items:center;justify-content:center;gap:12px;  
+ box-shadow:0 7px 20px #0003;transition:.2s  
+}  
+.google-btn:active{transform:scale(.97)}  
+.google-btn:disabled{opacity:.5}  
+.google-logo{width:21px;height:21px;flex-shrink:0}  
+#status{font-size:11px;color:#c4b5fd;margin-top:17px;min-height:18px;overflow-wrap:anywhere}  
+  
+/* APP */  
+.app-shell{max-width:560px;margin:auto;padding:18px 15px 155px}  
+header{  
+ display:flex;align-items:center;justify-content:space-between;  
+ margin:3px 0 25px;padding:15px 4px 22px;  
+ border-bottom:1px solid #a66cff55;  
+}  
+.logo{font:800 20px Poppins;letter-spacing:-.5px}  
+.user-chip{  
+ display:flex;align-items:center;gap:8px;max-width:48%;  
+ font-size:12px;color:#f0e5ff;  
+ background:linear-gradient(135deg,#29113f,#10091c);  
+ border:1px solid #a66cff88;padding:7px 13px 7px 7px;  
+ border-radius:30px;box-shadow:0 0 18px #9b36ff33  
+}  
+.user-chip img{  
+ width:42px;height:42px;border-radius:50%;  
+ object-fit:cover;border:2px solid #d08cff  
+}  
+.page{display:none;animation:fade .2s ease}  
+.page.active{display:block}  
+@keyframes fade{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:none}}  
+  
+/* WALLET */  
+.balance{  
+ position:relative;overflow:hidden;  
+ display:grid;grid-template-columns:90px 1fr;  
+ align-items:center;gap:12px;padding:23px 18px;  
+ min-height:195px;  
+ border:1px solid #d19aff;border-radius:30px;  
+ background:radial-gradient(circle at 90% 10%,#a84cff66,transparent 50%),linear-gradient(145deg,#401568,#21102f 65%,#100719);  
+ box-shadow:0 0 20px #a33cff55,inset 0 2px 12px #ffffff22;  
+}  
+.wallet-icon{font-size:67px;text-align:center}  
+.balance-content{min-width:0}  
+.balance small{color:#f0dfff;font-size:16px}  
+.balance h2{  
+ font:800 37px Poppins;margin:4px 0 8px;  
+ color:#ffd52d;text-shadow:0 0 18px #ffbd24  
+}  
+.balance .muted{color:#d3c1eb;font-size:12px}  
+.balance-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}  
+.withdraw-shortcut{  
+ border:1px solid #f3d4ff;border-radius:30px;padding:11px 15px;  
+ background:linear-gradient(135deg,#dc9aff,#8700e8);  
+ color:#fff;font-size:13px;font-weight:700;  
+ box-shadow:0 0 18px #a500ff88  
+}  
+  
+/* STATS */  
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 24px}  
+.stat{  
+ min-height:110px;  
+ background:linear-gradient(145deg,#301448,#160b22);  
+ border:1px solid #a55be477;padding:17px 13px;  
+ border-radius:23px;box-shadow:0 0 15px #a33cff22,inset 0 1px 8px #ffffff12;  
+ display:flex;gap:9px;align-items:center  
+}  
+.stat .emoji{font-size:32px}  
+.stat small{color:#d9c2ed;font-size:13px}  
+.stat strong{display:block;font:700 23px Poppins;color:#e9c3ff;margin-top:3px}  
+.section-title{display:flex;align-items:center;gap:9px;font-size:22px;margin:25px 0 17px;font-weight:800}  
+.section-title:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#b16cff,transparent)}  
+  
+/* FEATURE CARDS */  
+.feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}  
+.feature{  
+ position:relative;overflow:hidden;  
+ display:flex;flex-direction:column;align-items:center;  
+ justify-content:center;gap:7px;  
+ background:radial-gradient(circle at 50% 0%,#7130a955,transparent 65%),linear-gradient(145deg,#32134c,#13091f);  
+ border:1px solid #b56bff99;border-radius:24px;color:#fff;  
+ min-height:166px;padding:16px 5px;font-size:14px;  
+ box-shadow:0 0 15px #a13cff33,inset 0 2px 9px #ffffff20;  
+ transition:.2s  
+}  
+.feature b{  
+ width:67px;height:67px;display:flex;  
+ align-items:center;justify-content:center;  
+ border-radius:22px;font-size:36px;  
+ background:linear-gradient(145deg,#bd75ff,#6b20bd);  
+ border:1px solid #e5c1ff;  
+ box-shadow:0 0 18px #b45aff77,inset 0 3px 10px #ffffff66  
+}  
+.feature span{font-weight:700;color:#f3e8ff;font-size:13px;text-align:center}  
+.feature small{font-size:10px;color:#bca6d8;text-align:center}  
+.feature:active{transform:scale(.96);filter:brightness(1.15)}  
+.feature-bonus b{background:linear-gradient(145deg,#a35ce0,#54217f)}  
+.feature-ads b{background:linear-gradient(145deg,#8b61db,#38216c)}  
+.feature-tasks b{background:linear-gradient(145deg,#bd75e9,#562b85)}  
+.feature-referral b{background:linear-gradient(145deg,#a65bc7,#51205f)}  
+.feature-withdraw b{background:linear-gradient(145deg,#9b65c5,#45215e)}  
+.feature-history b{background:linear-gradient(145deg,#7657bd,#30205d)}  
+  
+/* REFERRAL */  
+.invite{  
+ display:flex;align-items:center;gap:10px;margin-top:20px;  
+ padding:17px;min-height:115px;  
+ border:1px solid #d19aff;border-radius:24px;  
+ background:radial-gradient(circle at 90% 20%,#9b36ff66,transparent 50%),linear-gradient(120deg,#52177e,#1b0a2c);  
+ box-shadow:0 0 20px #a33cff44  
+}  
+.invite .meg{font-size:43px}  
+.invite p{flex:1;font-size:13px;line-height:1.4}  
+.invite p strong{display:block;font-size:17px;color:#fff}  
+.invite button{  
+ border:1px solid #e2c5ff;border-radius:30px;padding:9px 12px;  
+ background:linear-gradient(135deg,#bd83f3,#7132b8);  
+ color:white;font-size:11px;font-weight:700;white-space:nowrap  
+}  
+  
+/* ACTIVITY */  
+.activity{  
+ margin-top:20px;padding:17px;  
+ border:1px solid #a45bdf88;border-radius:25px;  
+ background:linear-gradient(145deg,#29133d,#100819);  
+ box-shadow:0 0 18px #a33cff33  
+}  
+.activity-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}  
+.activity-head h3{font-size:18px;color:#f0e3ff}  
+.activity-head button{  
+ border:1px solid #b88be7;background:linear-gradient(135deg,#58327b,#301b4b);  
+ color:#f2e5ff;border-radius:22px;padding:6px 10px;font-size:11px  
+}  
+.activity .empty{padding:17px 4px;color:#c5b2df}  
+  
+.topline{display:flex;align-items:center;gap:10px;margin:5px 0 20px}  
+.back{  
+ min-width:43px;min-height:42px;border:1px solid #ffffff20;  
+ background:linear-gradient(145deg,#392653,#20142f);  
+ color:white;border-radius:14px;padding:8px 13px;font-size:19px  
+}  
+.page h2{font-size:22px}  
+.page-desc{font-size:13px;color:var(--muted);margin:5px 0 16px}  
+.card{  
+ background:linear-gradient(145deg,#28183c,#171027);  
+ border:1px solid #9e6ac766;border-radius:22px;  
+ padding:19px;margin-bottom:14px;  
+ box-shadow:0 12px 28px #0008,inset 0 1px 1px #ffffff12  
+}  
+.action{  
+ width:100%;border:1px solid #d4aaff88;border-radius:15px;  
+ padding:14px;background:linear-gradient(135deg,#a968df,#6532a5,#3e206b);  
+ color:white;font-weight:700;margin-top:12px;  
+ box-shadow:0 8px 20px #8d4bc744;transition:.2s  
+}  
+.action:active{transform:scale(.97)}  
+.action:disabled{opacity:.5;cursor:not-allowed}  
+.field{  
+ width:100%;background:#100b1b;border:1px solid #8d61b355;  
+ border-radius:14px;color:white;padding:14px;margin-top:7px;outline:none  
+}  
+.field:focus{border-color:#c18aff;box-shadow:0 0 0 3px #a45bff25}  
+label{display:block;color:#e2d3f5;font-size:13px;font-weight:600;margin-top:13px}  
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}  
+.list-item{padding:15px 2px;border-bottom:1px solid #ffffff12}  
+.list-item:last-child{border:0}  
+.list-item strong{color:#f0eaff}  
+.pill{  
+ font-size:11px;border-radius:20px;padding:5px 11px;  
+ background:linear-gradient(120deg,#39245a,#251638);  
+ border:1px solid #a66cff55;color:#eadcff  
+}  
+  
+/* BOTTOM NAV */  
+.bottom-nav{  
+ position:fixed!important;left:50%!important;bottom:0!important;  
+ transform:translateX(-50%)!important;  
+ width:min(560px,100%)!important;  
+ height:116px;  
+ display:grid;grid-template-columns:repeat(5,1fr);  
+ align-items:center;gap:3px;  
+ padding:13px 8px calc(13px + env(safe-area-inset-bottom));  
+ background:linear-gradient(145deg,#291044fa,#0b0415fc)!important;  
+ backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);  
+ border:1px solid #bd71ff;border-bottom:0;  
+ border-radius:36px 36px 0 0;  
+ box-shadow:0 -5px 30px #a32dff66;  
+ z-index:100  
+}  
+.bottom-nav:before{  
+ content:"";position:absolute;top:0;left:12%;right:12%;height:2px;  
+ background:linear-gradient(90deg,transparent,#b65cff,#fff,#b65cff,transparent);  
+ box-shadow:0 0 15px #bd78ff  
+}  
+.nav-btn{  
+ position:relative;isolation:isolate;  
+ min-width:0;height:86px;  
+ display:flex;flex-direction:column;justify-content:center;align-items:center;  
+ gap:7px;padding:4px 1px;border:1px solid transparent;  
+ border-radius:22px;background:transparent;color:#d6b9ef;  
+ font-family:'Hind Siliguri',sans-serif;transition:all .3s ease  
+}  
+.nav-btn b{  
+ width:54px;height:53px;display:flex;justify-content:center;align-items:center;  
+ border-radius:19px;background:linear-gradient(145deg,#542779,#241039);  
+ border:1px solid #c68aff99;  
+ box-shadow:0 5px 15px #0009,inset 0 2px 8px #ffffff33;  
+ transition:all .3s ease  
+}  
+.nav-btn b svg{width:31px;height:31px;stroke:#e5caff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}  
+.nav-btn span{font-size:12px;font-weight:700;color:#d6b9ef;white-space:nowrap}  
+.nav-btn.active:not(.center-nav){  
+ background:linear-gradient(145deg,#7225bd66,#3b155c);  
+ border:1px solid #e3baff;  
+ box-shadow:0 0 22px #b24cff66  
+}  
+.nav-btn.active:not(.center-nav) b{  
+ background:linear-gradient(145deg,#e3baff,#8d31d8);  
+ box-shadow:0 0 20px #c36aff;  
+ transform:translateY(-3px)  
+}  
+.nav-btn.active:not(.center-nav) b svg{stroke:#fff}  
+.nav-btn.active:not(.center-nav) span{color:#fff;text-shadow:0 0 10px #c18aff}  
+.nav-btn.active:not(.center-nav):after{  
+ content:"";position:absolute;bottom:0;width:25px;height:3px;  
+ border-radius:10px;background:#d8b1ff;box-shadow:0 0 12px #c18aff  
+}  
+.nav-btn:active{transform:scale(.91)}  
+.nav-btn.center-nav{  
+ width:100px;height:100px;min-height:100px;  
+ justify-self:center;align-self:center;margin-top:-48px;  
+ border:3px solid #e9caff;border-radius:50%;gap:2px;  
+ background:radial-gradient(circle at 30% 20%,#f1caff,#b14cff 48%,#6413a9);  
+ box-shadow:0 0 0 7px #a33cff44,0 0 35px #c05aff,inset 0 3px 15px #ffffffaa  
+}  
+.nav-btn.center-nav b{  
+ width:58px;height:55px;background:transparent;border:0;  
+ box-shadow:none;font-size:43px  
+}  
+.nav-btn.center-nav span{color:#fff;font-size:12px;font-weight:800}  
+.nav-btn.center-nav.active{  
+ box-shadow:0 0 0 7px #a33cff66,0 0 45px #c05aff,inset 0 3px 15px #ffffffaa  
+}  
+  
+.toast{  
+ position:fixed;bottom:130px;left:50%;transform:translateX(-50%);  
+ background:linear-gradient(135deg,#49266b,#211432);  
+ border:1px solid #bd8aff88;padding:11px 16px;  
+ border-radius:15px;font-size:13px;display:none;  
+ z-index:120;max-width:90%;text-align:center;box-shadow:0 8px 30px #0008  
+}  
+.empty{text-align:center;color:var(--muted);font-size:13px;padding:22px 5px}  
+.logout{  
+ width:100%;padding:12px;border:1px solid #b66bba55;  
+ background:linear-gradient(120deg,#442044,#2b1a35);  
+ color:white;border-radius:15px;margin-top:16px  
+}  
+.notice{  
+ font-size:12px;color:#f4d9ff;  
+ background:linear-gradient(120deg,#392448,#2b1d36);  
+ border:1px solid #c18aff30;padding:11px;  
+ border-radius:14px;margin-top:12px;line-height:1.7  
+}  
+#profilePhoto{  
+ border:3px solid #b77aff;  
+ box-shadow:0 0 0 5px #a45bff20,0 0 25px #a45bff55  
+}  
+  
+@media(max-width:390px){  
+ .app-shell{padding-left:11px;padding-right:11px}  
+ .feature-grid{gap:9px}  
+ .feature{min-height:150px}  
+ .feature b{width:58px;height:58px;font-size:31px}  
+ .balance{grid-template-columns:60px 1fr;padding:17px 12px;gap:8px}  
+ .wallet-icon{font-size:47px}  
+ .balance h2{font-size:29px}  
+ .bottom-nav{height:105px;padding-left:5px;padding-right:5px}  
+ .nav-btn b{width:45px;height:45px}  
+ .nav-btn b svg{width:27px;height:27px}  
+ .nav-btn.center-nav{width:85px;height:85px;min-height:85px;margin-top:-40px}  
+ .nav-btn.center-nav b{font-size:36px}  
+ .nav-btn span{font-size:10px}  
+ .invite p{font-size:11px}  
+ .invite p strong{font-size:14px}  
+ .invite button{font-size:10px;padding:8px}  
+}  
+</style>  </head>  <body>  <!-- LOGIN -->  <div id="loginScreen" class="screen">  
+ <div class="brand">  
+  <h1>EARNING <span>MONEY BD</span></h1>  
+  <p>Your earning journey starts here</p>  
+ </div>  
+ <div class="login-card">  
+  <h2>Welcome Earning Money BD!</h2>  
+  <p>Login or create your account with Google</p>  
+  <button class="google-btn" id="googleBtn" onclick="googleLogin()">  
+   <svg class="google-logo" viewBox="0 0 48 48">  
+    <path fill="#4285F4" d="M43.6 24.5c0-1.5-.1-3-.4-4.4H24v8.3h11a9.4 9.4 0 0 1-4.1 6.2v5.4h6.6c3.9-3.6 6.1-9 6.1-15.5z"/>  
+    <path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.9l-6.6-5.4c-1.8 1.2-4 1.9-6.9 1.9-5.3 0-9.8-3.6-11.4-8.5H5.8v5.5C9.2 39.4 16.1 44 24 44z"/>  
+    <path fill="#FBBC05" d="M12.6 27.1a12 12 0 0 1 0-7.2v-5.5H5.8a20 20 0 0 0 0 18.2z"/>  
+    <path fill="#EA4335" d="M24 11.4c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 5.3 29.5 3.5 24 3.5c-7.9 0-14.8 4.6-18.2 10.9l6.8 5.5c1.6-4.9 6.1-8.5 11.4-8.5z"/>  
+   </svg>  
+   Continue with Google  
+  </button>  
+  <div id="status"></div>  
+ </div>  
+</div>  <!-- MAIN APP -->  <div id="appScreen" class="app-shell" style="display:none">  <header>  
+ <div class="logo">  
+  EARNING <span>MONEY BD</span>  
+  <div style="font:500 10px 'Hind Siliguri';color:#d0bce8;margin-top:3px">Play • Earn • Withdraw</div>  
+ </div>  
+ <div class="user-chip">  
+  <img id="userPhoto" src="https://via.placeholder.com/80" alt="">  
+  <span id="userName">User</span>  
+ </div>  
+</header>  <!-- HOME -->  <main id="homePage" class="page active">  
+ <section class="balance">  
+  <div class="wallet-icon">👛</div>  
+  <div class="balance-content">  
+   <small>তোমার Wallet Balance</small>  
+   <h2>৳ <span id="balance">0.00</span></h2>  
+   <div class="balance-actions">  
+    <span class="muted">Earning Money BD Wallet</span>  
+    <button class="withdraw-shortcut" onclick="openPage('withdrawPage')">💸 Withdraw ➜</button>  
+   </div>  
+  </div>  
+ </section>   <section class="stats">  
+  <div class="stat">  
+   <span class="emoji">📈</span>  
+   <div><small>আজকের আয়</small><strong>৳ <span id="todayEarn">0.00</span></strong></div>  
+  </div>  
+  <div class="stat">  
+   <span class="emoji">📋</span>  
+   <div><small>সম্পন্ন কাজ</small><strong id="taskCount">0</strong></div>  
+  </div>  
+ </section>   <h3 class="section-title">⚡ Quick Access</h3>   <section class="feature-grid">  
+  <button class="feature feature-bonus" onclick="openPage('bonusPage')">  
+   <b>🎁</b><span>Daily Bonus</span><small>Get Free Bonus</small>  
+  </button>  
+  <button class="feature feature-ads" onclick="openPage('adsPage')">  
+   <b>▶️</b><span>Watch Ads</span><small>Earn More</small>  
+  </button>  
+  <button class="feature feature-tasks" onclick="openPage('tasksPage')">  
+   <b>📋</b><span>Tasks</span><small>Complete & Earn</small>  
+  </button>  
+  <button class="feature feature-referral" onclick="openPage('referralPage')">  
+   <b>👥</b><span>Referral</span><small>Invite Friends</small>  
+  </button>  
+  <button class="feature feature-withdraw" onclick="openPage('withdrawPage')">  
+   <b>👛</b><span>Withdraw</span><small>Get Your Money</small>  
+  </button>  
+  <button class="feature feature-history" onclick="openPage('historyPage')">  
+   <b>🕘</b><span>History</span><small>View Details</small>  
+  </button>  
+ </section>   <div class="invite">  
+  <span class="meg">📣</span>  
+  <p><strong>Refer Your Friends</strong>বন্ধুকে আমন্ত্রণ জানাও এবং বাড়াও তোমার আয়!</p>  
+  <button onclick="openPage('referralPage')">Invite Now ➜</button>  
+ </div>   <section class="activity">  
+  <div class="activity-head">  
+   <h3>◷ Recent Activity</h3>  
+   <button onclick="openPage('historyPage')">See All ➜</button>  
+  </div>  
+  <div id="recentActivity" class="empty">সাম্প্রতিক হিসাব দেখতে History খুলুন।</div>  
+ </section>  
+</main>  <!-- BONUS -->  <main id="bonusPage" class="page">  
+ <div class="topline">  
+  <button class="back" onclick="openPage('homePage')">←</button>  
+  <h2>🎁 Daily Bonus</h2>  
+ </div>  
+ <div class="card">  
+  <p class="page-desc">প্রতিদিন একবার বোনাস ক্লেইম করতে পারবে।</p>  
+  <h2 style="font:700 34px Poppins;margin:12px 0;color:#ead0ff">  
+   ৳ <span id="bonusAmount">10.00</span>  
+  </h2>  
+  <span class="pill">প্রতিদিন ১ বার</span>  
+  <button class="action" id="claimBonusBtn" onclick="claimBonus()">আজকের বোনাস ক্লেইম</button>  
+  <p class="notice">Claim করলেই বোনাস সরাসরি Wallet Balance-এ যোগ হবে।</p>  
+ </div>  
+</main>  <!-- ADS -->  <main id="adsPage" class="page">  
+ <div class="topline">  
+  <button class="back" onclick="openPage('homePage')">←</button>  
+  <h2>▶️ Watch Ads</h2>  
+ </div>  
+ <div class="card">  
+  <h3>বিজ্ঞাপন দেখে আয়</h3>  
+  <p class="page-desc">অ্যাড নেটওয়ার্ক যুক্ত হলে এখানে বিজ্ঞাপন দেখা ও রিওয়ার্ড পাওয়া যাবে।</p>  
+  <div class="row">  
+   <span class="muted">প্রতি বিজ্ঞাপনের রিওয়ার্ড</span>  
+   <strong>৳ <span id="adReward">0.00</span></strong>  
+  </div>  
+  <button class="action" disabled>বিজ্ঞাপন এখনো চালু হয়নি</button>  
+ </div>  
+</main>  <!-- TASKS -->  <main id="tasksPage" class="page">  
+ <div class="topline">  
+  <button class="back" onclick="openPage('homePage')">←</button>  
+  <h2>📋 Tasks</h2>  
+ </div>  
+ <p class="page-desc">Admin-এর দেওয়া কাজগুলো এখানে দেখা যাবে।</p>  
+ <div id="taskList" class="card"><div class="empty">কাজ লোড হচ্ছে...</div></div>  
+</main>  <!-- REFERRAL -->  <main id="referralPage" class="page">  
+ <div class="topline">  
+  <button class="back" onclick="openPage('homePage')">←</button>  
+  <h2>👥 Referral</h2>  
+ </div>  
+ <div class="card">  
+  <p class="page-desc">বন্ধুকে আমন্ত্রণ জানাও।</p>  
+  <label>তোমার Referral Code</label>  
+  <input class="field" id="refCode" readonly>  
+  <button class="action" onclick="copyReferral()">কোড কপি করো</button>  
+  <div class="notice">Referral tracking পরবর্তী ধাপে নিরাপদভাবে যুক্ত হবে।</div>  
+ </div>  
+</main>  <!-- WITHDRAW -->  <main id="withdrawPage" class="page">  
+ <div class="topline">  
+  <button class="back" onclick="openPage('homePage')">←</button>  
+  <h2>💸 Withdraw</h2>  
+ </div>  
+ <div class="card">  
+  <p class="page-desc">উত্তোলনের আবেদন জমা দাও। Admin যাচাই করে প্রসেস করবে।</p>  
+  <label>পেমেন্ট মাধ্যম</label>  
+  <select class="field" id="payMethod">  
+   <option value="bKash">bKash</option>  
+   <option value="Nagad">Nagad</option>  
+   <option value="Rocket">Rocket</option>  
+  </select>  
+  <label>অ্যাকাউন্ট নম্বর</label>  
+  <input class="field" id="payNumber" inputmode="numeric" placeholder="01XXXXXXXXX" maxlength="11">  
+  <label>টাকার পরিমাণ</label>  
+  <input class="field" id="withdrawAmount" type="number" min="1" step="1" placeholder="টাকার পরিমাণ">  
+  <button class="action" onclick="submitWithdraw()">উত্তোলনের আবেদন</button>  
+  <p class="notice">উত্তোলনের আবেদন Pending থাকবে যতক্ষণ Admin যাচাই না করে।</p>  
+ </div>  
+</main>  <!-- HISTORY -->  <main id="historyPage" class="page">  
+ <div class="topline">  
+  <button class="back" onclick="openPage('homePage')">←</button>  
+  <h2>📜 History</h2>  
+ </div>  
+ <div class="card" id="historyList"><div class="empty">হিসাব লোড হচ্ছে...</div></div>  
+</main>  <!-- PROFILE -->  <main id="profilePage" class="page">  
+ <div class="topline">  
+  <button class="back" onclick="openPage('homePage')">←</button>  
+  <h2>👤 Profile</h2>  
+ </div>  
+ <div class="card">  
+  <div style="text-align:center">  
+   <img id="profilePhoto" src="https://via.placeholder.com/100" style="width:76px;height:76px;border-radius:50%;object-fit:cover" alt="">  
+   <h3 id="profileName" style="margin-top:8px">User</h3>  
+   <p class="muted" id="profileEmail"></p>  
+  </div>  
+  <div class="list-item">  
+   <span class="muted">User ID</span>  
+   <p id="profileUid" style="font-size:11px;overflow-wrap:anywhere"></p>  
+  </div>  
+  <button class="logout" onclick="logout()">Log Out</button>  
+ </div>  
+</main>  </div>  <!-- NAVIGATION -->  <nav class="bottom-nav" id="bottomNav" style="display:none">  
+ <button class="nav-btn active" data-page="homePage" onclick="openPage('homePage',this)">  
+  <b><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M9 21v-7h6v7"/></svg></b>  
+  <span>Home</span>  
+ </button>   <button class="nav-btn" data-page="tasksPage" onclick="openPage('tasksPage',this)">  
+  <b><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 3V2h8v1"/><path d="M8 10l2 2 5-5"/><path d="M8 16h8"/></svg></b>  
+  <span>Tasks</span>  
+ </button>   <button class="nav-btn center-nav" data-page="bonusPage" onclick="openPage('bonusPage',this)">  
+  <b>🎁</b><span>Daily Bonus</span>  
+ </button>   <button class="nav-btn" data-page="historyPage" onclick="openPage('historyPage',this)">  
+  <b><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></b>  
+  <span>History</span>  
+ </button>   <button class="nav-btn" data-page="profilePage" onclick="openPage('profilePage',this)">  
+  <b><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></b>  
+  <span>Profile</span>  
+ </button>  
+</nav>  <div id="toast" class="toast"></div>  <script>  
+const firebaseConfig={  
+ apiKey:"AIzaSyDDDwkjIa7NecN7CnpyQxPja4KH0vLqCJ4",  
+ authDomain:"earning-bd-1e902.firebaseapp.com",  
+ projectId:"earning-bd-1e902",  
+ storageBucket:"earning-bd-1e902.firebasestorage.app",  
+ messagingSenderId:"504547016236",  
+ appId:"1:504547016236:web:8c5b2cfc733aaf16175b89",  
+ measurementId:"G-JYN5BL9RJV"  
+};  
+  
+firebase.initializeApp(firebaseConfig);  
+  
+const auth=firebase.auth();  
+const db=firebase.firestore();  
+const provider=new firebase.auth.GoogleAuthProvider();  
+  
+let currentUser=null;  
+let appSettings={dailyBonus:10,adReward:0,minWithdraw:0};  
+let userData={balance:0};  
+  
+function toast(message){  
+ const t=document.getElementById('toast');  
+ t.textContent=message;  
+ t.style.display='block';  
+ clearTimeout(window.toastTimer);  
+ window.toastTimer=setTimeout(()=>t.style.display='none',2600);  
+}  
+  
+function todayKey(){  
+ const d=new Date();  
+ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');  
+}  
+  
+/* NAVIGATION */  
+function openPage(id){  
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));  
+ document.getElementById(id).classList.add('active');  
+ document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));  
+ const nav=document.querySelector('.nav-btn[data-page="'+id+'"]');  
+ if(nav)nav.classList.add('active');  
+ window.scrollTo(0,0);  
+ if(id==='historyPage')loadHistory();  
+ if(id==='tasksPage')loadTasks();  
+}  
+  
+/* GOOGLE LOGIN */  
+async function googleLogin(){  
+ const btn=document.getElementById('googleBtn');  
+ const status=document.getElementById('status');  
+ btn.disabled=true;  
+ status.textContent='Google-এর সাথে সংযোগ হচ্ছে...';  
+ try{  
+  await auth.signInWithPopup(provider);  
+ }catch(e){  
+  console.error(e);  
+  status.textContent='Login Error: '+e.message;  
+  btn.disabled=false;  
+ }  
+}  
+  
+/* AUTH STATE */  
+auth.onAuthStateChanged(async user=>{  
+ if(!user){  
+  currentUser=null;  
+  document.getElementById('loginScreen').style.display='flex';  
+  document.getElementById('appScreen').style.display='none';  
+  document.getElementById('bottomNav').style.display='none';  
+  document.getElementById('googleBtn').disabled=false;  
+  return;  
+ }  
+  
+ currentUser=user;  
+  
+ try{  
+  const ref=db.collection('users').doc(user.uid);  
+  const snap=await ref.get();  
+  
+  if(!snap.exists){  
+   await ref.set({  
+    name:user.displayName||'User',  
+    email:user.email,  
+    photoURL:user.photoURL||'',  
+    balance:0,  
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()  
+   });  
+  }  
+  
+  const fresh=await ref.get();  
+  userData=fresh.data()||{balance:0};  
+  renderUserData();  
+  
+  document.getElementById('userName').textContent=user.displayName||'User';  
+  document.getElementById('userPhoto').src=user.photoURL||'https://via.placeholder.com/80';  
+  document.getElementById('profilePhoto').src=user.photoURL||'https://via.placeholder.com/100';  
+  document.getElementById('profileName').textContent=user.displayName||'User';  
+  document.getElementById('profileEmail').textContent=user.email||'';  
+  document.getElementById('profileUid').textContent=user.uid;  
+  document.getElementById('refCode').value=user.uid.slice(0,8).toUpperCase();  
+  
+  await loadSettings();  
+  await loadTodayStats();  
+  
+  document.getElementById('loginScreen').style.display='none';  
+  document.getElementById('appScreen').style.display='block';  
+  document.getElementById('bottomNav').style.display='grid';  
+  
+ }catch(e){  
+  console.error(e);  
+  document.getElementById('status').textContent='Database Error: '+e.message;  
+  toast('ডেটাবেসে সমস্যা হয়েছে');  
+ }  
+});  
+  
+function renderUserData(){  
+ document.getElementById('balance').textContent=Number(userData.balance||0).toFixed(2);  
+}  
+  
+/* ADMIN SETTINGS */  
+async function loadSettings(){  
+ try{  
+  const s=await db.collection('appConfig').doc('public').get();  
+  if(s.exists)appSettings={...appSettings,...s.data()};  
+ }catch(e){  
+  console.error('Settings read error',e);  
+  toast('Admin-এর Bonus Settings পড়া যায়নি');  
+ }  
+ document.getElementById('bonusAmount').textContent=Number(appSettings.dailyBonus??10).toFixed(2);  
+ document.getElementById('adReward').textContent=Number(appSettings.adReward??0).toFixed(2);  
+}  
+  
+/* TODAY STATS */  
+async function loadTodayStats(){  
+ try{  
+  const start=new Date();  
+  start.setHours(0,0,0,0);  
+  const q=await db.collection('users').doc(currentUser.uid)  
+   .collection('transactions')  
+   .where('createdAt','>=',firebase.firestore.Timestamp.fromDate(start))  
+   .get();  
+  
+  let total=0,count=0;  
+  q.forEach(d=>{  
+   const x=d.data();  
+   if(x.status==='approved'&&Number(x.amount)>0){  
+    total+=Number(x.amount);  
+    if(x.type==='task')count++;  
+   }  
+  });  
+  document.getElementById('todayEarn').textContent=total.toFixed(2);  
+  document.getElementById('taskCount').textContent=count;  
+ }catch(e){  
+  console.log('Stats:',e.message);  
+ }  
+}  
+  
+/* DAILY BONUS */  
+async function claimBonus(){  
+ if(!currentUser)return;  
+ const btn=document.getElementById('claimBonusBtn');  
+ btn.disabled=true;  
+  
+ try{  
+  const uid=currentUser.uid;  
+  const today=todayKey();  
+  const amount=Number(appSettings.dailyBonus);  
+  if(!Number.isFinite(amount)||amount<=0)throw new Error('Admin-এর Bonus amount সঠিক নয়');  
+  
+  const userRef=db.collection('users').doc(uid);  
+  const claimRef=db.collection('bonusClaims').doc(uid+'_'+today);  
+  const historyRef=userRef.collection('transactions').doc('bonus_'+today);  
+  
+  await db.runTransaction(async transaction=>{  
+   const [userSnap,claimSnap,configSnap]=await Promise.all([  
+    transaction.get(userRef),  
+    transaction.get(claimRef),  
+    transaction.get(db.collection('appConfig').doc('public'))  
+   ]);  
+  
+   if(!userSnap.exists)throw new Error('User account পাওয়া যায়নি');  
+   if(claimSnap.exists)throw new Error('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');  
+   if(!configSnap.exists)throw new Error('Admin Bonus Settings পাওয়া যায়নি');  
+  
+   const liveAmount=Number(configSnap.data().dailyBonus);  
+   if(!Number.isFinite(liveAmount)||liveAmount<=0)throw new Error('Admin Bonus amount সঠিক নয়');  
+  
+   const oldBalance=Number(userSnap.data().balance||0);  
+  
+   transaction.create(claimRef,{  
+    uid:uid,email:currentUser.email||'',name:currentUser.displayName||'User',  
+    amount:liveAmount,date:today,status:'approved',  
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()  
+   });  
+  
+   transaction.update(userRef,{  
+    balance:oldBalance+liveAmount,  
+    totalEarned:firebase.firestore.FieldValue.increment(liveAmount),  
+    lastBonusDate:today,lastBonusClaimId:uid+'_'+today  
+   });  
+  
+   transaction.set(historyRef,{  
+    type:'daily_bonus',amount:liveAmount,status:'approved',date:today,  
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()  
+   });  
+  });  
+  
+  const updated=await userRef.get();  
+  userData=updated.data()||userData;  
+  renderUserData();  
+  await loadTodayStats();  
+  toast('অভিনন্দন! ৳'+Number(appSettings.dailyBonus).toFixed(2)+' Wallet-এ যোগ হয়েছে।');  
+  
+ }catch(e){  
+  console.error('Daily bonus claim:',e);  
+  if(e.message&&e.message.toLowerCase().includes('already'))  
+   toast('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');  
+  else  
+   toast(e.message||'বোনাস যোগ হয়নি। Firestore Rules পরীক্ষা করো');  
+ }finally{  
+  btn.disabled=false;  
+ }  
+}  
+  
+/* WITHDRAW */  
+async function submitWithdraw(){  
+ if(!currentUser)return;  
+ const method=document.getElementById('payMethod').value;  
+ const number=document.getElementById('payNumber').value.trim();  
+ const amount=Number(document.getElementById('withdrawAmount').value);  
+  
+ if(!/^01[0-9]{9}$/.test(number)){  
+  toast('সঠিক ১১ সংখ্যার মোবাইল নম্বর দাও');return;  
+ }  
+ if(!Number.isFinite(amount)||amount<=0){  
+  toast('সঠিক টাকার পরিমাণ দাও');return;  
+ }  
+ if(amount<Number(appSettings.minWithdraw||0)){  
+  toast('ন্যূনতম উত্তোলন ৳'+appSettings.minWithdraw);return;  
+ }  
+ if(amount>Number(userData.balance||0)){  
+  toast('পর্যাপ্ত ব্যালেন্স নেই');return;  
+ }  
+  
+ try{  
+  await db.collection('withdrawRequests').add({  
+   uid:currentUser.uid,email:currentUser.email,method,number,amount,  
+   status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()  
+  });  
+  toast('উত্তোলনের আবেদন জমা হয়েছে');  
+  document.getElementById('payNumber').value='';  
+  document.getElementById('withdrawAmount').value='';  
+ }catch(e){  
+  console.error(e);  
+  toast('আবেদন জমা হয়নি: Firestore Rules পরীক্ষা করো');  
+ }  
+}  
+  
+/* REFERRAL */  
+async function copyReferral(){  
+ const code=document.getElementById('refCode').value;  
+ try{  
+  await navigator.clipboard.writeText(code);  
+  toast('Referral code কপি হয়েছে');  
+ }catch(e){  
+  document.getElementById('refCode').select();  
+  document.execCommand('copy');  
+  toast('Referral code কপি হয়েছে');  
+ }  
+}  
+  
+/* TASKS */  
+async function loadTasks(){  
+ const box=document.getElementById('taskList');  
+ box.innerHTML='<div class="empty">কাজ লোড হচ্ছে...</div>';  
+  
+ try{  
+  const s=await db.collection('tasks').where('active','==',true).get();  
+  if(s.empty){  
+   box.innerHTML='<div class="empty">এখনো কোনো কাজ যোগ করা হয়নি।</div>';  
+   return;  
+  }  
+  box.innerHTML='';  
+  s.forEach(doc=>{  
+   const d=doc.data();  
+   const item=document.createElement('div');  
+   item.className='list-item';  
+  
+   const title=document.createElement('strong');  
+   title.textContent=d.title||'Task';  
+  
+   const desc=document.createElement('p');  
+   desc.className='muted';  
+   desc.textContent=d.description||'';  
+  
+   const meta=document.createElement('div');  
+   meta.className='row';  
+   meta.style.marginTop='8px';  
+  
+   const reward=document.createElement('span');  
+   reward.textContent='রিওয়ার্ড: ৳'+Number(d.reward||0).toFixed(2);  
+  
+   const btn=document.createElement('button');  
+   btn.className='back';  
+   btn.textContent='আবেদন';  
+   btn.onclick=()=>submitTask(doc.id,d);  
+  
+   meta.append(reward,btn);  
+   item.append(title,desc,meta);  
+   box.append(item);  
+  });  
+ }catch(e){  
+  box.innerHTML='<div class="empty">Tasks লোড করা যায়নি। Firestore Rules / Admin setup বাকি।</div>';  
+ }  
+}  
+  
+/* TASK SUBMISSION */  
+async function submitTask(taskId,task){  
+ try{  
+  await db.collection('taskSubmissions').add({  
+   uid:currentUser.uid,email:currentUser.email,taskId,  
+   title:task.title||'Task',reward:Number(task.reward||0),  
+   status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()  
+  });  
+  toast('Task submission জমা হয়েছে');  
+ }catch(e){  
+  console.error(e);  
+  toast('জমা হয়নি: Firestore Rules পরীক্ষা করো');  
+ }  
+}  
+  
+/* HISTORY */  
+async function loadHistory(){  
+ const box=document.getElementById('historyList');  
+ box.innerHTML='<div class="empty">হিসাব লোড হচ্ছে...</div>';  
+  
+ try{  
+  const [tx,claims,withdrawals]=await Promise.all([  
+   db.collection('users').doc(currentUser.uid).collection('transactions').limit(30).get(),  
+   db.collection('bonusClaims').where('uid','==',currentUser.uid).limit(20).get(),  
+   db.collection('withdrawRequests').where('uid','==',currentUser.uid).limit(20).get()  
+  ]);  
+  
+  const rows=[];  
+  tx.forEach(d=>rows.push({...d.data(),kind:d.data().type||'transaction'}));  
+  claims.forEach(d=>rows.push({...d.data(),kind:'Daily Bonus'}));  
+  withdrawals.forEach(d=>rows.push({...d.data(),kind:'Withdraw'}));  
+  
+  rows.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));  
+  
+  if(!rows.length){  
+   box.innerHTML='<div class="empty">এখনো কোনো হিসাব নেই।</div>';  
+   return;  
+  }  
+  
+  box.innerHTML='';  
+  rows.slice(0,40).forEach(r=>{  
+   const el=document.createElement('div');  
+   el.className='list-item';  
+  
+   const top=document.createElement('div');  
+   top.className='row';  
+  
+   const name=document.createElement('strong');  
+   name.textContent=r.kind;  
+  
+   const status=document.createElement('span');  
+   status.className='pill';  
+   status.textContent=r.status||'approved';  
+  
+   top.append(name,status);  
+  
+   const detail=document.createElement('p');  
+   detail.className='muted';  
+   detail.style.marginTop='5px';  
+   detail.textContent='৳'+Number(r.amount||r.reward||0).toFixed(2);  
+  
+   el.append(top,detail);  
+   box.append(el);  
+  });  
+ }catch(e){  
+  console.error(e);  
+  box.innerHTML='<div class="empty">History দেখতে Firestore Rules আপডেট করতে হবে।</div>';  
+ }  
+}  
+  
+/* LOGOUT */  
+async function logout(){  
+ await auth.signOut();  
+ toast('লগআউট হয়েছে');  
+}  
+</script>  </body>  
+</html>  
+Ei code tar kogin korar pore user panel dekhte emon dekhabe 
