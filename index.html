@@ -14,6 +14,8 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{min-height:100vh;background:radial-gradient(ellipse at 10% 0%,#33206455,transparent 38%),radial-gradient(ellipse at 100% 40%,#173b7650,transparent 38%),#070916;background-attachment:fixed;color:#fff;font-family:'Hind Siliguri',Poppins,sans-serif}
 button,input,select{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+
+/* ORIGINAL LOGIN DESIGN: intentionally kept unchanged */
 .screen{max-width:520px;margin:auto;padding:20px 18px 115px}
 #loginScreen{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:25px 18px}
 .brand{text-align:center;margin-bottom:35px}.brand h1{font:800 29px Poppins;letter-spacing:-1px;text-shadow:0 5px 25px #8b55ff55}.brand h1 span,.logo span{color:#b18aff}.brand p{color:#929bb2;font-size:12px;margin-top:8px}
@@ -22,47 +24,50 @@ button,input,select{font:inherit}button{cursor:pointer;-webkit-tap-highlight-col
 .google-btn{width:100%;padding:15px;border:0;border-radius:16px;background:#fff;color:#252525;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 7px 20px #0003;transition:.2s}
 .google-btn:active{transform:scale(.97)}.google-btn:disabled{opacity:.5}.google-logo{width:21px;height:21px;flex-shrink:0}
 #status{font-size:11px;color:#c4b5fd;margin-top:17px;min-height:18px;overflow-wrap:anywhere}
+
+/* Premium user panel */
+.app-shell{max-width:560px;margin:auto;padding:16px 16px 115px}
 header{display:flex;align-items:center;justify-content:space-between;margin:3px 0 20px;padding:12px 14px;border:1px solid #ffffff12;border-radius:20px;background:linear-gradient(135deg,#171e35dd,#101629dd);box-shadow:0 8px 25px #0004;backdrop-filter:blur(18px)}
 .logo{font:800 16px Poppins;letter-spacing:-.5px}.user-chip{display:flex;align-items:center;gap:8px;max-width:48%;font-size:12px;color:#dce2f1;background:#ffffff0b;border:1px solid #ffffff12;padding:5px 9px 5px 5px;border-radius:30px}
 .user-chip img{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #a77bff}
-.balance{position:relative;overflow:hidden;padding:25px 21px;border:1px solid #ffffff35;border-radius:27px;background:radial-gradient(circle at 90% 10%,#ffffff35,transparent 35%),linear-gradient(130deg,#4920b9,#773be0 55%,#a34be9);box-shadow:0 16px 40px #7739df55}
-.balance:after{content:"";position:absolute;width:145px;height:145px;right:-40px;bottom:-75px;border:1px solid #ffffff35;border-radius:50%;box-shadow:0 0 0 18px #ffffff09,0 0 0 38px #ffffff06}
-.balance small{color:#eee0ff}.balance h2{font:700 37px Poppins;margin:7px 0;letter-spacing:-1px;text-shadow:0 3px 15px #26065c66}.balance .muted{color:#eee0ff}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:13px 0}
-.stat{background:linear-gradient(145deg,#1a2441,#10172b);border:1px solid #ffffff17;padding:17px 15px;border-radius:21px;box-shadow:0 8px 22px #0003}.stat small{color:var(--muted)}.stat strong{display:block;font:700 21px Poppins;color:#d7c3ff;margin-top:4px}
-.section-title{display:flex;align-items:center;gap:9px;font-size:19px;margin:25px 0 12px}.section-title:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#a879ff66,transparent)}
+.page{display:none;animation:fade .2s ease}.page.active{display:block}@keyframes fade{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:none}}
+.balance{position:relative;overflow:hidden;padding:25px 21px;border:1px solid #d88cff;border-radius:27px;background:radial-gradient(circle at 90% 10%,#ffffff35,transparent 35%),linear-gradient(130deg,#5710bd,#3710a0 55%,#101d86);box-shadow:0 0 26px #8b35ff55,inset 0 0 25px #ffffff12}
+.balance:after{content:"";position:absolute;width:150px;height:150px;right:-35px;bottom:-78px;border:1px solid #ffffff35;border-radius:50%;box-shadow:0 0 0 18px #ffffff09,0 0 0 38px #ffffff06}
+.balance small{color:#eee0ff;font-size:17px}.balance h2{font:800 39px Poppins;margin:8px 0;letter-spacing:-1px;text-shadow:0 3px 15px #26065c66}.balance .muted{color:#eee0ff;font-size:14px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:13px 0 20px}
+.stat{background:linear-gradient(145deg,#1a2441,#10172b);border:1px solid #ffffff20;padding:17px 15px;border-radius:21px;box-shadow:0 8px 22px #0003;display:flex;gap:10px;align-items:center}.stat .emoji{font-size:30px}.stat small{color:var(--muted)}.stat strong{display:block;font:700 21px Poppins;color:#e2d3ff;margin-top:4px}
+.section-title{display:flex;align-items:center;gap:9px;font-size:21px;margin:22px 0 12px}.section-title:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#a879ff66,transparent)}
 .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.feature{position:relative;overflow:hidden;background:radial-gradient(circle at 100% 0%,#9c6bff20,transparent 55%),linear-gradient(145deg,#1c2745,#10172a);border:1px solid #ffffff18;border-radius:21px;color:#fff;min-height:112px;padding:12px 5px;font-size:30px;box-shadow:0 8px 22px #0003;transition:.2s}
-.feature span{display:block;font-size:12px;font-weight:600;color:#e4d9ff;margin-top:5px}.feature:active{transform:scale(.95);border-color:#b18aff;box-shadow:0 0 20px #9b6cff44}
-.page{display:none}.page.active{display:block}
+.feature{position:relative;overflow:hidden;background:radial-gradient(circle at 100% 0%,#9c6bff25,transparent 55%),linear-gradient(145deg,#24185f,#10102e);border:1px solid #7045ff;border-radius:21px;color:#fff;min-height:119px;padding:12px 5px;font-size:34px;box-shadow:0 8px 22px #0003;transition:.2s}
+.feature span{display:block;font:600 13px Poppins;color:#eee5ff;margin-top:6px}.feature:active{transform:scale(.95);border-color:#e19aff;box-shadow:0 0 20px #9b6cff44}
+.invite{display:flex;align-items:center;gap:10px;margin-top:17px;padding:15px;border:1px solid #d43cff;border-radius:22px;background:linear-gradient(100deg,#5512b4,#191078)}
+.invite .meg{font-size:32px}.invite p{flex:1;font-size:14px;line-height:1.4}.invite button{border:0;border-radius:30px;padding:10px 13px;background:#ffc928;color:#1a103b;font-weight:700;white-space:nowrap}
 .topline{display:flex;align-items:center;gap:10px;margin:5px 0 20px}.back{min-width:43px;min-height:42px;border:1px solid #ffffff20;background:linear-gradient(145deg,#222e4c,#151e34);color:white;border-radius:14px;padding:8px 13px;font-size:19px}
 .page h2{font-size:22px}.page-desc{font-size:13px;color:var(--muted);margin:5px 0 16px}
 .card{background:radial-gradient(circle at 100% 0%,#9b6cff12,transparent 45%),linear-gradient(145deg,#19233d,#10172a);border:1px solid #ffffff19;border-radius:24px;padding:20px;margin-bottom:14px;box-shadow:0 12px 30px #0004}
 .action{width:100%;border:1px solid #ffffff25;border-radius:15px;padding:14px;background:linear-gradient(110deg,#7040d5,#9d61f4,#7440dc);color:white;font-weight:700;margin-top:12px;box-shadow:0 8px 22px #884de044;transition:.2s}
 .action:active{transform:scale(.97)}.action:disabled{opacity:.5;cursor:not-allowed}
-.secondary{background:linear-gradient(120deg,#263451,#1a2742);border:1px solid var(--line)}
 .field{width:100%;background:#090f20;border:1px solid #ffffff20;border-radius:14px;color:white;padding:14px;margin-top:7px;outline:none}
 .field:focus{border-color:#a879ff;box-shadow:0 0 0 3px #a879ff20}
 label{display:block;color:#d5c9f5;font-size:13px;font-weight:600;margin-top:13px}
 .row{display:flex;justify-content:space-between;gap:10px;align-items:center}
 .list-item{padding:15px 2px;border-bottom:1px solid #ffffff12}.list-item:last-child{border:0}.list-item strong{color:#f0eaff}
 .pill{font-size:11px;border-radius:20px;padding:5px 11px;background:linear-gradient(120deg,#42276c,#30204d);border:1px solid #b18aff35;color:#dfcaff}
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:end;gap:2px;padding:10px 8px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#171d35f5,#090e20fa);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);border:1px solid #ffffff18;border-bottom:0;border-radius:25px 25px 0 0;box-shadow:0 -12px 40px #0008,0 -2px 20px #8855ff20;z-index:5}
-.nav-btn{position:relative;background:transparent;border:0;color:#7e8ba9;font-size:10px;font-weight:600;min-width:0;min-height:49px;padding:5px 1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:.25s}
-.nav-btn b{display:block;font-size:23px;line-height:27px;font-weight:500;transition:.25s}.nav-btn.active{color:#d5baff;text-shadow:0 0 15px #a879ff88}.nav-btn.active b{transform:translateY(-2px);color:#c49bff}
-.nav-btn.center-nav{justify-self:center;align-self:end;width:72px;height:72px;min-height:72px;margin-top:-38px;border-radius:24px;border:2px solid #d7b8ff;background:radial-gradient(circle at 35% 20%,#e4c3ff,#a44cff 35%,#6020c9 75%);color:#fff;box-shadow:0 0 0 5px #9b6cff25,0 8px 28px #a34cff99,inset 0 2px 12px #ffffff55;z-index:2;font-size:10px;font-weight:700;transform:translateY(-2px)}
-.nav-btn.center-nav b{font-size:29px;line-height:32px;text-shadow:0 0 12px #ffd45a}.nav-btn.center-nav span{font-size:9px;font-weight:700;color:#fff}
-.nav-btn.center-nav.active{border-color:#ffe4a1;background:radial-gradient(circle at 35% 20%,#ffe8b1,#b35aff 40%,#6723cf 80%);box-shadow:0 0 0 5px #b77aff35,0 0 32px #b15cffcc,inset 0 2px 15px #ffffff66}
-.toast{position:fixed;bottom:115px;left:50%;transform:translateX(-50%);background:linear-gradient(120deg,#29204a,#172440);border:1px solid #a879ff55;padding:11px 16px;border-radius:15px;font-size:13px;display:none;z-index:10;max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;backdrop-filter:blur(15px)}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(560px,100%);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:end;gap:2px;padding:10px 8px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#171d35f5,#090e20fa);backdrop-filter:blur(25px);border:1px solid #ffffff18;border-bottom:0;border-radius:25px 25px 0 0;box-shadow:0 -12px 40px #0008;z-index:5}
+.nav-btn{background:transparent;border:0;color:#9b94c9;font-size:10px;font-weight:600;min-width:0;min-height:49px;padding:5px 1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.nav-btn b{font-size:23px;line-height:27px;font-weight:500}.nav-btn.active{color:#d5baff;text-shadow:0 0 15px #a879ff88}
+.nav-btn.center-nav{width:72px;height:72px;min-height:72px;margin-top:-38px;border-radius:50%;border:2px solid #e6b8ff;background:radial-gradient(circle at 35% 20%,#e4c3ff,#a44cff 35%,#6020c9 75%);color:#fff;box-shadow:0 0 0 5px #9b6cff25,0 8px 28px #a34cff99;font-size:10px;font-weight:700;justify-self:center}
+.nav-btn.center-nav b{font-size:29px;line-height:32px}.nav-btn.center-nav span{font-size:9px}
+.toast{position:fixed;bottom:115px;left:50%;transform:translateX(-50%);background:linear-gradient(120deg,#29204a,#172440);border:1px solid #a879ff55;padding:11px 16px;border-radius:15px;font-size:13px;display:none;z-index:10;max-width:90%;text-align:center;box-shadow:0 8px 30px #0008}
 .empty{text-align:center;color:var(--muted);font-size:13px;padding:22px 5px}
 .logout{width:100%;padding:12px;border:1px solid #b66bba55;background:linear-gradient(120deg,#442044,#2b1a35);color:white;border-radius:15px;margin-top:16px}
 .notice{font-size:12px;color:#f4d59b;background:linear-gradient(120deg,#392c1d,#2b241d);border:1px solid #ffcf7930;padding:11px;border-radius:14px;margin-top:12px;line-height:1.7}
 #profilePhoto{border:3px solid #a879ff;box-shadow:0 0 0 5px #a879ff20,0 0 25px #a879ff55}
-@media(min-width:520px){body{background:radial-gradient(circle at top,#17203a,#080b18 60%)}}
-@media(max-width:360px){.feature-grid{gap:8px}.feature{min-height:100px;font-size:26px}.nav-btn{font-size:9px}.nav-btn.center-nav{width:65px;height:65px;min-height:65px}.balance h2{font-size:32px}}
+@media(max-width:360px){.feature-grid{gap:8px}.feature{min-height:105px;font-size:28px}.nav-btn{font-size:9px}.nav-btn.center-nav{width:65px;height:65px;min-height:65px}.balance h2{font-size:32px}.invite p{font-size:12px}.invite button{font-size:11px}}
 </style>
 </head>
 <body>
+<!-- ORIGINAL LOGIN HTML: intentionally unchanged -->
 <div id="loginScreen" class="screen">
  <div class="brand"><h1>EARNING <span>MONEY BD</span></h1><p>Your earning journey starts here</p></div>
  <div class="login-card">
@@ -74,11 +79,11 @@ label{display:block;color:#d5c9f5;font-size:13px;font-weight:600;margin-top:13px
  </div>
 </div>
 
-<div id="appScreen" class="screen" style="display:none">
+<div id="appScreen" class="app-shell" style="display:none">
  <header><div class="logo">EARNING <span>MONEY BD</span></div><div class="user-chip"><img id="userPhoto" src="https://via.placeholder.com/80" alt=""><span id="userName">User</span></div></header>
  <main id="homePage" class="page active">
   <section class="balance"><small>💎 মোট ব্যালেন্স</small><h2>৳ <span id="balance">0.00</span></h2><div class="muted">তোমার Earning Money BD ওয়ালেট</div></section>
-  <section class="stats"><div class="stat"><small>আজকের আয়</small><strong>৳ <span id="todayEarn">0.00</span></strong></div><div class="stat"><small>সম্পন্ন কাজ</small><strong id="taskCount">0</strong></div></section>
+  <section class="stats"><div class="stat"><span class="emoji">📈</span><div><small>আজকের আয়</small><strong>৳ <span id="todayEarn">0.00</span></strong></div></div><div class="stat"><span class="emoji">📋</span><div><small>সম্পন্ন কাজ</small><strong id="taskCount">0</strong></div></div></section>
   <h3 class="section-title">⚡ আয় করার ফিচার</h3>
   <section class="feature-grid">
    <button class="feature" onclick="openPage('bonusPage')">🎁<span>Daily Bonus</span></button>
@@ -88,19 +93,19 @@ label{display:block;color:#d5c9f5;font-size:13px;font-weight:600;margin-top:13px
    <button class="feature" onclick="openPage('withdrawPage')">💸<span>Withdraw</span></button>
    <button class="feature" onclick="openPage('historyPage')">📜<span>History</span></button>
   </section>
+  <div class="invite"><span class="meg">📣</span><p>বন্ধুকে আমন্ত্রণ জানাও এবং বাড়াও তোমার আয়!</p><button onclick="openPage('referralPage')">Referral Now ➜</button></div>
  </main>
- <main id="bonusPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>🎁 Daily Bonus</h2></div><div class="card"><p class="muted">প্রতিদিন একবার বোনাস ক্লেইম করতে পারবে।</p><h2 style="font:700 32px Poppins;margin:12px 0">৳ <span id="bonusAmount">10.00</span></h2><span class="pill">প্রতিদিন ১ বার</span><button class="action" id="claimBonusBtn" onclick="claimBonus()">আজকের বোনাস ক্লেইম</button><p class="notice">বোনাসের টাকা Admin approval / server verification-এর পর ব্যালেন্সে যোগ হবে।</p></div></main>
- <main id="adsPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>▶️ Watch Ads</h2></div><div class="card"><h3>বিজ্ঞাপন দেখে আয়</h3><p class="page-desc">অ্যাড নেটওয়ার্ক যুক্ত হলে এখানে বিজ্ঞাপন দেখা ও রিওয়ার্ড পাওয়া যাবে।</p><div class="row"><span class="muted">প্রতি বিজ্ঞাপনের রিওয়ার্ড</span><strong>৳ <span id="adReward">0.00</span></strong></div><button class="action" disabled>বিজ্ঞাপন এখনো চালু হয়নি</button><p class="notice">বৈধ ad network ও server verification প্রয়োজন।</p></div></main>
- <main id="tasksPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>📋 Tasks</h2></div><p class="page-desc">Admin-এর দেওয়া কাজগুলো এখানে দেখা যাবে।</p><div id="taskList" class="card"><div class="empty">এখনো কোনো কাজ যোগ করা হয়নি।</div></div></main>
- <main id="referralPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>👥 Referral</h2></div><div class="card"><p class="page-desc">বন্ধুকে আমন্ত্রণ জানাও। Referral bonus Admin সেট করবে।</p><label>তোমার Referral Code</label><input class="field" id="refCode" readonly><button class="action" onclick="copyReferral()">কোড কপি করো</button><div class="notice">শুধু বৈধ নতুন ব্যবহারকারীর referral গণনা হবে।</div></div></main>
- <main id="withdrawPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>💸 Withdraw</h2></div><div class="card"><p class="page-desc">উত্তোলনের আবেদন জমা দাও। Admin যাচাই করে প্রসেস করবে।</p><label>পেমেন্ট মাধ্যম</label><select class="field" id="payMethod"><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option></select><label>অ্যাকাউন্ট নম্বর</label><input class="field" id="payNumber" inputmode="numeric" placeholder="01XXXXXXXXX"><label>টাকার পরিমাণ</label><input class="field" id="withdrawAmount" type="number" min="1" step="1" placeholder="টাকার পরিমাণ"><button class="action" onclick="submitWithdraw()">উত্তোলনের আবেদন</button><p class="notice">ন্যূনতম উত্তোলন ও চার্জ Admin Panel থেকে নির্ধারিত হবে। আবেদন Pending থাকবে।</p></div></main>
+ <main id="bonusPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>🎁 Daily Bonus</h2></div><div class="card"><p class="page-desc">প্রতিদিন একবার বোনাস ক্লেইম করতে পারবে।</p><h2 style="font:700 34px Poppins;margin:12px 0;color:#d8a2ff">৳ <span id="bonusAmount">10.00</span></h2><span class="pill">প্রতিদিন ১ বার</span><button class="action" id="claimBonusBtn" onclick="claimBonus()">আজকের বোনাস ক্লেইম</button><p class="notice">Claim করলেই বোনাস সরাসরি Wallet Balance-এ যোগ হবে।</p></div></main>
+ <main id="adsPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>▶️ Watch Ads</h2></div><div class="card"><h3>বিজ্ঞাপন দেখে আয়</h3><p class="page-desc">অ্যাড নেটওয়ার্ক যুক্ত হলে এখানে বিজ্ঞাপন দেখা ও রিওয়ার্ড পাওয়া যাবে।</p><div class="row"><span class="muted">প্রতি বিজ্ঞাপনের রিওয়ার্ড</span><strong>৳ <span id="adReward">0.00</span></strong></div><button class="action" disabled>বিজ্ঞাপন এখনো চালু হয়নি</button></div></main>
+ <main id="tasksPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>📋 Tasks</h2></div><p class="page-desc">Admin-এর দেওয়া কাজগুলো এখানে দেখা যাবে।</p><div id="taskList" class="card"><div class="empty">কাজ লোড হচ্ছে...</div></div></main>
+ <main id="referralPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>👥 Referral</h2></div><div class="card"><p class="page-desc">বন্ধুকে আমন্ত্রণ জানাও।</p><label>তোমার Referral Code</label><input class="field" id="refCode" readonly><button class="action" onclick="copyReferral()">কোড কপি করো</button><div class="notice">Referral tracking পরবর্তী ধাপে নিরাপদভাবে যুক্ত হবে।</div></div></main>
+ <main id="withdrawPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>💸 Withdraw</h2></div><div class="card"><p class="page-desc">উত্তোলনের আবেদন জমা দাও। Admin যাচাই করে প্রসেস করবে।</p><label>পেমেন্ট মাধ্যম</label><select class="field" id="payMethod"><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option></select><label>অ্যাকাউন্ট নম্বর</label><input class="field" id="payNumber" inputmode="numeric" placeholder="01XXXXXXXXX" maxlength="11"><label>টাকার পরিমাণ</label><input class="field" id="withdrawAmount" type="number" min="1" step="1" placeholder="টাকার পরিমাণ"><button class="action" onclick="submitWithdraw()">উত্তোলনের আবেদন</button><p class="notice">উত্তোলনের আবেদন Pending থাকবে যতক্ষণ Admin যাচাই না করে।</p></div></main>
  <main id="historyPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>📜 History</h2></div><div class="card" id="historyList"><div class="empty">হিসাব লোড হচ্ছে...</div></div></main>
- <main id="profilePage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>👤 Profile</h2></div><div class="card"><div style="text-align:center"><img id="profilePhoto" src="https://via.placeholder.com/100" style="width:76px;height:76px;border-radius:50%;object-fit:cover" alt=""><h3 id="profileName" style="margin-top:8px">User</h3><p class="muted" id="profileEmail"></p></div><div class="list-item"><span class="muted">User ID</span><p id="profileUid" style="font-size:11px;overflow-wrap:anywhere"></p></div><div class="list-item"><span class="muted">Account status</span><p>Active</p></div><button class="logout" onclick="logout()">Log Out</button></div></main>
+ <main id="profilePage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>👤 Profile</h2></div><div class="card"><div style="text-align:center"><img id="profilePhoto" src="https://via.placeholder.com/100" style="width:76px;height:76px;border-radius:50%;object-fit:cover" alt=""><h3 id="profileName" style="margin-top:8px">User</h3><p class="muted" id="profileEmail"></p></div><div class="list-item"><span class="muted">User ID</span><p id="profileUid" style="font-size:11px;overflow-wrap:anywhere"></p></div><button class="logout" onclick="logout()">Log Out</button></div></main>
 </div>
-
 <nav class="bottom-nav" id="bottomNav" style="display:none">
  <button class="nav-btn active" data-page="homePage" onclick="openPage('homePage',this)"><b>⌂</b><span>Home</span></button>
- <button class="nav-btn" data-page="tasksPage" onclick="openPage('tasksPage',this)"><b>▤</b><span>Tasks</span></button>
+ <button class="nav-btn" data-page="tasksPage" onclick="openPage('tasksPage',this)"><b>☷</b><span>Tasks</span></button>
  <button class="nav-btn center-nav" data-page="bonusPage" onclick="openPage('bonusPage',this)"><b>🎁</b><span>Daily Bonus</span></button>
  <button class="nav-btn" data-page="historyPage" onclick="openPage('historyPage',this)"><b>◷</b><span>History</span></button>
  <button class="nav-btn" data-page="profilePage" onclick="openPage('profilePage',this)"><b>♙</b><span>Profile</span></button>
@@ -121,6 +126,7 @@ firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth(),db=firebase.firestore(),provider=new firebase.auth.GoogleAuthProvider();
 let currentUser=null,appSettings={dailyBonus:10,adReward:0,minWithdraw:0},userData={balance:0};
 function toast(message){const t=document.getElementById('toast');t.textContent=message;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',2600)}
+function todayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function openPage(id){
  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
  document.getElementById(id).classList.add('active');
@@ -143,7 +149,7 @@ auth.onAuthStateChanged(async user=>{
   const ref=db.collection('users').doc(user.uid),snap=await ref.get();
   if(!snap.exists)await ref.set({name:user.displayName||'User',email:user.email,photoURL:user.photoURL||'',balance:0,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
   const fresh=await ref.get();userData=fresh.data()||{balance:0};
-  document.getElementById('balance').textContent=Number(userData.balance||0).toFixed(2);
+  renderUserData();
   document.getElementById('userName').textContent=user.displayName||'User';
   document.getElementById('userPhoto').src=user.photoURL||'https://via.placeholder.com/80';
   document.getElementById('profilePhoto').src=user.photoURL||'https://via.placeholder.com/100';
@@ -157,9 +163,14 @@ auth.onAuthStateChanged(async user=>{
   document.getElementById('bottomNav').style.display='grid';
  }catch(e){console.error(e);document.getElementById('status').textContent='Database Error: '+e.message;toast('ডেটাবেসে সমস্যা হয়েছে')}
 });
+function renderUserData(){
+ document.getElementById('balance').textContent=Number(userData.balance||0).toFixed(2);
+}
 async function loadSettings(){
- try{const s=await db.collection('appConfig').doc('public').get();if(s.exists)appSettings={...appSettings,...s.data()}}
- catch(e){console.log('Settings not published yet',e.message)}
+ try{
+  const s=await db.collection('appConfig').doc('public').get();
+  if(s.exists)appSettings={...appSettings,...s.data()};
+ }catch(e){console.error('Settings read error',e);toast('Admin-এর Bonus Settings পড়া যায়নি')}
  document.getElementById('bonusAmount').textContent=Number(appSettings.dailyBonus??10).toFixed(2);
  document.getElementById('adReward').textContent=Number(appSettings.adReward??0).toFixed(2);
 }
@@ -171,20 +182,56 @@ async function loadTodayStats(){
   q.forEach(d=>{const x=d.data();if(x.status==='approved'&&Number(x.amount)>0){total+=Number(x.amount);if(x.type==='task')count++}});
   document.getElementById('todayEarn').textContent=total.toFixed(2);
   document.getElementById('taskCount').textContent=count;
- }catch(e){console.log(e.message)}
+ }catch(e){console.log('Stats:',e.message)}
 }
+
+/*
+ Daily Bonus: one atomic Firestore transaction.
+ Claim document + wallet increment + transaction history are committed together.
+ Firestore Security Rules must enforce the matching claim and balance increment.
+*/
 async function claimBonus(){
  if(!currentUser)return;
  const btn=document.getElementById('claimBonusBtn');btn.disabled=true;
  try{
-  const now=new Date(),today=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
-  const uid=currentUser.uid,claimRef=db.collection('bonusClaims').doc(uid+'_'+today);
-  const old=await claimRef.get();
-  if(old.exists){toast('আজকের বোনাসের আবেদন আগেই করা হয়েছে');return}
-  await claimRef.set({uid,email:currentUser.email,name:currentUser.displayName||'User',amount:Number(appSettings.dailyBonus??10),date:today,status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-  toast('৳'+Number(appSettings.dailyBonus??10)+' বোনাসের আবেদন জমা হয়েছে');
- }catch(e){console.error(e);toast('আবেদন জমা হয়নি: Firestore Rules সেট করতে হবে')}
- finally{btn.disabled=false}
+  const uid=currentUser.uid,today=todayKey(),amount=Number(appSettings.dailyBonus);
+  if(!Number.isFinite(amount)||amount<=0)throw new Error('Admin-এর Bonus amount সঠিক নয়');
+  const userRef=db.collection('users').doc(uid);
+  const claimRef=db.collection('bonusClaims').doc(uid+'_'+today);
+  const historyRef=userRef.collection('transactions').doc('bonus_'+today);
+  await db.runTransaction(async transaction=>{
+   const [userSnap,claimSnap,configSnap]=await Promise.all([
+    transaction.get(userRef),transaction.get(claimRef),transaction.get(db.collection('appConfig').doc('public'))
+   ]);
+   if(!userSnap.exists)throw new Error('User account পাওয়া যায়নি');
+   if(claimSnap.exists)throw new Error('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');
+   if(!configSnap.exists)throw new Error('Admin Bonus Settings পাওয়া যায়নি');
+   const liveAmount=Number(configSnap.data().dailyBonus);
+   if(!Number.isFinite(liveAmount)||liveAmount<=0)throw new Error('Admin Bonus amount সঠিক নয়');
+   const oldBalance=Number(userSnap.data().balance||0);
+   transaction.create(claimRef,{
+    uid:uid,email:currentUser.email||'',name:currentUser.displayName||'User',
+    amount:liveAmount,date:today,status:'approved',
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+   });
+   transaction.update(userRef,{
+    balance:oldBalance+liveAmount,
+    totalEarned:firebase.firestore.FieldValue.increment(liveAmount),
+    lastBonusDate:today,lastBonusClaimId:uid+'_'+today
+   });
+   transaction.set(historyRef,{
+    type:'daily_bonus',amount:liveAmount,status:'approved',date:today,
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+   });
+  });
+  const updated=await userRef.get();userData=updated.data()||userData;renderUserData();
+  await loadTodayStats();
+  toast('অভিনন্দন! ৳'+amount.toFixed(2)+' Wallet-এ যোগ হয়েছে।');
+ }catch(e){
+  console.error('Daily bonus claim:',e);
+  if(e.message&&e.message.toLowerCase().includes('already'))toast('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');
+  else toast(e.message||'বোনাস যোগ হয়নি। Firestore Rules পরীক্ষা করো।');
+ }finally{btn.disabled=false}
 }
 async function submitWithdraw(){
  if(!currentUser)return;
@@ -192,10 +239,11 @@ async function submitWithdraw(){
  if(!/^01[0-9]{9}$/.test(number)){toast('সঠিক ১১ সংখ্যার মোবাইল নম্বর দাও');return}
  if(!Number.isFinite(amount)||amount<=0){toast('সঠিক টাকার পরিমাণ দাও');return}
  if(amount<Number(appSettings.minWithdraw||0)){toast('ন্যূনতম উত্তোলন ৳'+appSettings.minWithdraw);return}
+ if(amount>Number(userData.balance||0)){toast('পর্যাপ্ত ব্যালেন্স নেই');return}
  try{
   await db.collection('withdrawRequests').add({uid:currentUser.uid,email:currentUser.email,method,number,amount,status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
   toast('উত্তোলনের আবেদন জমা হয়েছে');document.getElementById('payNumber').value='';document.getElementById('withdrawAmount').value='';
- }catch(e){console.error(e);toast('আবেদন জমা হয়নি: Firestore Rules সেট করতে হবে')}
+ }catch(e){console.error(e);toast('আবেদন জমা হয়নি: Firestore Rules পরীক্ষা করো')}
 }
 async function copyReferral(){
  const code=document.getElementById('refCode').value;
@@ -220,10 +268,8 @@ async function loadTasks(){
  }catch(e){box.innerHTML='<div class="empty">Tasks লোড করা যায়নি। Firestore Rules / Admin setup বাকি।</div>'}
 }
 async function submitTask(taskId,task){
- try{
-  await db.collection('taskSubmissions').add({uid:currentUser.uid,email:currentUser.email,taskId,title:task.title||'Task',reward:Number(task.reward||0),status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-  toast('Task submission জমা হয়েছে');
- }catch(e){console.error(e);toast('জমা হয়নি: Firestore Rules সেট করতে হবে')}
+ try{await db.collection('taskSubmissions').add({uid:currentUser.uid,email:currentUser.email,taskId,title:task.title||'Task',reward:Number(task.reward||0),status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()});toast('Task submission জমা হয়েছে')}
+ catch(e){console.error(e);toast('জমা হয়নি: Firestore Rules পরীক্ষা করো')}
 }
 async function loadHistory(){
  const box=document.getElementById('historyList');box.innerHTML='<div class="empty">হিসাব লোড হচ্ছে...</div>';
@@ -233,8 +279,7 @@ async function loadHistory(){
    db.collection('bonusClaims').where('uid','==',currentUser.uid).limit(20).get(),
    db.collection('withdrawRequests').where('uid','==',currentUser.uid).limit(20).get()
   ]);
-  const rows=[];
-  tx.forEach(d=>rows.push({...d.data(),kind:d.data().type||'transaction'}));
+  const rows=[];tx.forEach(d=>rows.push({...d.data(),kind:d.data().type||'transaction'}));
   claims.forEach(d=>rows.push({...d.data(),kind:'Daily Bonus'}));
   withdrawals.forEach(d=>rows.push({...d.data(),kind:'Withdraw'}));
   rows.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
