@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#080b18">
+<meta name="theme-color" content="#080511">
 <title>Earning Money BD</title>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
-:root{--bg:#070916;--panel:#11182d;--muted:#a4aec8;--purple:#a879ff;--line:#ffffff19;--green:#42d6a0}
+:root{--bg:#080511;--panel:#171027;--muted:#b7a9ce;--purple:#b58aff;--line:#ffffff19;--green:#42d6a0}
 *{box-sizing:border-box;margin:0;padding:0}
-body{min-height:100vh;background:radial-gradient(ellipse at 10% 0%,#33206455,transparent 38%),radial-gradient(ellipse at 100% 40%,#173b7650,transparent 38%),#070916;background-attachment:fixed;color:#fff;font-family:'Hind Siliguri',Poppins,sans-serif}
+body{min-height:100vh;background:radial-gradient(ellipse at 15% 0%,#55238c55,transparent 38%),radial-gradient(ellipse at 95% 35%,#35105d55,transparent 40%),#080511;background-attachment:fixed;color:#fff;font-family:'Hind Siliguri',Poppins,sans-serif}
 button,input,select{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 
 /* ORIGINAL LOGIN DESIGN — unchanged */
@@ -25,70 +25,85 @@ button,input,select{font:inherit}button{cursor:pointer;-webkit-tap-highlight-col
 .google-btn:active{transform:scale(.97)}.google-btn:disabled{opacity:.5}.google-logo{width:21px;height:21px;flex-shrink:0}
 #status{font-size:11px;color:#c4b5fd;margin-top:17px;min-height:18px;overflow-wrap:anywhere}
 
-/* PREMIUM HOME DASHBOARD */
+/* PREMIUM USER DASHBOARD */
 .app-shell{max-width:560px;margin:auto;padding:12px 15px 135px}
-header{display:flex;align-items:center;justify-content:space-between;margin:3px 0 17px;padding:10px 2px 14px;border:0;border-bottom:1px solid #168bff38;border-radius:0;background:transparent;box-shadow:0 10px 28px #00133b33}
+header{display:flex;align-items:center;justify-content:space-between;margin:3px 0 17px;padding:10px 2px 14px;border:0;border-bottom:1px solid #a66cff35;border-radius:0;background:transparent;box-shadow:0 10px 28px #00133b33}
 .logo{font:800 16px Poppins;letter-spacing:-.5px}.logo span{color:#ffd52d}
-.user-chip{display:flex;align-items:center;gap:8px;max-width:48%;font-size:12px;color:#dceaff;background:#071b3d;border:1px solid #178cff77;padding:5px 9px 5px 5px;border-radius:30px;box-shadow:0 0 16px #087cff22}
-.user-chip img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #13bfff}
+.user-chip{display:flex;align-items:center;gap:8px;max-width:48%;font-size:12px;color:#f0e5ff;background:linear-gradient(135deg,#28163f,#160e27);border:1px solid #a66cff55;padding:5px 9px 5px 5px;border-radius:30px;box-shadow:0 5px 20px #0008,0 0 15px #9d5bff18}
+.user-chip img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #c18aff}
 .page{display:none;animation:fade .2s ease}.page.active{display:block}@keyframes fade{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:none}}
+
 /* Wallet */
-.balance{position:relative;overflow:hidden;display:grid;grid-template-columns:78px 1fr;align-items:center;gap:12px;padding:20px 16px;border:1.5px solid #08caff;border-radius:25px;background:radial-gradient(ellipse at 90% 0%,#167aff77,transparent 48%),linear-gradient(120deg,#062d70,#061c4d 55%,#080d35);box-shadow:0 0 24px #008cff55,inset 0 0 25px #20aaff18}
-.wallet-icon{font-size:58px;filter:drop-shadow(0 5px 12px #008dff88);text-align:center}
-.balance-content{min-width:0}.balance small{color:#d6edff;font-size:14px}.balance h2{font:800 34px Poppins;margin:4px 0 8px;letter-spacing:-1px;color:#ffe52d;text-shadow:0 0 16px #ffcb2666}.balance .muted{color:#c7dcff;font-size:11px}
+.balance{position:relative;overflow:hidden;display:grid;grid-template-columns:78px 1fr;align-items:center;gap:12px;padding:20px 16px;border:1px solid #bd8aff88;border-radius:25px;background:radial-gradient(circle at 90% 10%,#a45bff55,transparent 45%),linear-gradient(135deg,#321653,#1b1030 65%,#100b20);box-shadow:0 15px 35px #0009,inset 0 1px 1px #ffffff25,0 0 22px #a45bff22}
+.wallet-icon{font-size:58px;filter:drop-shadow(0 5px 12px #a45bff88);text-align:center}
+.balance-content{min-width:0}.balance small{color:#eadcff;font-size:14px}.balance h2{font:800 34px Poppins;margin:4px 0 8px;letter-spacing:-1px;color:#e4caff;text-shadow:0 0 18px #b46aff88}.balance .muted{color:#d3c1eb;font-size:11px}
 .balance-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.withdraw-shortcut{border:1px solid #18d7ff;border-radius:30px;padding:8px 13px;background:linear-gradient(110deg,#00bfff,#174dff);color:#fff;font-size:12px;font-weight:700;box-shadow:0 0 16px #00aaff66}
+.withdraw-shortcut{border:1px solid #e1c4ff;border-radius:30px;padding:8px 13px;background:linear-gradient(135deg,#c08aff,#7434c7);color:#fff;font-size:12px;font-weight:700;box-shadow:0 5px 15px #8b43d866}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 19px}
-.stat{background:linear-gradient(145deg,#0d2d60,#091a3c);border:1px solid #167bdc88;padding:13px 12px;border-radius:17px;box-shadow:0 7px 20px #0004;display:flex;gap:9px;align-items:center}.stat .emoji{font-size:25px}.stat small{color:#b8d5ff;font-size:11px}.stat strong{display:block;font:700 17px Poppins;color:#ffe34d;margin-top:3px}
-.section-title{display:flex;align-items:center;gap:9px;font-size:19px;margin:20px 0 11px}.section-title:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#08bfff88,transparent)}
-/* Four colorful dashboard tiles */
-.feature-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
-.feature{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(150deg,#0752a9,#071b55);border:1.5px solid #08bfff;border-radius:19px;color:#fff;min-height:124px;padding:11px 3px;font-size:34px;box-shadow:0 7px 19px #001c4b99,inset 0 0 18px #3ebdff18;transition:.2s}
-.feature:nth-child(2){background:linear-gradient(150deg,#008a65,#063b48);border-color:#00e6a0;box-shadow:0 0 17px #00e6a033}
-.feature:nth-child(3){background:linear-gradient(150deg,#6510bd,#20105c);border-color:#b34cff;box-shadow:0 0 17px #a44bff33}
-.feature:nth-child(4){background:linear-gradient(150deg,#a94b00,#522000);border-color:#ffb21c;box-shadow:0 0 17px #ff9e0033}
-.feature span{display:block;font:600 11px 'Hind Siliguri',Poppins;color:#fff;margin-top:7px;white-space:nowrap}
-.feature:active{transform:scale(.95);filter:brightness(1.2)}
-.feature .sub{font:500 9px Poppins;color:#d4eaff;margin-top:2px}
-.invite{position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;margin-top:16px;padding:14px 12px;border:1.5px solid #a13cff;border-radius:20px;background:radial-gradient(circle at 90% 0%,#a83dff55,transparent 45%),linear-gradient(105deg,#3d087d,#15105a 70%,#071b50);box-shadow:0 0 20px #8d35ff33}
-.invite .meg{font-size:37px}.invite p{flex:1;font-size:13px;line-height:1.4}.invite p strong{display:block;font-size:16px;color:#ffe34d}.invite button{border:1px solid #d99aff;border-radius:30px;padding:9px 12px;background:linear-gradient(110deg,#c02cff,#6d21dc);color:white;font-size:11px;font-weight:700;white-space:nowrap;box-shadow:0 0 14px #b334ff66}
-.activity{margin-top:17px;padding:15px 14px;border:1px solid #1c65b9;border-radius:20px;background:linear-gradient(145deg,#0c1d42,#080f29);box-shadow:0 10px 25px #0005}
-.activity-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.activity-head h3{font-size:17px}.activity-head button{border:1px solid #2879d8;background:#102d65;color:#d9efff;border-radius:22px;padding:6px 10px;font-size:11px}
-.activity .empty{padding:17px 4px;color:#a9c4e9}
-.topline{display:flex;align-items:center;gap:10px;margin:5px 0 20px}.back{min-width:43px;min-height:42px;border:1px solid #ffffff20;background:linear-gradient(145deg,#222e4c,#151e34);color:white;border-radius:14px;padding:8px 13px;font-size:19px}
+.stat{background:linear-gradient(145deg,#291942,#171027);border:1px solid #8952bb77;padding:13px 12px;border-radius:17px;box-shadow:0 8px 20px #0008,inset 0 1px 1px #ffffff12;display:flex;gap:9px;align-items:center}.stat .emoji{font-size:25px}.stat small{color:#d0bce8;font-size:11px}.stat strong{display:block;font:700 17px Poppins;color:#dfbdff;margin-top:3px}
+.section-title{display:flex;align-items:center;gap:9px;font-size:19px;margin:20px 0 11px}.section-title:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#b16cff,transparent)}
+
+/* Six premium 3D feature cards */
+.feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.feature{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;background:linear-gradient(145deg,#392052,#1b102b 65%,#100a1c);border:1px solid #c99aff66;border-radius:23px;color:#fff;min-height:145px;padding:17px 10px;font-size:14px;box-shadow:0 12px 22px #0009,inset 0 1px 1px #ffffff30,inset 0 -8px 15px #0005;transition:.2s}
+.feature:before{content:"";position:absolute;top:0;left:15%;width:70%;height:1px;background:linear-gradient(90deg,transparent,#e9d5ff,transparent)}
+.feature:after{content:"";position:absolute;width:100px;height:100px;top:-55px;right:-40px;border-radius:50%;background:#c18aff20;filter:blur(15px)}
+.feature b{width:57px;height:57px;display:flex;align-items:center;justify-content:center;border-radius:18px;font-size:29px;background:linear-gradient(145deg,#7545a3,#35204f);border:1px solid #d4aaff77;box-shadow:0 7px 14px #0008,inset 0 2px 8px #ffffff35}
+.feature span{display:block;font:700 14px 'Hind Siliguri',Poppins;color:#f3e8ff;margin:0;white-space:nowrap}
+.feature small{font:500 10px Poppins,sans-serif;color:#bca6d8}
+.feature:active{transform:scale(.96);filter:brightness(1.15)}
+.feature-bonus b{background:linear-gradient(145deg,#a35ce0,#54217f)}
+.feature-ads b{background:linear-gradient(145deg,#8b61db,#38216c)}
+.feature-tasks b{background:linear-gradient(145deg,#bd75e9,#562b85)}
+.feature-referral b{background:linear-gradient(145deg,#a65bc7,#51205f)}
+.feature-withdraw b{background:linear-gradient(145deg,#9b65c5,#45215e)}
+.feature-history b{background:linear-gradient(145deg,#7657bd,#30205d)}
+
+/* Referral banner */
+.invite{position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;margin-top:16px;padding:14px 12px;border:1px solid #c08aff77;border-radius:20px;background:linear-gradient(125deg,#49216c,#24133c 65%,#120b22);box-shadow:0 10px 25px #0008,0 0 20px #9c53e522}
+.invite .meg{font-size:37px}.invite p{flex:1;font-size:13px;line-height:1.4}.invite p strong{display:block;font-size:16px;color:#ead0ff}.invite button{border:1px solid #e2c5ff;border-radius:30px;padding:9px 12px;background:linear-gradient(135deg,#bd83f3,#7132b8);color:white;font-size:11px;font-weight:700;white-space:nowrap;box-shadow:0 0 14px #b334ff44}
+
+/* Recent Activity */
+.activity{margin-top:17px;padding:15px 14px;border:1px solid #9b69cb66;border-radius:23px;background:linear-gradient(145deg,#211432,#120d20);box-shadow:0 12px 25px #0008,inset 0 1px 1px #ffffff15}
+.activity-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.activity-head h3{font-size:17px;color:#f0e3ff}.activity-head button{border:1px solid #b88be7;background:linear-gradient(135deg,#58327b,#301b4b);color:#f2e5ff;border-radius:22px;padding:6px 10px;font-size:11px}
+.activity .empty{padding:17px 4px;color:#c5b2df}
+
+.topline{display:flex;align-items:center;gap:10px;margin:5px 0 20px}.back{min-width:43px;min-height:42px;border:1px solid #ffffff20;background:linear-gradient(145deg,#392653,#20142f);color:white;border-radius:14px;padding:8px 13px;font-size:19px}
 .page h2{font-size:22px}.page-desc{font-size:13px;color:var(--muted);margin:5px 0 16px}
-.card{background:radial-gradient(circle at 100% 0%,#168cff18,transparent 45%),linear-gradient(145deg,#10254a,#10172a);border:1px solid #1684df55;border-radius:22px;padding:19px;margin-bottom:14px;box-shadow:0 12px 30px #0004}
-.action{width:100%;border:1px solid #28cfff;border-radius:15px;padding:14px;background:linear-gradient(110deg,#087bdf,#2451e8,#713be0);color:white;font-weight:700;margin-top:12px;box-shadow:0 8px 22px #087bdf44;transition:.2s}
+.card{background:linear-gradient(145deg,#28183c,#171027);border:1px solid #9e6ac766;border-radius:22px;padding:19px;margin-bottom:14px;box-shadow:0 12px 28px #0008,inset 0 1px 1px #ffffff12}
+.action{width:100%;border:1px solid #d4aaff88;border-radius:15px;padding:14px;background:linear-gradient(135deg,#a968df,#6532a5,#3e206b);color:white;font-weight:700;margin-top:12px;box-shadow:0 8px 20px #8d4bc744;transition:.2s}
 .action:active{transform:scale(.97)}.action:disabled{opacity:.5;cursor:not-allowed}
-.field{width:100%;background:#090f20;border:1px solid #ffffff20;border-radius:14px;color:white;padding:14px;margin-top:7px;outline:none}
-.field:focus{border-color:#168cff;box-shadow:0 0 0 3px #168cff20}
-label{display:block;color:#d5e7ff;font-size:13px;font-weight:600;margin-top:13px}
+.field{width:100%;background:#100b1b;border:1px solid #8d61b355;border-radius:14px;color:white;padding:14px;margin-top:7px;outline:none}
+.field:focus{border-color:#c18aff;box-shadow:0 0 0 3px #a45bff25}
+label{display:block;color:#e2d3f5;font-size:13px;font-weight:600;margin-top:13px}
 .row{display:flex;justify-content:space-between;gap:10px;align-items:center}
 .list-item{padding:15px 2px;border-bottom:1px solid #ffffff12}.list-item:last-child{border:0}.list-item strong{color:#f0eaff}
-.pill{font-size:11px;border-radius:20px;padding:5px 11px;background:linear-gradient(120deg,#123b73,#30204d);border:1px solid #3c8eea55;color:#d5eaff}
-.bottom-nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(560px,100%);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;gap:2px;padding:11px 8px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(5,22,57,.98),rgba(2,8,28,.99));-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border:1.5px solid #08bfff;border-bottom:0;border-radius:27px 27px 0 0;box-shadow:0 -8px 32px #007bff55,0 -2px 18px #00d5ff33;z-index:20}
-.bottom-nav:before{content:"";position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,#00d9ff,#fff,#168cff,transparent);box-shadow:0 0 12px #00cfff}
-.nav-btn{position:relative;isolation:isolate;min-width:0;min-height:59px;padding:5px 1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1px solid transparent;border-radius:16px;background:transparent;color:#d6e6ff;font-family:'Hind Siliguri',Poppins,sans-serif;font-size:10px;font-weight:600;transition:.2s}
+.pill{font-size:11px;border-radius:20px;padding:5px 11px;background:linear-gradient(120deg,#39245a,#251638);border:1px solid #a66cff55;color:#eadcff}
+
+/* Premium bottom navigation */
+.bottom-nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(560px,100%);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;gap:2px;padding:11px 8px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#241536f5,#100a1cfb);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border:1px solid #a66bdb77;border-bottom:0;border-radius:27px 27px 0 0;box-shadow:0 -10px 35px #000b,0 -3px 22px #9c55e52b;z-index:20}
+.bottom-nav:before{content:"";position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,#b77aff,#f0d9ff,#b77aff,transparent);box-shadow:0 0 15px #b77aff}
+.nav-btn{position:relative;isolation:isolate;min-width:0;min-height:59px;padding:5px 1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1px solid transparent;border-radius:16px;background:transparent;color:#bcaed0;font-family:'Hind Siliguri',Poppins,sans-serif;font-size:10px;font-weight:600;transition:.2s}
 .nav-btn b{width:30px;height:29px;display:flex;align-items:center;justify-content:center;font-size:24px;line-height:1;font-weight:500;filter:drop-shadow(0 2px 6px #0008)}
 .nav-btn span{white-space:nowrap;line-height:1.1}
-.nav-btn.active:not(.center-nav){color:#fff;background:linear-gradient(180deg,#0755b877,#07306a22);border-color:#13bfff55;box-shadow:inset 0 0 17px #078dff22}
-.nav-btn.active:not(.center-nav):after{content:"";position:absolute;bottom:1px;left:22%;right:22%;height:3px;border-radius:5px;background:linear-gradient(90deg,#00cfff,#b5f4ff);box-shadow:0 0 12px #00bfff}
+.nav-btn.active:not(.center-nav){color:#fff;background:linear-gradient(180deg,#71439b66,#3a205322);border-color:#c08aff55;box-shadow:inset 0 0 15px #a45bff22}
+.nav-btn.active:not(.center-nav):after{content:"";position:absolute;bottom:1px;left:22%;right:22%;height:3px;border-radius:5px;background:linear-gradient(90deg,#a45bff,#e5caff);box-shadow:0 0 12px #b77aff}
 .nav-btn:active{transform:scale(.92)}
-.nav-btn.center-nav{width:82px;height:82px;min-height:82px;margin-top:-40px;justify-self:center;align-self:center;border:2px solid #a8f5ff;border-radius:50%;gap:2px;color:#fff;background:radial-gradient(circle at 32% 20%,#70eaff 0%,#087bff 35%,#102d9b 75%,#071849 100%);box-shadow:0 0 0 5px #087bff33,0 0 0 8px #00d9ff1c,0 8px 28px #007bff99,inset 0 2px 12px #ffffff88;font-weight:700}
-.nav-btn.center-nav b{width:37px;height:37px;font-size:31px}
+.nav-btn.center-nav{width:84px;height:84px;min-height:84px;margin-top:-42px;justify-self:center;align-self:center;border:2px solid #e5c5ff;border-radius:50%;gap:2px;color:#fff;background:radial-gradient(circle at 30% 20%,#e5c4ff 0%,#b16be8 28%,#7134b1 65%,#321450 100%);box-shadow:0 0 0 5px #9b5bd633,0 0 0 9px #c18aff18,0 9px 30px #000b,0 0 28px #a45bff99,inset 0 3px 12px #ffffff99;font-weight:700}
+.nav-btn.center-nav b{width:37px;height:37px;font-size:32px}
 .nav-btn.center-nav span{font-size:10px;color:#fff}
-.nav-btn.center-nav.active{box-shadow:0 0 0 5px #087bff44,0 0 0 8px #00d9ff25,0 0 34px #00aaffcc,inset 0 2px 13px #ffffff99}
-.toast{position:fixed;bottom:125px;left:50%;transform:translateX(-50%);background:linear-gradient(120deg,#123b73,#172440);border:1px solid #168cff88;padding:11px 16px;border-radius:15px;font-size:13px;display:none;z-index:30;max-width:90%;text-align:center;box-shadow:0 8px 30px #0008}
+.nav-btn.center-nav.active{box-shadow:0 0 0 5px #a45bff55,0 0 0 9px #d2a3ff22,0 0 35px #b16be8cc,inset 0 3px 13px #ffffffaa}
+.toast{position:fixed;bottom:125px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#49266b,#211432);border:1px solid #bd8aff88;padding:11px 16px;border-radius:15px;font-size:13px;display:none;z-index:30;max-width:90%;text-align:center;box-shadow:0 8px 30px #0008}
 .empty{text-align:center;color:var(--muted);font-size:13px;padding:22px 5px}
 .logout{width:100%;padding:12px;border:1px solid #b66bba55;background:linear-gradient(120deg,#442044,#2b1a35);color:white;border-radius:15px;margin-top:16px}
-.notice{font-size:12px;color:#f4d59b;background:linear-gradient(120deg,#392c1d,#2b241d);border:1px solid #ffcf7930;padding:11px;border-radius:14px;margin-top:12px;line-height:1.7}
-#profilePhoto{border:3px solid #168cff;box-shadow:0 0 0 5px #168cff20,0 0 25px #168cff55}
+.notice{font-size:12px;color:#f4d9ff;background:linear-gradient(120deg,#392448,#2b1d36);border:1px solid #c18aff30;padding:11px;border-radius:14px;margin-top:12px;line-height:1.7}
+#profilePhoto{border:3px solid #b77aff;box-shadow:0 0 0 5px #a45bff20,0 0 25px #a45bff55}
 @media(max-width:390px){
  .app-shell{padding-left:11px;padding-right:11px}
- .feature-grid{gap:7px}.feature{min-height:112px;border-radius:16px;font-size:30px}.feature span{font-size:10px}
+ .feature-grid{gap:10px}.feature{min-height:132px;border-radius:19px}.feature span{font-size:13px}
  .balance{grid-template-columns:60px 1fr;padding:17px 12px;gap:8px}.wallet-icon{font-size:47px}.balance h2{font-size:29px}
  .nav-btn{font-size:9px;min-height:55px}.nav-btn b{font-size:21px}
- .nav-btn.center-nav{width:72px;height:72px;min-height:72px;margin-top:-34px}.nav-btn.center-nav b{font-size:27px}
+ .nav-btn.center-nav{width:74px;height:74px;min-height:74px;margin-top:-36px}.nav-btn.center-nav b{font-size:27px}
  .invite p{font-size:11px}.invite p strong{font-size:14px}.invite button{font-size:10px;padding:8px}
 }
 </style>
@@ -107,7 +122,7 @@ label{display:block;color:#d5e7ff;font-size:13px;font-weight:600;margin-top:13px
 </div>
 
 <div id="appScreen" class="app-shell" style="display:none">
- <header><div class="logo">EARNING <span>MONEY BD</span><div style="font:500 10px 'Hind Siliguri';color:#b9d9ff;margin-top:3px">Play • Earn • Withdraw</div></div><div class="user-chip"><img id="userPhoto" src="https://via.placeholder.com/80" alt=""><span id="userName">User</span></div></header>
+ <header><div class="logo">EARNING <span>MONEY BD</span><div style="font:500 10px 'Hind Siliguri';color:#d0bce8;margin-top:3px">Play • Earn • Withdraw</div></div><div class="user-chip"><img id="userPhoto" src="https://via.placeholder.com/80" alt=""><span id="userName">User</span></div></header>
  <main id="homePage" class="page active">
   <section class="balance">
    <div class="wallet-icon">👛</div>
@@ -119,19 +134,18 @@ label{display:block;color:#d5e7ff;font-size:13px;font-weight:600;margin-top:13px
   </section>
   <h3 class="section-title">⚡ Quick Access</h3>
   <section class="feature-grid">
-   <button class="feature" onclick="openPage('tasksPage')">📋<span>Tasks</span><span class="sub">Earn More</span></button>
-   <button class="feature" onclick="openPage('bonusPage')">🎁<span>Daily Bonus</span><span class="sub">Get Bonus</span></button>
-   <button class="feature" onclick="openPage('historyPage')">◷<span>History</span><span class="sub">View History</span></button>
-   <button class="feature" onclick="openPage('profilePage')">👤<span>Profile</span><span class="sub">My Account</span></button>
+   <button class="feature feature-bonus" onclick="openPage('bonusPage')"><b>🎁</b><span>Daily Bonus</span><small>Daily Reward</small></button>
+   <button class="feature feature-ads" onclick="openPage('adsPage')"><b>▶️</b><span>Watch Ads</span><small>Watch & Earn</small></button>
+   <button class="feature feature-tasks" onclick="openPage('tasksPage')"><b>📋</b><span>Tasks</span><small>Complete Tasks</small></button>
+   <button class="feature feature-referral" onclick="openPage('referralPage')"><b>👥</b><span>Referral</span><small>Invite Friends</small></button>
+   <button class="feature feature-withdraw" onclick="openPage('withdrawPage')"><b>💸</b><span>Withdraw</span><small>Cash Out</small></button>
+   <button class="feature feature-history" onclick="openPage('historyPage')"><b>📜</b><span>History</span><small>Transaction</small></button>
   </section>
   <div class="invite"><span class="meg">🎁</span><p><strong>Refer Your Friends</strong>বন্ধুকে আমন্ত্রণ জানাও এবং বাড়াও তোমার আয়!</p><button onclick="openPage('referralPage')">👥 Invite ➜</button></div>
   <section class="activity"><div class="activity-head"><h3>⚡ Recent Activity</h3><button onclick="openPage('historyPage')">View All ➜</button></div><div id="recentActivity" class="empty">সাম্প্রতিক হিসাব দেখতে History খুলুন।</div></section>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px">
-   <button class="action" style="margin:0" onclick="openPage('adsPage')">▶️ Watch Ads</button>
-   <button class="action" style="margin:0" onclick="openPage('referralPage')">👥 Referral</button>
-  </div>
  </main>
- <main id="bonusPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>🎁 Daily Bonus</h2></div><div class="card"><p class="page-desc">প্রতিদিন একবার বোনাস ক্লেইম করতে পারবে।</p><h2 style="font:700 34px Poppins;margin:12px 0;color:#ffe34d">৳ <span id="bonusAmount">10.00</span></h2><span class="pill">প্রতিদিন ১ বার</span><button class="action" id="claimBonusBtn" onclick="claimBonus()">আজকের বোনাস ক্লেইম</button><p class="notice">Claim করলেই বোনাস সরাসরি Wallet Balance-এ যোগ হবে।</p></div></main>
+
+ <main id="bonusPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>🎁 Daily Bonus</h2></div><div class="card"><p class="page-desc">প্রতিদিন একবার বোনাস ক্লেইম করতে পারবে।</p><h2 style="font:700 34px Poppins;margin:12px 0;color:#ead0ff">৳ <span id="bonusAmount">10.00</span></h2><span class="pill">প্রতিদিন ১ বার</span><button class="action" id="claimBonusBtn" onclick="claimBonus()">আজকের বোনাস ক্লেইম</button><p class="notice">Claim করলেই বোনাস সরাসরি Wallet Balance-এ যোগ হবে।</p></div></main>
  <main id="adsPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>▶️ Watch Ads</h2></div><div class="card"><h3>বিজ্ঞাপন দেখে আয়</h3><p class="page-desc">অ্যাড নেটওয়ার্ক যুক্ত হলে এখানে বিজ্ঞাপন দেখা ও রিওয়ার্ড পাওয়া যাবে।</p><div class="row"><span class="muted">প্রতি বিজ্ঞাপনের রিওয়ার্ড</span><strong>৳ <span id="adReward">0.00</span></strong></div><button class="action" disabled>বিজ্ঞাপন এখনো চালু হয়নি</button></div></main>
  <main id="tasksPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>📋 Tasks</h2></div><p class="page-desc">Admin-এর দেওয়া কাজগুলো এখানে দেখা যাবে।</p><div id="taskList" class="card"><div class="empty">কাজ লোড হচ্ছে...</div></div></main>
  <main id="referralPage" class="page"><div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>👥 Referral</h2></div><div class="card"><p class="page-desc">বন্ধুকে আমন্ত্রণ জানাও।</p><label>তোমার Referral Code</label><input class="field" id="refCode" readonly><button class="action" onclick="copyReferral()">কোড কপি করো</button><div class="notice">Referral tracking পরবর্তী ধাপে নিরাপদভাবে যুক্ত হবে।</div></div></main>
