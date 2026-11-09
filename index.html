@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -14,301 +15,209 @@
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
 
 :root{
- --bg:#080411;
- --panel:#1b1028;
- --purple:#bd75ff;
- --purple2:#7d35d1;
- --gold:#ffd45a;
- --muted:#c5b4d9;
- --line:#bd75ff55;
- --green:#42d6a0;
+--bg:#080411;--panel:#1b1028;--purple:#bd75ff;--purple2:#7d35d1;
+--gold:#ffd45a;--muted:#c5b4d9;--line:#bd75ff55;--green:#42d6a0;
 }
-
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
- min-height:100vh;
- background:
- radial-gradient(ellipse at 10% 0%,#6817a555,transparent 36%),
- radial-gradient(ellipse at 95% 35%,#47107855,transparent 40%),
- #080411;
- background-attachment:fixed;
- color:#fff;
- font-family:'Hind Siliguri',Poppins,sans-serif;
+min-height:100vh;
+background:radial-gradient(ellipse at 10% 0%,#6817a555,transparent 36%),radial-gradient(ellipse at 95% 35%,#47107855,transparent 40%),#080411;
+background-attachment:fixed;color:#fff;
+font-family:'Hind Siliguri',Poppins,sans-serif;
 }
 button,input,select{font:inherit}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 
+/* LANGUAGE SELECTOR */
+.language-selector{
+position:fixed;top:8px;right:8px;left:auto;z-index:10000;
+display:flex;gap:3px;padding:4px;
+border:1px solid #bd75ff88;border-radius:25px;
+background:#160d24;box-shadow:0 4px 15px #0008;
+}
+.language-selector button{
+border:0;border-radius:20px;padding:6px 10px;
+font-size:11px;font-weight:700;color:#d7b8f4;background:transparent;
+}
+.language-selector button.active{
+background:linear-gradient(120deg,#ffe17a,#ffb82e);
+color:#241306;
+}
+#languageConfirm{
+position:fixed;inset:0;z-index:11000;
+display:none;align-items:center;justify-content:center;
+padding:20px;background:#000b;
+}
+.language-confirm-box{
+width:100%;max-width:320px;padding:22px;
+border:1px solid #bd75ff;border-radius:20px;
+background:#1b1028;text-align:center;
+box-shadow:0 15px 40px #0009;
+}
+.language-confirm-box p{margin:10px 0 18px;color:#e3d3f3;font-size:14px}
+.language-confirm-actions{display:flex;gap:10px}
+.language-confirm-actions button{
+flex:1;padding:11px;border-radius:12px;border:1px solid #bd75ff;
+background:#2a1740;color:white;font-weight:700;
+}
+.language-confirm-actions .confirm-yes{
+background:linear-gradient(120deg,#ffe17a,#ffb82e);
+color:#241306;border-color:#fff0a6;
+}
+
 /* AUTH LOADING */
 #authLoading{
- position:fixed;
- inset:0;
- z-index:9999;
- display:flex;
- align-items:center;
- justify-content:center;
- flex-direction:column;
- background:#080411;
- color:#fff;
- font-family:Poppins,sans-serif;
+position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;flex-direction:column;
+background:#080411;color:#fff;font-family:Poppins,sans-serif;
 }
 .auth-spinner{
- width:35px;
- height:35px;
- margin-top:22px;
- border:3px solid #ffffff25;
- border-top:3px solid #bd75ff;
- border-radius:50%;
- animation:authSpin .8s linear infinite;
+width:35px;height:35px;margin-top:22px;
+border:3px solid #ffffff25;border-top:3px solid #bd75ff;
+border-radius:50%;animation:authSpin .8s linear infinite;
 }
 @keyframes authSpin{to{transform:rotate(360deg)}}
 
 /* LOGIN */
 .screen{max-width:520px;margin:auto;padding:20px 18px 115px}
 #loginScreen{
- min-height:100vh;
- display:flex;
- flex-direction:column;
- justify-content:center;
- padding:25px 18px;
+min-height:100vh;display:flex;flex-direction:column;
+justify-content:center;padding:45px 18px 25px;
 }
 .brand{text-align:center;margin-bottom:35px}
-.brand h1{
- font:800 29px Poppins;
- letter-spacing:-1px;
- text-shadow:0 5px 25px #8b55ff55
-}
+.brand h1{font:800 29px Poppins;letter-spacing:-1px;text-shadow:0 5px 25px #8b55ff55}
 .brand h1 span{color:#b18aff}
 .brand p{color:#929bb2;font-size:12px;margin-top:8px}
 .login-card{
- background:radial-gradient(circle at 50% 0%,#8652e52a,transparent 55%),linear-gradient(145deg,#1a2340,#0d1428);
- border:1px solid #a879ff55;
- border-radius:28px;
- padding:32px 22px;
- text-align:center;
- box-shadow:0 20px 55px #0007,0 0 35px #8b55ff12;
+background:radial-gradient(circle at 50% 0%,#8652e52a,transparent 55%),linear-gradient(145deg,#1a2340,#0d1428);
+border:1px solid #a879ff55;border-radius:28px;padding:32px 22px;
+text-align:center;box-shadow:0 20px 55px #0007,0 0 35px #8b55ff12;
 }
 .login-card h2{font-size:21px;margin-bottom:10px}
 .login-card p{font-size:12px;color:#9ba5bd;margin-bottom:20px}
 .google-btn{
- width:100%;padding:15px;border:0;border-radius:16px;
- background:#fff;color:#252525;font-size:14px;font-weight:700;
- display:flex;align-items:center;justify-content:center;gap:12px;
- box-shadow:0 7px 20px #0003;
+width:100%;padding:15px;border:0;border-radius:16px;
+background:#fff;color:#252525;font-size:14px;font-weight:700;
+display:flex;align-items:center;justify-content:center;gap:12px;
+box-shadow:0 7px 20px #0003;
 }
 .google-btn:disabled{opacity:.5}
 .google-logo{width:21px;height:21px;flex-shrink:0}
-#status{
- font-size:11px;color:#c4b5fd;margin-top:17px;
- min-height:18px;overflow-wrap:anywhere
-}
+#status{font-size:11px;color:#c4b5fd;margin-top:17px;min-height:18px;overflow-wrap:anywhere}
 
-/* NEW LOGIN INPUTS */
+/* INPUTS */
 .auth-input{
- width:100%;
- background:#100b1b;
- border:1px solid #a77acb77;
- border-radius:14px;
- color:white;
- padding:14px;
- margin-top:10px;
- outline:none;
+width:100%;background:#100b1b;border:1px solid #a77acb77;
+border-radius:14px;color:white;padding:14px;margin-top:10px;outline:none;
 }
-.auth-input:focus{
- border-color:#ffd56c;
- box-shadow:0 0 0 3px #ffce5a20;
+.auth-input:focus{border-color:#ffd56c;box-shadow:0 0 0 3px #ffce5a20}
+.password-wrap{position:relative;width:100%;margin-top:10px}
+.password-wrap .auth-input{margin-top:0;padding-right:52px}
+.password-eye{
+position:absolute;right:8px;top:50%;transform:translateY(-50%);
+width:38px;height:38px;border:0;border-radius:10px;
+background:transparent;color:#d7aaff;display:flex;
+align-items:center;justify-content:center;
 }
+.password-eye svg{width:22px;height:22px}
+.password-eye:active{background:#ffffff12}
+.forgot-under-password{width:100%;display:flex;justify-content:flex-end;margin-top:7px}
+.forgot-under-password .auth-link{padding:3px 2px;color:#d7aaff;font-size:12px}
 .auth-main-btn{
- width:100%;
- padding:14px;
- margin-top:13px;
- border:1px solid #fff0a6;
- border-radius:15px;
- background:linear-gradient(120deg,#ffe17a,#ffb82e 60%,#d47b15);
- color:#241306;
- font-weight:800;
+width:100%;padding:14px;margin-top:13px;border:1px solid #fff0a6;
+border-radius:15px;background:linear-gradient(120deg,#ffe17a,#ffb82e 60%,#d47b15);
+color:#241306;font-weight:800;
 }
 .auth-main-btn:disabled{opacity:.5}
-.auth-link{
- border:0;
- background:transparent;
- color:#d7aaff;
- padding:12px 5px 0;
- font-size:12px;
-}
-.auth-divider{
- display:flex;
- align-items:center;
- gap:10px;
- color:#9ba5bd;
- font-size:11px;
- margin:17px 0;
-}
-.auth-divider:before,.auth-divider:after{
- content:"";
- flex:1;
- height:1px;
- background:#ffffff25;
-}
+.auth-link{border:0;background:transparent;color:#d7aaff;padding:12px 5px 0;font-size:12px}
+.auth-divider{display:flex;align-items:center;gap:10px;color:#9ba5bd;font-size:11px;margin:17px 0}
+.auth-divider:before,.auth-divider:after{content:"";flex:1;height:1px;background:#ffffff25}
 .auth-secondary{
- width:100%;
- padding:13px;
- border:1px solid #a879ff66;
- border-radius:14px;
- background:#241532;
- color:#fff;
- font-weight:700;
- margin-top:10px;
+width:100%;padding:13px;border:1px solid #a879ff66;border-radius:14px;
+background:#241532;color:#fff;font-weight:700;margin-top:10px;
 }
 .auth-error{color:#ff9b9b!important}
 
 /* MAIN APP */
-.app-shell{
- max-width:560px;
- margin:auto;
- padding:12px 14px 110px;
-}
+.app-shell{max-width:560px;margin:auto;padding:12px 14px 110px}
 header{
- display:flex;align-items:center;justify-content:space-between;
- margin:2px 0 15px;padding:10px 2px 14px;
- border-bottom:1px solid #d4a34d55;
+display:flex;align-items:center;justify-content:space-between;
+margin:2px 0 15px;padding:10px 2px 14px;border-bottom:1px solid #d4a34d55;
 }
-.logo{
- font:800 16px Poppins;
- letter-spacing:.1px;
- text-shadow:0 0 18px #ffca5544;
-}
+.logo{font:800 16px Poppins;letter-spacing:.1px;text-shadow:0 0 18px #ffca5544}
 .logo span{color:var(--gold)}
 .user-chip{
- display:flex;align-items:center;gap:8px;
- max-width:48%;font-size:12px;color:#f0e5ff;
- background:linear-gradient(135deg,#382044,#170d24);
- border:1px solid #e7bd6b99;
- padding:5px 10px 5px 5px;border-radius:30px;
- box-shadow:0 5px 18px #0009,0 0 15px #f5c45b20;
+display:flex;align-items:center;gap:8px;max-width:48%;
+font-size:12px;color:#f0e5ff;background:linear-gradient(135deg,#382044,#170d24);
+border:1px solid #e7bd6b99;padding:5px 10px 5px 5px;border-radius:30px;
+box-shadow:0 5px 18px #0009,0 0 15px #f5c45b20;
 }
-.user-chip img{
- width:36px;height:36px;border-radius:50%;
- object-fit:cover;border:2px solid var(--gold);
-}
+.user-chip img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)}
 .page{display:none;animation:fade .2s ease}
 .page.active{display:block}
-@keyframes fade{
- from{opacity:.5;transform:translateY(5px)}
- to{opacity:1;transform:none}
-}
+@keyframes fade{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:none}}
 
 /* WELCOME */
 .welcome-strip{
- display:flex;align-items:center;gap:12px;
- margin:0 0 14px;padding:14px 15px;
- border:1px solid #b47bdf88;border-radius:21px;
- background:linear-gradient(110deg,#35164b,#160d25 65%,#24112e);
- box-shadow:0 9px 24px #0008,inset 0 1px 0 #ffffff20;
+display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:14px 15px;
+border:1px solid #b47bdf88;border-radius:21px;
+background:linear-gradient(110deg,#35164b,#160d25 65%,#24112e);
+box-shadow:0 9px 24px #0008,inset 0 1px 0 #ffffff20;
 }
 .welcome-crown{font-size:34px;filter:drop-shadow(0 0 10px #c16cff)}
 .welcome-copy{min-width:0}
-.welcome-copy strong{
- display:block;font:700 17px Poppins,'Hind Siliguri',sans-serif;
- color:#fff;
-}
+.welcome-copy strong{display:block;font:700 17px Poppins,'Hind Siliguri',sans-serif;color:#fff}
 .welcome-copy span{font-size:12px;color:#d7b8f4}
 
-/* WALLET CARD */
+/* BALANCE */
 .balance{
- position:relative;overflow:hidden;
- display:grid;grid-template-columns:75px 1fr;
- align-items:center;gap:10px;
- min-height:164px;padding:18px 15px;
- border:1.5px solid #ffd56d;
- border-radius:25px;
- background:
- radial-gradient(circle at 90% 10%,#f5b62d44,transparent 43%),
- radial-gradient(circle at 10% 100%,#8c39c955,transparent 48%),
- linear-gradient(125deg,#301344,#160d27 62%,#0d0a1b);
- box-shadow:0 14px 32px #000b,0 0 25px #ffc34b25,inset 0 1px 0 #fff5;
+position:relative;overflow:hidden;display:grid;grid-template-columns:75px 1fr;
+align-items:center;gap:10px;min-height:164px;padding:18px 15px;
+border:1.5px solid #ffd56d;border-radius:25px;
+background:radial-gradient(circle at 90% 10%,#f5b62d44,transparent 43%),radial-gradient(circle at 10% 100%,#8c39c955,transparent 48%),linear-gradient(125deg,#301344,#160d27 62%,#0d0a1b);
+box-shadow:0 14px 32px #000b,0 0 25px #ffc34b25,inset 0 1px 0 #fff5;
 }
-.balance:after{
- content:'↗';position:absolute;right:15px;top:6px;
- color:#ffcf4d;font:800 62px Poppins;opacity:.2;
-}
-.wallet-icon{
- font-size:56px;text-align:center;
- filter:drop-shadow(0 6px 10px #ffbd3d88);
-}
+.balance:after{content:'↗';position:absolute;right:15px;top:6px;color:#ffcf4d;font:800 62px Poppins;opacity:.2}
+.wallet-icon{font-size:56px;text-align:center;filter:drop-shadow(0 6px 10px #ffbd3d88)}
 .balance-content{min-width:0;position:relative;z-index:1}
 .balance small{color:#ffe7a8;font-size:13px}
-.balance h2{
- color:#ffd75d;font:800 34px Poppins;
- margin:4px 0 8px;letter-spacing:-1px;
- text-shadow:0 0 20px #ffc53d55;
-}
+.balance h2{color:#ffd75d;font:800 34px Poppins;margin:4px 0 8px;letter-spacing:-1px;text-shadow:0 0 20px #ffc53d55}
 .balance .muted{color:#e0cce9;font-size:11px}
 .balance-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .withdraw-shortcut{
- border:1px solid #fff0a8;border-radius:30px;
- padding:9px 14px;
- background:linear-gradient(135deg,#ffe17b,#ffb72e 58%,#d77c13);
- color:#21120a;font-size:12px;font-weight:800;
- box-shadow:0 5px 15px #ffb72e55;
+border:1px solid #fff0a8;border-radius:30px;padding:9px 14px;
+background:linear-gradient(135deg,#ffe17b,#ffb72e 58%,#d77c13);
+color:#21120a;font-size:12px;font-weight:800;box-shadow:0 5px 15px #ffb72e55;
 }
 
 /* STATS */
-.stats{
- display:grid;grid-template-columns:1fr 1fr;
- gap:10px;margin:12px 0 19px;
-}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 19px}
 .stat{
- background:linear-gradient(145deg,#291942,#171027);
- border:1px solid #a66bd177;
- padding:13px 12px;border-radius:18px;
- box-shadow:0 8px 20px #0008,inset 0 1px 1px #ffffff12;
- display:flex;gap:9px;align-items:center;
+background:linear-gradient(145deg,#291942,#171027);border:1px solid #a66bd177;
+padding:13px 12px;border-radius:18px;box-shadow:0 8px 20px #0008,inset 0 1px 1px #ffffff12;
+display:flex;gap:9px;align-items:center;
 }
 .stat .emoji{font-size:25px}
 .stat small{color:#d9c5e9;font-size:11px}
-.stat strong{
- display:block;font:700 17px Poppins;
- color:#ffdb77;margin-top:3px;
-}
+.stat strong{display:block;font:700 17px Poppins;color:#ffdb77;margin-top:3px}
 
 /* FEATURE CARDS */
-.section-title{
- display:flex;align-items:center;gap:9px;
- font-size:19px;margin:20px 0 12px;color:#f7eaff;
-}
-.section-title:after{
- content:"";flex:1;height:2px;
- background:linear-gradient(90deg,#e8b84d,#a94cff66,transparent);
-}
-.feature-grid{
- display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
- gap:12px;
-}
+.section-title{display:flex;align-items:center;gap:9px;font-size:19px;margin:20px 0 12px;color:#f7eaff}
+.section-title:after{content:"";flex:1;height:2px;background:linear-gradient(90deg,#e8b84d,#a94cff66,transparent)}
+.feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .feature{
- position:relative;overflow:hidden;
- display:flex;flex-direction:column;
- align-items:center;justify-content:center;gap:7px;
- min-height:132px;padding:17px 10px;
- border:1px solid #bd8aef88;border-radius:21px;
- background:
- radial-gradient(circle at 50% 0%,#a34de633,transparent 62%),
- linear-gradient(145deg,#2a1740,#150d24 72%,#0d0918);
- color:#fff;
- box-shadow:0 10px 22px #0009,inset 0 1px 0 #fff3,inset 0 -8px 16px #0007;
- transition:.2s;
+position:relative;overflow:hidden;display:flex;flex-direction:column;
+align-items:center;justify-content:center;gap:7px;min-height:132px;padding:17px 10px;
+border:1px solid #bd8aef88;border-radius:21px;
+background:radial-gradient(circle at 50% 0%,#a34de633,transparent 62%),linear-gradient(145deg,#2a1740,#150d24 72%,#0d0918);
+color:#fff;box-shadow:0 10px 22px #0009,inset 0 1px 0 #fff3,inset 0 -8px 16px #0007;transition:.2s;
 }
-.feature:before{
- content:"";position:absolute;top:0;left:15%;width:70%;height:1px;
- background:linear-gradient(90deg,transparent,#ffe7a8,transparent);
-}
+.feature:before{content:"";position:absolute;top:0;left:15%;width:70%;height:1px;background:linear-gradient(90deg,transparent,#ffe7a8,transparent)}
 .feature b{
- width:55px;height:55px;border-radius:17px;
- display:flex;align-items:center;justify-content:center;
- font-size:28px;
- border:1px solid #e5c1ff99;
- background:linear-gradient(145deg,#b26de5,#54216f);
- box-shadow:0 6px 15px #0009,inset 0 2px 8px #fff5,0 0 16px #a94cff44;
+width:55px;height:55px;border-radius:17px;display:flex;align-items:center;justify-content:center;
+font-size:28px;border:1px solid #e5c1ff99;background:linear-gradient(145deg,#b26de5,#54216f);
+box-shadow:0 6px 15px #0009,inset 0 2px 8px #fff5,0 0 16px #a94cff44;
 }
 .feature span{font-size:14px;font-weight:700;color:#fff2d6}
 .feature small{font:500 10px Poppins;color:#cbb6df}
@@ -319,650 +228,696 @@ header{
 .feature-referral b{background:linear-gradient(145deg,#ffbf59,#a64a25)}
 .feature-history b{background:linear-gradient(145deg,#bd83f5,#54218c)}
 
-/* REFERRAL BANNER */
+/* REFERRAL */
 .invite{
- display:flex;align-items:center;gap:10px;
- margin-top:16px;padding:14px 12px;
- border:1px solid #e7bd69;border-radius:20px;
- background:radial-gradient(circle at 0 50%,#a04bd544,transparent 45%),linear-gradient(120deg,#2c153b,#160d24);
- box-shadow:0 10px 24px #0009,0 0 18px #ffcb4b1c;
+display:flex;align-items:center;gap:10px;margin-top:16px;padding:14px 12px;
+border:1px solid #e7bd69;border-radius:20px;
+background:radial-gradient(circle at 0 50%,#a04bd544,transparent 45%),linear-gradient(120deg,#2c153b,#160d24);
+box-shadow:0 10px 24px #0009,0 0 18px #ffcb4b1c;
 }
 .invite .meg{font-size:37px}
 .invite p{flex:1;font-size:12px;line-height:1.5}
 .invite p strong{display:block;font-size:16px;color:#ffdb70}
 .invite button{
- border:1px solid #fff0a6;border-radius:30px;
- padding:9px 12px;
- background:linear-gradient(135deg,#ffe17b,#ffb82e 65%,#d98517);
- color:#241306;font-size:11px;font-weight:800;white-space:nowrap;
+border:1px solid #fff0a6;border-radius:30px;padding:9px 12px;
+background:linear-gradient(135deg,#ffe17b,#ffb82e 65%,#d98517);
+color:#241306;font-size:11px;font-weight:800;white-space:nowrap;
 }
 
 /* ACTIVITY */
 .activity,.card{
- border:1px solid #aa78d077;
- border-radius:22px;padding:17px;margin-bottom:14px;
- background:linear-gradient(145deg,#241532,#120c1e);
- box-shadow:0 11px 26px #0009,inset 0 1px 0 #ffffff18;
+border:1px solid #aa78d077;border-radius:22px;padding:17px;margin-bottom:14px;
+background:linear-gradient(145deg,#241532,#120c1e);
+box-shadow:0 11px 26px #0009,inset 0 1px 0 #ffffff18;
 }
 .activity{margin-top:17px}
-.activity-head{
- display:flex;justify-content:space-between;
- align-items:center;gap:8px;margin-bottom:8px;
-}
+.activity-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
 .activity-head h3{font-size:17px;color:#f4e6ff}
-.activity-head button{
- border:1px solid #d7b46a88;
- background:linear-gradient(135deg,#382044,#21112e);
- color:#ffe6ad;border-radius:22px;padding:7px 11px;font-size:11px;
-}
+.activity-head button{border:1px solid #d7b46a88;background:linear-gradient(135deg,#382044,#21112e);color:#ffe6ad;border-radius:22px;padding:7px 11px;font-size:11px}
 .empty{text-align:center;color:var(--muted);font-size:13px;padding:22px 5px}
 
 /* INNER PAGES */
 .topline{display:flex;align-items:center;gap:10px;margin:5px 0 20px}
-.back{
- min-width:43px;min-height:42px;
- border:1px solid #d7b46a88;
- background:linear-gradient(135deg,#382044,#21112e);
- color:#ffe6ad;border-radius:14px;padding:8px 13px;font-size:19px;
-}
+.back{min-width:43px;min-height:42px;border:1px solid #d7b46a88;background:linear-gradient(135deg,#382044,#21112e);color:#ffe6ad;border-radius:14px;padding:8px 13px;font-size:19px}
 .page h2{font-size:22px;color:#f4e8ff}
 .page-desc{font-size:13px;color:var(--muted);margin:5px 0 16px}
 .action{
- width:100%;border:1px solid #fff0a6;border-radius:15px;
- padding:14px;margin-top:12px;
- background:linear-gradient(120deg,#ffe17a,#ffb82e 60%,#d47b15);
- color:#241306;font-weight:800;
- box-shadow:0 7px 19px #ffb52d33;
+width:100%;border:1px solid #fff0a6;border-radius:15px;padding:14px;margin-top:12px;
+background:linear-gradient(120deg,#ffe17a,#ffb82e 60%,#d47b15);color:#241306;font-weight:800;
+box-shadow:0 7px 19px #ffb52d33;
 }
 .action:active{transform:scale(.97)}
 .action:disabled{opacity:.5;cursor:not-allowed}
-.field{
- width:100%;background:#100b1b;
- border:1px solid #a77acb77;border-radius:14px;
- color:white;padding:14px;margin-top:7px;outline:none;
-}
+.field{width:100%;background:#100b1b;border:1px solid #a77acb77;border-radius:14px;color:white;padding:14px;margin-top:7px;outline:none}
 .field:focus{border-color:#ffd56c;box-shadow:0 0 0 3px #ffce5a20}
 label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px}
 .row{display:flex;justify-content:space-between;gap:10px;align-items:center}
 .list-item{padding:15px 2px;border-bottom:1px solid #ffffff18}
 .list-item:last-child{border:0}
-.pill{
- font-size:11px;border-radius:20px;padding:5px 11px;
- background:#30203e;border:1px solid #d3a65c66;color:#ffe5a5;
-}
-.notice{
- font-size:12px;color:#f6dfad;
- background:linear-gradient(120deg,#3a2b1a,#241a20);
- border:1px solid #e6bd6244;
- padding:11px;border-radius:14px;margin-top:12px;line-height:1.7;
-}
-.logout{
- width:100%;padding:12px;
- border:1px solid #e1a66c77;
- background:linear-gradient(120deg,#51233c,#2b172c);
- color:#ffe9d7;border-radius:15px;margin-top:16px;
-}
+.pill{font-size:11px;border-radius:20px;padding:5px 11px;background:#30203e;border:1px solid #d3a65c66;color:#ffe5a5}
+.notice{font-size:12px;color:#f6dfad;background:linear-gradient(120deg,#3a2b1a,#241a20);border:1px solid #e6bd6244;padding:11px;border-radius:14px;margin-top:12px;line-height:1.7}
+.logout{width:100%;padding:12px;border:1px solid #e1a66c77;background:linear-gradient(120deg,#51233c,#2b172c);color:#ffe9d7;border-radius:15px;margin-top:16px}
 
-/* WALLET PAGE */
-.wallet-summary{
- padding:20px;border:1px solid #e8bd66;
- border-radius:22px;
- background:linear-gradient(135deg,#3b1d4e,#170d25);
- text-align:center;
- box-shadow:0 10px 25px #0008,0 0 20px #ffca4b18;
-}
+/* WALLET */
+.wallet-summary{padding:20px;border:1px solid #e8bd66;border-radius:22px;background:linear-gradient(135deg,#3b1d4e,#170d25);text-align:center;box-shadow:0 10px 25px #0008,0 0 20px #ffca4b18}
 .wallet-summary small{color:#e5c9fa}
 .wallet-summary h2{font:800 32px Poppins;color:#ffd45a;margin:7px 0}
 .wallet-menu{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.wallet-menu button{
- border:1px solid #bd8aef77;border-radius:17px;
- background:linear-gradient(145deg,#38204e,#1a1029);
- color:#f4e5ff;padding:16px 8px;font-weight:700;
-}
+.wallet-menu button{border:1px solid #bd8aef77;border-radius:17px;background:linear-gradient(145deg,#38204e,#1a1029);color:#f4e5ff;padding:16px 8px;font-weight:700}
 .wallet-menu button b{display:block;font-size:25px;margin-bottom:5px}
 
 /* PROFILE */
-#profilePhoto{
- border:3px solid #ffd36a;
- box-shadow:0 0 0 5px #ffcf4b22,0 0 24px #ffbd4e55;
-}
+#profilePhoto{border:3px solid #ffd36a;box-shadow:0 0 0 5px #ffcf4b22,0 0 24px #ffbd4e55}
 
-/* SLIM PREMIUM BOTTOM NAV */
+/* BOTTOM NAV */
 .bottom-nav{
- position:fixed;
- left:50%;
- bottom:10px;
- transform:translateX(-50%);
- width:min(560px,calc(100% - 26px));
- height:72px;
- min-height:72px;
- display:grid;
- grid-template-columns:repeat(5,minmax(0,1fr));
- align-items:center;
- gap:0;
- padding:4px 5px;
- border:1px solid #a832ff;
- border-radius:40px;
- background:
- radial-gradient(ellipse at 50% 0%,#45105c88,transparent 75%),
- linear-gradient(110deg,#100619f7,#0b0615fa);
- box-shadow:
- 0 0 5px #c44aff,
- 0 0 12px #922cff,
- inset 0 1px 4px #ffffff12,
- 0 7px 20px #000c;
- z-index:50;
+position:fixed;left:50%;bottom:10px;transform:translateX(-50%);
+width:min(560px,calc(100% - 26px));height:72px;min-height:72px;
+display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;
+gap:0;padding:4px 5px;border:1px solid #a832ff;border-radius:40px;
+background:radial-gradient(ellipse at 50% 0%,#45105c88,transparent 75%),linear-gradient(110deg,#100619f7,#0b0615fa);
+box-shadow:0 0 5px #c44aff,0 0 12px #922cff,inset 0 1px 4px #ffffff12,0 7px 20px #000c;z-index:50;
 }
-.bottom-nav:before{
- content:"";
- position:absolute;
- inset:2px;
- border:1px solid #c76aff44;
- border-radius:38px;
- pointer-events:none;
-}
+.bottom-nav:before{content:"";position:absolute;inset:2px;border:1px solid #c76aff44;border-radius:38px;pointer-events:none}
 .nav-btn{
- position:relative;
- z-index:1;
- min-width:0;
- min-height:60px;
- height:60px;
- padding:3px 0;
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:center;
- gap:2px;
- border:0;
- border-radius:30px;
- background:transparent;
- color:#c77dff;
- font-family:'Hind Siliguri',Poppins,sans-serif;
- transition:.2s ease;
+position:relative;z-index:1;min-width:0;min-height:60px;height:60px;padding:3px 0;
+display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+border:0;border-radius:30px;background:transparent;color:#c77dff;
+font-family:'Hind Siliguri',Poppins,sans-serif;transition:.2s ease;
 }
-.nav-btn b{
- width:30px;
- height:29px;
- display:flex;
- align-items:center;
- justify-content:center;
- font-size:25px;
- line-height:1;
- font-weight:500;
- color:#c77dff;
- filter:none;
-}
-.nav-btn span{
- font-size:10px;
- font-weight:600;
- line-height:1;
- white-space:nowrap;
- color:#d6b2f2;
-}
-.nav-btn.active{
- color:#fff0a6;
- background:linear-gradient(180deg,#ffcf4b18,#a83cff15);
- box-shadow:inset 0 0 8px #c04dff18;
-}
-.nav-btn.active b{
- color:#ffe477;
- filter:drop-shadow(0 0 4px #ffcf4b);
-}
-.nav-btn.active span{
- color:#ffe99a;
- text-shadow:0 0 5px #ffcb55;
-}
+.nav-btn b{width:30px;height:29px;display:flex;align-items:center;justify-content:center;font-size:25px;line-height:1;font-weight:500;color:#c77dff}
+.nav-btn span{font-size:10px;font-weight:600;line-height:1;white-space:nowrap;color:#d6b2f2}
+.nav-btn.active{color:#fff0a6;background:linear-gradient(180deg,#ffcf4b18,#a83cff15);box-shadow:inset 0 0 8px #c04dff18}
+.nav-btn.active b{color:#ffe477;filter:drop-shadow(0 0 4px #ffcf4b)}
+.nav-btn.active span{color:#ffe99a;text-shadow:0 0 5px #ffcb55}
 .nav-btn:active{transform:scale(.94)}
-
 .toast{
- position:fixed;bottom:100px;left:50%;
- transform:translateX(-50%);
- background:linear-gradient(135deg,#3b234b,#21132f);
- border:1px solid #e2bb6a;
- padding:11px 16px;border-radius:15px;
- font-size:13px;display:none;z-index:80;
- max-width:90%;text-align:center;
- box-shadow:0 8px 30px #0008;
+position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
+background:linear-gradient(135deg,#3b234b,#21132f);border:1px solid #e2bb6a;
+padding:11px 16px;border-radius:15px;font-size:13px;display:none;z-index:80;
+max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 }
-
 @media(max-width:390px){
- .app-shell{padding-left:11px;padding-right:11px}
- .balance{grid-template-columns:58px 1fr;padding:16px 11px;gap:7px}
- .wallet-icon{font-size:45px}
- .balance h2{font-size:28px}
- .feature-grid{gap:10px}
- .feature{min-height:120px;padding:13px 7px}
- .feature b{width:48px;height:48px;font-size:25px}
- .feature span{font-size:13px}
- .bottom-nav{
-  width:calc(100% - 18px);
-  height:68px;
-  min-height:68px;
-  padding:3px;
- }
- .nav-btn{min-height:56px;height:56px}
- .nav-btn b{font-size:23px}
- .nav-btn span{font-size:9px}
- .invite p{font-size:11px}
- .invite p strong{font-size:14px}
+.app-shell{padding-left:11px;padding-right:11px}
+.balance{grid-template-columns:58px 1fr;padding:16px 11px;gap:7px}
+.wallet-icon{font-size:45px}.balance h2{font-size:28px}
+.feature-grid{gap:10px}.feature{min-height:120px;padding:13px 7px}
+.feature b{width:48px;height:48px;font-size:25px}
+.feature span{font-size:13px}
+.bottom-nav{width:calc(100% - 18px);height:68px;min-height:68px;padding:3px}
+.nav-btn{min-height:56px;height:56px}
+.nav-btn b{font-size:23px}.nav-btn span{font-size:9px}
+.invite p{font-size:11px}.invite p strong{font-size:14px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- AUTH LOADING SCREEN -->
+<!-- LANGUAGE SELECTOR -->
+<div class="language-selector">
+<button id="langBn" onclick="requestLanguage('bn')">বাংলা</button>
+<button id="langEn" onclick="requestLanguage('en')">English</button>
+</div>
+
+<div id="languageConfirm">
+<div class="language-confirm-box">
+<h3 id="confirmTitle">ভাষা পরিবর্তন</h3>
+<p id="confirmMessage">আপনি কি অ্যাপের ভাষা পরিবর্তন করতে চান?</p>
+<div class="language-confirm-actions">
+<button onclick="cancelLanguage()">না</button>
+<button class="confirm-yes" onclick="confirmLanguage()">হ্যাঁ</button>
+</div>
+</div>
+</div>
+
+<!-- AUTH LOADING -->
 <div id="authLoading">
- <div style="font-size:25px;font-weight:800">
-  EARNING <span style="color:#b18aff">MONEY BD</span>
- </div>
- <div class="auth-spinner"></div>
- <p style="font-size:12px;color:#c5b4d9;margin-top:14px">
-  Loading your account...
- </p>
+<div style="font-size:25px;font-weight:800">EARNING <span style="color:#b18aff">MONEY BD</span></div>
+<div class="auth-spinner"></div>
+<p style="font-size:12px;color:#c5b4d9;margin-top:14px">Loading your account...</p>
 </div>
 
 <!-- LOGIN -->
 <div id="loginScreen" class="screen">
- <div class="brand">
-  <h1>EARNING <span>MONEY BD</span></h1>
-  <p>Your earning journey starts here</p>
- </div>
+<div class="brand">
+<h1>EARNING <span>MONEY BD</span></h1>
+<p>Your earning journey starts here</p>
+</div>
 
- <div class="login-card">
-  <h2 id="authTitle">Welcome Earning Money BD!</h2>
-  <p id="authSubtitle">তোমার অ্যাকাউন্টে লগইন করো</p>
+<div class="login-card">
+<h2 id="authTitle">Welcome Earning Money BD!</h2>
+<p id="authSubtitle">আপনার অ্যাকাউন্টে লগইন করুন</p>
 
-  <!-- LOGIN FORM -->
-  <div id="loginForm">
-   <input class="auth-input" id="loginEmail"
-    type="email" placeholder="Gmail Address">
+<div id="loginForm">
+<input class="auth-input" id="loginEmail" type="email" placeholder="Gmail Address">
 
-   <input class="auth-input" id="loginPassword"
-    type="password" placeholder="Password">
+<div class="password-wrap">
+<input class="auth-input" id="loginPassword" type="password" placeholder="Password">
+<button type="button" class="password-eye" id="loginPasswordEye" onclick="togglePassword('loginPassword','loginPasswordEye')" aria-label="Show password">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M3 3l18 18"></path>
+<path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
+<path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.5 15.5 0 0 1-3.1 3.8"></path>
+<path d="M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7c1.4 0 2.7-.3 3.8-.8"></path>
+</svg>
+</button>
+</div>
 
-   <button class="auth-main-btn" onclick="emailLogin()">
-    Login
-   </button>
+<div class="forgot-under-password">
+<button class="auth-link" onclick="showForgotForm()">Forgot Password?</button>
+</div>
 
-   <button class="auth-link" onclick="showForgotForm()">
-    Forgot Password?
-   </button>
+<button class="auth-main-btn" onclick="emailLogin()">Login</button>
+<button class="auth-secondary" onclick="showRegisterForm()">Create New Account</button>
+</div>
 
-   <button class="auth-secondary" onclick="showRegisterForm()">
-    Create New Account
-   </button>
-  </div>
+<div id="registerForm" style="display:none">
+<input class="auth-input" id="registerName" type="text" placeholder="Full Name">
+<input class="auth-input" id="registerEmail" type="email" placeholder="Gmail Address">
 
-  <!-- REGISTER FORM -->
-  <div id="registerForm" style="display:none">
-   <input class="auth-input" id="registerName"
-    type="text" placeholder="Full Name">
+<div class="password-wrap">
+<input class="auth-input" id="registerPassword" type="password" placeholder="Create Password">
+<button type="button" class="password-eye" id="registerPasswordEye" onclick="togglePassword('registerPassword','registerPasswordEye')" aria-label="Show password">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M3 3l18 18"></path><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
+<path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.5 15.5 0 0 1-3.1 3.8"></path>
+<path d="M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7c1.4 0 2.7-.3 3.8-.8"></path>
+</svg>
+</button>
+</div>
 
-   <input class="auth-input" id="registerEmail"
-    type="email" placeholder="Gmail Address">
+<div class="password-wrap">
+<input class="auth-input" id="confirmPassword" type="password" placeholder="Confirm Password">
+<button type="button" class="password-eye" id="confirmPasswordEye" onclick="togglePassword('confirmPassword','confirmPasswordEye')" aria-label="Show password">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M3 3l18 18"></path><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
+<path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.5 15.5 0 0 1-3.1 3.8"></path>
+<path d="M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7c1.4 0 2.7-.3 3.8-.8"></path>
+</svg>
+</button>
+</div>
 
-   <input class="auth-input" id="registerPassword"
-    type="password" placeholder="Create Password">
+<button class="auth-main-btn" onclick="registerAccount()">Create Account</button>
+<button class="auth-link" onclick="showLoginForm()">Already have an account? Login</button>
+</div>
 
-   <input class="auth-input" id="confirmPassword"
-    type="password" placeholder="Confirm Password">
+<div id="forgotForm" style="display:none">
+<input class="auth-input" id="forgotEmail" type="email" placeholder="আপনার Gmail Address">
+<button class="auth-main-btn" onclick="resetPassword()">Send Reset Link</button>
+<button class="auth-link" onclick="showLoginForm()">Back to Login</button>
+</div>
 
-   <button class="auth-main-btn" onclick="registerAccount()">
-    Create Account
-   </button>
+<div class="auth-divider">OR</div>
 
-   <button class="auth-link" onclick="showLoginForm()">
-    Already have an account? Login
-   </button>
-  </div>
-
-  <!-- FORGOT PASSWORD FORM -->
-  <div id="forgotForm" style="display:none">
-   <input class="auth-input" id="forgotEmail"
-    type="email" placeholder="তোমার Gmail Address">
-
-   <button class="auth-main-btn" onclick="resetPassword()">
-    Send Reset Link
-   </button>
-
-   <button class="auth-link" onclick="showLoginForm()">
-    Back to Login
-   </button>
-  </div>
-
-  <div class="auth-divider">OR</div>
-
-  <!-- GOOGLE LOGIN -->
-  <button class="google-btn" id="googleBtn" onclick="googleLogin()">
-   <svg class="google-logo" viewBox="0 0 48 48">
-    <path fill="#4285F4" d="M43.6 24.5c0-1.5-.1-3-.4-4.4H24v8.3h11a9.4 9.4 0 0 1-4.1 6.2v5.4h6.6c3.9-3.6 6.1-9 6.1-15.5z"/>
-    <path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.9l-6.6-5.4c-1.8 1.2-4 1.9-6.9 1.9-5.3 0-9.8-3.6-11.4-8.5H5.8v5.5C9.2 39.4 16.1 44 24 44z"/>
-    <path fill="#FBBC05" d="M12.6 27.1a12 12 0 0 1 0-7.2v-5.5H5.8a20 20 0 0 0 0 18.2z"/>
-    <path fill="#EA4335" d="M24 11.4c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 5.3 29.5 3.5 24 3.5c-7.9 0-14.8 4.6-18.2 10.9l6.8 5.5c1.6-4.9 6.1-8.5 11.4-8.5z"/>
-   </svg>
-   Continue with Google
-  </button>
-
-  <div id="status"></div>
- </div>
+<button class="google-btn" id="googleBtn" onclick="googleLogin()">
+<svg class="google-logo" viewBox="0 0 48 48">
+<path fill="#4285F4" d="M43.6 24.5c0-1.5-.1-3-.4-4.4H24v8.3h11a9.4 9.4 0 0 1-4.1 6.2v5.4h6.6c3.9-3.6 6.1-9 6.1-15.5z"/>
+<path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.9l-6.6-5.4c-1.8 1.2-4 1.9-6.9 1.9-5.3 0-9.8-3.6-11.4-8.5H5.8v5.5C9.2 39.4 16.1 44 24 44z"/>
+<path fill="#FBBC05" d="M12.6 27.1a12 12 0 0 1 0-7.2v-5.5H5.8a20 20 0 0 0 0 18.2z"/>
+<path fill="#EA4335" d="M24 11.4c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 5.3 29.5 3.5 24 3.5c-7.9 0-14.8 4.6-18.2 10.9l6.8 5.5c1.6-4.9 6.1-8.5 11.4-8.5z"/>
+</svg>
+Continue with Google
+</button>
+<div id="status"></div>
+</div>
 </div>
 
 <!-- APP -->
 <div id="appScreen" class="app-shell" style="display:none">
-
 <header>
- <div class="logo">
-  EARNING <span>MONEY BD</span>
-  <div style="font:500 10px 'Hind Siliguri';color:#d0bce8;margin-top:3px">Play • Earn • Withdraw</div>
- </div>
- <div class="user-chip">
-  <img id="userPhoto" src="https://via.placeholder.com/80" alt="">
-  <span id="userName">User</span>
- </div>
+<div class="logo">
+EARNING <span>MONEY BD</span>
+<div style="font:500 10px 'Hind Siliguri';color:#d0bce8;margin-top:3px">Play • Earn • Withdraw</div>
+</div>
+<div class="user-chip">
+<img id="userPhoto" src="https://via.placeholder.com/80" alt="">
+<span id="userName">User</span>
+</div>
 </header>
 
 <section class="welcome-strip">
- <div class="welcome-crown">♛</div>
- <div class="welcome-copy">
-  <strong>Welcome Back! 👋</strong>
-  <span>Keep earning, keep growing!</span>
- </div>
+<div class="welcome-crown">♛</div>
+<div class="welcome-copy">
+<strong>Welcome Back! 👋</strong>
+<span>Keep earning, keep growing!</span>
+</div>
 </section>
 
-<!-- HOME -->
+<!-- HOME DASHBOARD -->
 <main id="homePage" class="page active">
- <section class="balance">
-  <div class="wallet-icon">👛</div>
-  <div class="balance-content">
-   <small>তোমার Wallet Balance</small>
-   <h2>৳ <span id="balance">0.00</span></h2>
-   <div class="balance-actions">
-    <span class="muted">Earning Money BD Wallet</span>
-    <button class="withdraw-shortcut" onclick="openPage('withdrawPage')">💸 Withdraw ➜</button>
-   </div>
-  </div>
- </section>
+<section class="balance">
+<div class="wallet-icon">👛</div>
+<div class="balance-content">
+<small>আপনার Wallet Balance</small>
+<h2>৳ <span id="balance">0.00</span></h2>
+<div class="balance-actions">
+<span class="muted">Earning Money BD Wallet</span>
+<button class="withdraw-shortcut" onclick="openPage('withdrawPage')">💸 Withdraw ➜</button>
+</div>
+</div>
+</section>
 
- <section class="stats">
-  <div class="stat">
-   <span class="emoji">📈</span>
-   <div><small>আজকের আয়</small><strong>৳ <span id="todayEarn">0.00</span></strong></div>
-  </div>
-  <div class="stat">
-   <span class="emoji">📋</span>
-   <div><small>সম্পন্ন কাজ</small><strong id="taskCount">0</strong></div>
-  </div>
- </section>
+<section class="stats">
+<div class="stat"><span class="emoji">📈</span><div><small>আজকের আয়</small><strong>৳ <span id="todayEarn">0.00</span></strong></div></div>
+<div class="stat"><span class="emoji">📋</span><div><small>সম্পন্ন কাজ</small><strong id="taskCount">0</strong></div></div>
+</section>
 
- <h3 class="section-title">⚡ Quick Access</h3>
+<h3 class="section-title">⚡ Quick Access</h3>
 
- <section class="feature-grid">
-  <button class="feature feature-bonus" onclick="openPage('bonusPage')">
-   <b>🎁</b><span>Daily Bonus</span><small>Daily Reward</small>
-  </button>
-  <button class="feature feature-ads" onclick="openPage('adsPage')">
-   <b>▶️</b><span>Watch Ads</span><small>Watch & Earn</small>
-  </button>
-  <button class="feature feature-tasks" onclick="openPage('tasksPage')">
-   <b>📋</b><span>Tasks</span><small>Complete Tasks</small>
-  </button>
-  <button class="feature feature-referral" onclick="openPage('referralPage')">
-   <b>👥</b><span>Referral</span><small>Invite Friends</small>
-  </button>
-  <button class="feature feature-withdraw" onclick="openPage('withdrawPage')">
-   <b>💸</b><span>Withdraw</span><small>Cash Out</small>
-  </button>
-  <button class="feature feature-history" onclick="openPage('historyPage')">
-   <b>📜</b><span>History</span><small>Transaction</small>
-  </button>
- </section>
+<section class="feature-grid">
+<button class="feature feature-bonus" onclick="openPage('bonusPage')"><b>🎁</b><span>Daily Bonus</span><small>Daily Reward</small></button>
+<button class="feature feature-ads" onclick="openPage('adsPage')"><b>▶️</b><span>Watch Ads</span><small>Watch & Earn</small></button>
+<button class="feature feature-tasks" onclick="openPage('tasksPage')"><b>📋</b><span>Tasks</span><small>Complete Tasks</small></button>
+<button class="feature feature-referral" onclick="openPage('referralPage')"><b>👥</b><span>Referral</span><small>Invite Friends</small></button>
+<button class="feature feature-withdraw" onclick="openPage('withdrawPage')"><b>💸</b><span>Withdraw</span><small>Cash Out</small></button>
+<button class="feature feature-history" onclick="openPage('historyPage')"><b>📜</b><span>History</span><small>Transaction</small></button>
+</section>
 
- <div class="invite">
-  <span class="meg">🎁</span>
-  <p><strong>Refer Your Friends</strong>বন্ধুকে আমন্ত্রণ জানাও এবং বাড়াও তোমার আয়!</p>
-  <button onclick="openPage('referralPage')">👥 Invite ➜</button>
- </div>
+<div class="invite">
+<span class="meg">🎁</span>
+<p><strong>Refer Your Friends</strong>বন্ধুদের আমন্ত্রণ জানান এবং আপনার আয় বাড়ান!</p>
+<button onclick="openPage('referralPage')">👥 Invite ➜</button>
+</div>
 
- <section class="activity">
-  <div class="activity-head">
-   <h3>⚡ Recent Activity</h3>
-   <button onclick="openPage('historyPage')">View All ➜</button>
-  </div>
-  <div id="recentActivity" class="empty">সাম্প্রতিক হিসাব দেখতে History খুলুন।</div>
- </section>
+<section class="activity">
+<div class="activity-head">
+<h3>⚡ Recent Activity</h3>
+<button onclick="openPage('historyPage')">View All ➜</button>
+</div>
+<div id="recentActivity" class="empty">সাম্প্রতিক হিসাব দেখতে History খুলুন।</div>
+</section>
 </main>
 
 <!-- TASKS -->
 <main id="tasksPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('homePage')">←</button>
-  <h2>📋 Tasks</h2>
- </div>
- <p class="page-desc">Admin-এর দেওয়া কাজগুলো এখানে দেখা যাবে।</p>
- <div id="taskList" class="card"><div class="empty">কাজ লোড হচ্ছে...</div></div>
+<div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>📋 Tasks</h2></div>
+<p class="page-desc">Admin-এর দেওয়া কাজগুলো এখানে দেখা যাবে।</p>
+<div id="taskList" class="card"><div class="empty">কাজ লোড হচ্ছে...</div></div>
 </main>
 
 <!-- WALLET -->
 <main id="walletPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('homePage')">←</button>
-  <h2>👛 My Wallet</h2>
- </div>
-
- <div class="wallet-summary">
-  <small>তোমার মোট Wallet Balance</small>
-  <h2>৳ <span id="walletBalance">0.00</span></h2>
-  <span class="pill">Earning Money BD Wallet</span>
- </div>
-
- <div class="wallet-menu">
-  <button onclick="openPage('withdrawPage')"><b>💸</b>Withdraw</button>
-  <button onclick="openPage('historyPage')"><b>📜</b>History</button>
- </div>
-
- <div class="card" style="margin-top:14px">
-  <h3>Wallet Information</h3>
-  <p class="page-desc">তোমার আয় এবং উত্তোলনের হিসাব এখানে দেখতে পারবে।</p>
-  <div class="row"><span class="muted">Available Balance</span><strong>৳ <span id="walletBalance2">0.00</span></strong></div>
-  <button class="action" onclick="openPage('withdrawPage')">Withdraw Money ➜</button>
-  <button class="action" style="background:linear-gradient(120deg,#b77aff,#7534c7);color:white;border-color:#e0baff" onclick="openPage('historyPage')">View Transaction History</button>
- </div>
+<div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>👛 My Wallet</h2></div>
+<div class="wallet-summary">
+<small>আপনার মোট Wallet Balance</small>
+<h2>৳ <span id="walletBalance">0.00</span></h2>
+<span class="pill">Earning Money BD Wallet</span>
+</div>
+<div class="wallet-menu">
+<button onclick="openPage('withdrawPage')"><b>💸</b>Withdraw</button>
+<button onclick="openPage('historyPage')"><b>📜</b>History</button>
+</div>
+<div class="card" style="margin-top:14px">
+<h3>Wallet Information</h3>
+<p class="page-desc">আপনার আয় এবং উত্তোলনের হিসাব এখানে দেখতে পারবেন।</p>
+<div class="row"><span class="muted">Available Balance</span><strong>৳ <span id="walletBalance2">0.00</span></strong></div>
+<button class="action" onclick="openPage('withdrawPage')">Withdraw Money ➜</button>
+<button class="action" style="background:linear-gradient(120deg,#b77aff,#7534c7);color:white;border-color:#e0baff" onclick="openPage('historyPage')">View Transaction History</button>
+</div>
 </main>
 
 <!-- REFERRAL -->
 <main id="referralPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('homePage')">←</button>
-  <h2>👥 Referral</h2>
- </div>
- <div class="card">
-  <p class="page-desc">বন্ধুকে আমন্ত্রণ জানাও।</p>
-  <label>তোমার Referral Code</label>
-  <input class="field" id="refCode" readonly>
-  <button class="action" onclick="copyReferral()">কোড কপি করো</button>
-  <div class="notice">Referral tracking পরবর্তী ধাপে নিরাপদভাবে যুক্ত হবে।</div>
- </div>
+<div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>👥 Referral</h2></div>
+<div class="card">
+<p class="page-desc">বন্ধুদের আমন্ত্রণ জানান।</p>
+<label>আপনার Referral Code</label>
+<input class="field" id="refCode" readonly>
+<button class="action" onclick="copyReferral()">কোড কপি করুন</button>
+<div class="notice">Referral tracking পরবর্তী ধাপে নিরাপদভাবে যুক্ত হবে।</div>
+</div>
 </main>
 
 <!-- PROFILE -->
 <main id="profilePage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('homePage')">←</button>
-  <h2>⚙️ Settings</h2>
- </div>
-
- <div class="card">
-  <div style="text-align:center">
-   <img id="profilePhoto" src="https://via.placeholder.com/100" style="width:76px;height:76px;border-radius:50%;object-fit:cover" alt="">
-   <h3 id="profileName" style="margin-top:8px">User</h3>
-   <p class="muted" id="profileEmail"></p>
-  </div>
-
-  <div class="list-item">
-   <span class="muted">User ID</span>
-   <p id="profileUid" style="font-size:11px;overflow-wrap:anywhere"></p>
-  </div>
-
-  <div class="list-item">
-   <div class="row"><strong>Account</strong><span class="pill" id="accountType">Google Login</span></div>
-  </div>
-
-  <div class="list-item">
-   <div class="row"><strong>App Version</strong><span class="muted">Earning Money BD</span></div>
-  </div>
-
-  <button class="logout" onclick="logout()">Log Out</button>
- </div>
+<div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>⚙️ Settings</h2></div>
+<div class="card">
+<div style="text-align:center">
+<img id="profilePhoto" src="https://via.placeholder.com/100" style="width:76px;height:76px;border-radius:50%;object-fit:cover" alt="">
+<h3 id="profileName" style="margin-top:8px">User</h3>
+<p class="muted" id="profileEmail"></p>
+</div>
+<div class="list-item"><span class="muted">User ID</span><p id="profileUid" style="font-size:11px;overflow-wrap:anywhere"></p></div>
+<div class="list-item"><div class="row"><strong>Account</strong><span class="pill" id="accountType">Google Login</span></div></div>
+<div class="list-item"><div class="row"><strong>App Version</strong><span class="muted">Earning Money BD</span></div></div>
+<button class="logout" onclick="logout()">Log Out</button>
+</div>
 </main>
 
 <!-- DAILY BONUS -->
 <main id="bonusPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('homePage')">←</button>
-  <h2>🎁 Daily Bonus</h2>
- </div>
- <div class="card">
-  <p class="page-desc">প্রতিদিন একবার বোনাস ক্লেইম করতে পারবে।</p>
-  <h2 style="font:700 34px Poppins;margin:12px 0;color:#ffd45a">৳ <span id="bonusAmount">10.00</span></h2>
-  <span class="pill">প্রতিদিন ১ বার</span>
-  <button class="action" id="claimBonusBtn" onclick="claimBonus()">আজকের বোনাস ক্লেইম</button>
-  <p class="notice">Claim করলেই বোনাস সরাসরি Wallet Balance-এ যোগ হবে।</p>
- </div>
+<div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>🎁 Daily Bonus</h2></div>
+<div class="card">
+<p class="page-desc">আপনি প্রতিদিন একবার বোনাস ক্লেইম করতে পারবেন।</p>
+<h2 style="font:700 34px Poppins;margin:12px 0;color:#ffd45a">৳ <span id="bonusAmount">10.00</span></h2>
+<span class="pill">প্রতিদিন ১ বার</span>
+<button class="action" id="claimBonusBtn" onclick="claimBonus()">আজকের বোনাস ক্লেইম</button>
+<p class="notice">Claim করলেই বোনাস সরাসরি Wallet Balance-এ যোগ হবে।</p>
+</div>
 </main>
 
 <!-- ADS -->
 <main id="adsPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('homePage')">←</button>
-  <h2>▶️ Watch Ads</h2>
- </div>
- <div class="card">
-  <h3>বিজ্ঞাপন দেখে আয়</h3>
-  <p class="page-desc">অ্যাড নেটওয়ার্ক যুক্ত হলে এখানে বিজ্ঞাপন দেখা ও রিওয়ার্ড পাওয়া যাবে।</p>
-  <div class="row">
-   <span class="muted">প্রতি বিজ্ঞাপনের রিওয়ার্ড</span>
-   <strong>৳ <span id="adReward">0.00</span></strong>
-  </div>
-  <button class="action" disabled>বিজ্ঞাপন এখনো চালু হয়নি</button>
- </div>
+<div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>▶️ Watch Ads</h2></div>
+<div class="card">
+<h3>বিজ্ঞাপন দেখে আয়</h3>
+<p class="page-desc">অ্যাড নেটওয়ার্ক যুক্ত হলে এখানে বিজ্ঞাপন দেখা ও রিওয়ার্ড পাওয়া যাবে।</p>
+<div class="row"><span class="muted">প্রতি বিজ্ঞাপনের রিওয়ার্ড</span><strong>৳ <span id="adReward">0.00</span></strong></div>
+<button class="action" disabled>বিজ্ঞাপন এখনো চালু হয়নি</button>
+</div>
 </main>
 
 <!-- WITHDRAW -->
 <main id="withdrawPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('walletPage')">←</button>
-  <h2>💸 Withdraw</h2>
- </div>
- <div class="card">
-  <p class="page-desc">উত্তোলনের আবেদন জমা দাও। Admin যাচাই করে প্রসেস করবে।</p>
-  <label>পেমেন্ট মাধ্যম</label>
-  <select class="field" id="payMethod">
-   <option value="bKash">bKash</option>
-   <option value="Nagad">Nagad</option>
-   <option value="Rocket">Rocket</option>
-  </select>
-  <label>অ্যাকাউন্ট নম্বর</label>
-  <input class="field" id="payNumber" inputmode="numeric" placeholder="01XXXXXXXXX" maxlength="11">
-  <label>টাকার পরিমাণ</label>
-  <input class="field" id="withdrawAmount" type="number" min="1" step="1" placeholder="টাকার পরিমাণ">
-  <button class="action" onclick="submitWithdraw()">উত্তোলনের আবেদন</button>
-  <p class="notice">উত্তোলনের আবেদন Pending থাকবে যতক্ষণ Admin যাচাই না করে।</p>
- </div>
+<div class="topline"><button class="back" onclick="openPage('walletPage')">←</button><h2>💸 Withdraw</h2></div>
+<div class="card">
+<p class="page-desc">উত্তোলনের আবেদন জমা দিন। Admin যাচাই করে প্রসেস করবেন।</p>
+<label>পেমেন্ট মাধ্যম</label>
+<select class="field" id="payMethod">
+<option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option>
+</select>
+<label>অ্যাকাউন্ট নম্বর</label>
+<input class="field" id="payNumber" inputmode="numeric" placeholder="01XXXXXXXXX" maxlength="11">
+<label>টাকার পরিমাণ</label>
+<input class="field" id="withdrawAmount" type="number" min="1" step="1" placeholder="টাকার পরিমাণ">
+<button class="action" onclick="submitWithdraw()">উত্তোলনের আবেদন জমা দিন</button>
+<p class="notice">Admin যাচাই না করা পর্যন্ত উত্তোলনের আবেদন Pending থাকবে।</p>
+</div>
 </main>
 
 <!-- HISTORY -->
 <main id="historyPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('walletPage')">←</button>
-  <h2>📜 History</h2>
- </div>
- <div class="card" id="historyList">
-  <div class="empty">হিসাব লোড হচ্ছে...</div>
- </div>
+<div class="topline"><button class="back" onclick="openPage('walletPage')">←</button><h2>📜 History</h2></div>
+<div class="card" id="historyList"><div class="empty">হিসাব লোড হচ্ছে...</div></div>
 </main>
-
 </div>
 
-<!-- FIVE ICON BOTTOM NAV -->
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav" id="bottomNav" style="display:none">
-
- <button class="nav-btn active" data-nav="home" onclick="openPage('homePage')">
-  <b>
-   <svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="m3 10 9-7 9 7"></path>
-    <path d="M5 9v12h14V9"></path>
-    <path d="M9 21v-7h6v7"></path>
-   </svg>
-  </b>
-  <span>Home</span>
- </button>
-
- <button class="nav-btn" data-nav="tasks" onclick="openPage('tasksPage')">
-  <b>
-   <svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="5" y="4" width="14" height="18" rx="2"></rect>
-    <path d="M9 4V2h6v2"></path>
-    <path d="M8 10h8M8 14h8M8 18h5"></path>
-   </svg>
-  </b>
-  <span>Tasks</span>
- </button>
-
- <button class="nav-btn" data-nav="wallet" onclick="openPage('walletPage')">
-  <b>
-   <svg viewBox="0 0 24 24" width="29" height="27" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H21v16H5.5A2.5 2.5 0 0 1 3 17.5z"></path>
-    <path d="M3 7h15"></path>
-    <path d="M16 11h5v5h-5a2.5 2.5 0 0 1 0-5z"></path>
-    <path d="M18 13.5h.01"></path>
-   </svg>
-  </b>
-  <span>Wallet</span>
- </button>
-
- <button class="nav-btn" data-nav="refer" onclick="openPage('referralPage')">
-  <b>
-   <svg viewBox="0 0 24 24" width="29" height="27" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-    <circle cx="9" cy="7" r="4"></circle>
-    <path d="M20 21v-2a4 4 0 0 0-3-3.87"></path>
-    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-   </svg>
-  </b>
-  <span>Refer</span>
- </button>
-
- <button class="nav-btn" data-nav="me" onclick="openPage('profilePage')">
-  <b>
-   <svg viewBox="0 0 24 24" width="29" height="29"
-    fill="none" stroke="currentColor" stroke-width="1.9"
-    stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="8" r="4"></circle>
-    <path d="M4.5 20.5c.7-4.1 3.4-6.5 7.5-6.5s6.8 2.4 7.5 6.5"></path>
-    <path d="M7.5 19.5h9"></path>
-   </svg>
-  </b>
-  <span>Me</span>
- </button>
-
+<button class="nav-btn active" data-nav="home" onclick="openPage('homePage')">
+<b><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7"></path><path d="M5 9v12h14V9"></path><path d="M9 21v-7h6v7"></path></svg></b><span>Home</span>
+</button>
+<button class="nav-btn" data-nav="tasks" onclick="openPage('tasksPage')">
+<b><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="18" rx="2"></rect><path d="M9 4V2h6v2"></path><path d="M8 10h8M8 14h8M8 18h5"></path></svg></b><span>Tasks</span>
+</button>
+<button class="nav-btn" data-nav="wallet" onclick="openPage('walletPage')">
+<b><svg viewBox="0 0 24 24" width="29" height="27" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H21v16H5.5A2.5 2.5 0 0 1 3 17.5z"></path><path d="M3 7h15"></path><path d="M16 11h5v5h-5a2.5 2.5 0 0 1 0-5z"></path><path d="M18 13.5h.01"></path></svg></b><span>Wallet</span>
+</button>
+<button class="nav-btn" data-nav="refer" onclick="openPage('referralPage')">
+<b><svg viewBox="0 0 24 24" width="29" height="27" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M20 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></b><span>Refer</span>
+</button>
+<button class="nav-btn" data-nav="me" onclick="openPage('profilePage')">
+<b><svg viewBox="0 0 24 24" width="29" height="29" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4.5 20.5c.7-4.1 3.4-6.5 7.5-6.5s6.8 2.4 7.5 6.5"></path><path d="M7.5 19.5h9"></path></svg></b><span>Me</span>
+</button>
 </nav>
 
 <div id="toast" class="toast"></div>
 
 <script>
+/* LANGUAGE SYSTEM */
+let currentLanguage=localStorage.getItem('embd_language')||'bn';
+let pendingLanguage=null;
+
+const translations={
+'ভাষা পরিবর্তন':'Change Language',
+'আপনি কি অ্যাপের ভাষা পরিবর্তন করতে চান?':'Would you like to change the app language?',
+'না':'Cancel',
+'হ্যাঁ':'Yes',
+
+'আপনার অ্যাকাউন্টে লগইন করুন':'Log in to your account',
+'নতুন অ্যাকাউন্ট তৈরি করুন':'Create a New Account',
+'পাসওয়ার্ড ভুলে গেছেন?':'Forgot Password?',
+'পাসওয়ার্ড রিসেট করার লিংক পাঠান':'Send a password reset link',
+'আপনার Gmail Address':'Your Gmail Address',
+'আপনার Wallet Balance':'Your Wallet Balance',
+'আপনার মোট Wallet Balance':'Your Total Wallet Balance',
+'আজকের আয়':"Today's Earnings",
+'সম্পন্ন কাজ':'Completed Tasks',
+'আজকের বোনাস ক্লেইম':'Claim Today’s Bonus',
+'প্রতিদিন একবার বোনাস ক্লেইম করতে পারবেন।':'You can claim the bonus once every day.',
+'প্রতিদিন ১ বার':'Once per day',
+'Claim করলেই বোনাস সরাসরি Wallet Balance-এ যোগ হবে।':'The bonus will be added directly to your wallet after claiming.',
+'বিজ্ঞাপন দেখে আয়':'Earn by watching ads',
+'অ্যাড নেটওয়ার্ক যুক্ত হলে এখানে বিজ্ঞাপন দেখা ও রিওয়ার্ড পাওয়া যাবে।':'Ads and rewards will be available here after an ad network is connected.',
+'প্রতি বিজ্ঞাপনের রিওয়ার্ড':'Reward per advertisement',
+'বিজ্ঞাপন এখনো চালু হয়নি':'Advertisements are not active yet',
+'বন্ধুদের আমন্ত্রণ জানান।':'Invite your friends.',
+'আপনার Referral Code':'Your Referral Code',
+'কোড কপি করুন':'Copy Code',
+'Referral tracking পরবর্তী ধাপে নিরাপদভাবে যুক্ত হবে।':'Referral tracking will be added securely in a future update.',
+'উত্তোলনের আবেদন জমা দিন। Admin যাচাই করে প্রসেস করবেন।':'Submit a withdrawal request. The admin will verify and process it.',
+'পেমেন্ট মাধ্যম':'Payment Method',
+'অ্যাকাউন্ট নম্বর':'Account Number',
+'টাকার পরিমাণ':'Amount',
+'উত্তোলনের আবেদন জমা দিন':'Submit Withdrawal Request',
+'উত্তোলনের আবেদন':'Submit Withdrawal Request',
+'Admin যাচাই না করা পর্যন্ত উত্তোলনের আবেদন Pending থাকবে।':'Your withdrawal request will remain pending until verified by the admin.',
+'হিসাব লোড হচ্ছে...':'Loading history...',
+'এখনো কোনো হিসাব নেই।':'No transactions yet.',
+'এখনো কোনো কাজ যোগ করা হয়নি।':'No tasks have been added yet.',
+'কাজ লোড হচ্ছে...':'Loading tasks...',
+'Admin-এর দেওয়া কাজগুলো এখানে দেখা যাবে।':'Tasks provided by the admin will appear here.',
+'আপনার আয় এবং উত্তোলনের হিসাব এখানে দেখতে পারবেন।':'You can see your earnings and withdrawal records here.',
+'বন্ধুদের আমন্ত্রণ জানান এবং আপনার আয় বাড়ান!':'Invite friends and increase your earnings!',
+'সাম্প্রতিক হিসাব দেখতে History খুলুন।':'Open History to see recent activity.',
+'আপনার Referral Code':'Your Referral Code',
+'আপনার পুরো নাম লিখুন।':'Enter your full name.',
+'অনুগ্রহ করে সঠিক Gmail Address দিন।':'Enter a valid Gmail address.',
+'অনুগ্রহ করে শুধু Gmail Address ব্যবহার করুন।':'Use a Gmail address only.',
+'অনুগ্রহ করে Password লিখুন।':'Enter your password.',
+'Password কমপক্ষে ৬ অক্ষরের হতে হবে।':'Password must be at least 6 characters.',
+'দুটি Password মিলছে না।':'The two passwords do not match.',
+'Login হচ্ছে...':'Logging in...',
+'Login সফল হয়েছে!':'Login successful!',
+'Gmail অথবা Password ভুল।':'Incorrect Gmail or password.',
+'Password ভুল হয়েছে।':'Incorrect password.',
+'অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে চেষ্টা করুন।':'Too many attempts. Try again later.',
+'অ্যাকাউন্ট তৈরি হচ্ছে...':'Creating account...',
+'অ্যাকাউন্ট তৈরি হয়েছে! Dashboard খুলছে...':'Account created! Opening dashboard...',
+'এই Gmail দিয়ে আগে অ্যাকাউন্ট খোলা হয়েছে। Login করুন।':'An account already exists with this Gmail. Please log in.',
+'আরও শক্তিশালী Password ব্যবহার করুন।':'Choose a stronger password.',
+'Gmail Address সঠিক নয়।':'Invalid Gmail address.',
+'Firebase Console থেকে Email/Password Login চালু করুন।':'Enable Email/Password login in Firebase Console.',
+'Reset Link পাঠানো হচ্ছে...':'Sending reset link...',
+'Reset Link পাঠানো হয়েছে। Gmail Inbox দেখুন।':'Reset link sent. Check your Gmail inbox.',
+'এই Gmail দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।':'No account found with this Gmail.',
+'Google-এর সাথে সংযোগ হচ্ছে...':'Connecting to Google...',
+'ডেটাবেস সংযোগে সমস্যা হয়েছে':'Database connection problem',
+'বোনাস যোগ হয়নি। Firestore Rules পরীক্ষা করুন':'Bonus not added. Check Firestore Rules.',
+'অনুগ্রহ করে সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন।':'Enter a valid 11-digit mobile number.',
+'অনুগ্রহ করে সঠিক টাকার পরিমাণ দিন।':'Enter a valid amount.',
+'আপনার পর্যাপ্ত ব্যালেন্স নেই।':'Insufficient balance.',
+'উত্তোলনের আবেদন জমা হয়েছে':'Withdrawal request submitted.',
+'আবেদন জমা হয়নি: Firestore Rules পরীক্ষা করুন':'Request failed. Check Firestore Rules.',
+'Referral code কপি হয়েছে':'Referral code copied.',
+'Task submission জমা হয়েছে':'Task submission submitted.',
+'জমা হয়নি: Firestore Rules পরীক্ষা করুন':'Submission failed. Check Firestore Rules.',
+'History দেখতে Firestore Rules আপডেট করতে হবে।':'Update Firestore Rules to view history.',
+'Tasks লোড করা যায়নি। Firestore Rules / Admin setup বাকি।':'Could not load tasks. Check Firestore Rules / Admin setup.',
+'ন্যূনতম উত্তোলন ৳':'Minimum withdrawal ৳',
+'অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।':'Could not create account. Try again.',
+'Login করা যায়নি। আবার চেষ্টা করুন।':'Login failed. Please try again.',
+'Reset Link পাঠানো যায়নি। আবার চেষ্টা করুন।':'Could not send reset link. Try again.',
+'আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে':'Today’s bonus has already been claimed',
+'Admin-এর Bonus Settings পড়া যায়নি':'Could not load admin bonus settings',
+'Welcome Back! 👋':'Welcome Back! 👋',
+'Keep earning, keep growing!':'Keep earning, keep growing!',
+'হ্যালো,':'Hello,',
+'Quick Access':'Quick Access',
+'Daily Bonus':'Daily Bonus',
+'Daily Reward':'Daily Reward',
+'Watch Ads':'Watch Ads',
+'Watch & Earn':'Watch & Earn',
+'Tasks':'Tasks',
+'Complete Tasks':'Complete Tasks',
+'Referral':'Referral',
+'Invite Friends':'Invite Friends',
+'Withdraw':'Withdraw',
+'Cash Out':'Cash Out',
+'History':'History',
+'Transaction':'Transaction',
+'Refer Your Friends':'Refer Your Friends',
+'Recent Activity':'Recent Activity',
+'View All ➜':'View All ➜',
+'My Wallet':'My Wallet',
+'Wallet Information':'Wallet Information',
+'Available Balance':'Available Balance',
+'Withdraw Money ➜':'Withdraw Money ➜',
+'View Transaction History':'View Transaction History',
+'Settings':'Settings',
+'User ID':'User ID',
+'Account':'Account',
+'App Version':'App Version',
+'Log Out':'Log Out',
+'Google Login':'Google Login',
+'Email & Password':'Email & Password',
+'Back to Login':'Back to Login',
+'Already have an account? Login':'Already have an account? Login',
+'Create New Account':'Create New Account',
+'Create Account':'Create Account',
+'Forgot Password?':'Forgot Password?',
+'Send Reset Link':'Send Reset Link',
+'Continue with Google':'Continue with Google',
+'Login':'Login',
+'Full Name':'Full Name',
+'Gmail Address':'Gmail Address',
+'Password':'Password',
+'Create Password':'Create Password',
+'Confirm Password':'Confirm Password',
+'OR':'OR',
+'Home':'Home',
+'Wallet':'Wallet',
+'Refer':'Refer',
+'Me':'Me',
+'Play • Earn • Withdraw':'Play • Earn • Withdraw',
+'Loading your account...':'Loading your account...',
+'Welcome Earning Money BD!':'Welcome Earning Money BD!',
+'পাসওয়ার্ড লুকান':'Hide password',
+'পাসওয়ার্ড দেখুন':'Show password',
+'আবেদন':'Apply',
+'রিওয়ার্ড: ৳':'Reward: ৳',
+'Daily Bonus':'Daily Bonus',
+'daily_bonus':'Daily Bonus',
+'Withdraw':'Withdraw',
+'approved':'Approved',
+'pending':'Pending',
+'Task':'Task',
+'transaction':'Transaction'
+};
+
+function getTranslation(value,target){
+const trimmed=String(value).trim();
+if(!trimmed)return value;
+
+if(target==='en'){
+if(translations[trimmed])return value.replace(trimmed,translations[trimmed]);
+}else{
+for(const [bn,en] of Object.entries(translations)){
+if(en===trimmed)return value.replace(trimmed,bn);
+}
+}
+return value;
+}
+
+const originalTextNodes=new WeakMap();
+const originalAttributes=new WeakMap();
+
+function translateText(value){
+return getTranslation(value,'en');
+}
+
+function restoreBangla(value){
+return getTranslation(value,'bn');
+}
+
+function updateWelcomeLanguage(){
+const welcomeTitle=document.querySelector('.welcome-copy strong');
+if(!welcomeTitle)return;
+const name=welcomeTitle.dataset.welcomeName;
+if(!name)return;
+welcomeTitle.textContent=currentLanguage==='en'
+?'Hello, '+name+' 👋'
+:'হ্যালো, '+name+' 👋';
+}
+
+function applyLanguage(){
+document.documentElement.lang=currentLanguage;
+
+document.getElementById('langBn').classList.toggle('active',currentLanguage==='bn');
+document.getElementById('langEn').classList.toggle('active',currentLanguage==='en');
+
+const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+let node;
+
+while(node=walker.nextNode()){
+if(node.parentElement.closest('script,style,.language-selector,#languageConfirm'))continue;
+
+if(!originalTextNodes.has(node)){
+originalTextNodes.set(node,node.nodeValue);
+}
+
+const original=originalTextNodes.get(node);
+node.nodeValue=currentLanguage==='en'
+?translateText(original)
+:restoreBangla(original);
+}
+
+document.querySelectorAll('input,button').forEach(el=>{
+['placeholder','aria-label','title'].forEach(attr=>{
+if(!el.hasAttribute(attr))return;
+
+let store=originalAttributes.get(el);
+if(!store){
+store={};
+originalAttributes.set(el,store);
+}
+
+if(store[attr]===undefined){
+store[attr]=el.getAttribute(attr);
+}
+
+const original=store[attr];
+el.setAttribute(attr,currentLanguage==='en'
+?translateText(original)
+:restoreBangla(original));
+});
+});
+
+applyConfirmLanguage();
+updateWelcomeLanguage();
+}
+
+function requestLanguage(lang){
+if(lang===currentLanguage)return;
+pendingLanguage=lang;
+document.getElementById('languageConfirm').style.display='flex';
+applyConfirmLanguage();
+}
+
+function applyConfirmLanguage(){
+const title=document.getElementById('confirmTitle');
+const message=document.getElementById('confirmMessage');
+const buttons=document.querySelectorAll('.language-confirm-actions button');
+
+title.textContent=currentLanguage==='en'?'Change Language':'ভাষা পরিবর্তন';
+
+message.textContent=currentLanguage==='en'
+?'Would you like to change the app language?'
+:'আপনি কি অ্যাপের ভাষা পরিবর্তন করতে চান?';
+
+buttons[0].textContent=currentLanguage==='en'?'Cancel':'না';
+buttons[1].textContent=currentLanguage==='en'?'Yes':'হ্যাঁ';
+}
+
+function cancelLanguage(){
+pendingLanguage=null;
+document.getElementById('languageConfirm').style.display='none';
+}
+
+function confirmLanguage(){
+if(!pendingLanguage)return;
+
+currentLanguage=pendingLanguage;
+localStorage.setItem('embd_language',currentLanguage);
+pendingLanguage=null;
+
+document.getElementById('languageConfirm').style.display='none';
+applyLanguage();
+}
+
+/* FIREBASE */
 const firebaseConfig={
- apiKey:"AIzaSyDDDwkjIa7NecN7CnpyQxPja4KH0vLqCJ4",
- authDomain:"earning-bd-1e902.firebaseapp.com",
- projectId:"earning-bd-1e902",
- storageBucket:"earning-bd-1e902.firebasestorage.app",
- messagingSenderId:"504547016236",
- appId:"1:504547016236:web:8c5b2cfc733aaf16175b89",
- measurementId:"G-JYN5BL9RJV"
+apiKey:"AIzaSyDDDwkjIa7NecN7CnpyQxPja4KH0vLqCJ4",
+authDomain:"earning-bd-1e902.firebaseapp.com",
+projectId:"earning-bd-1e902",
+storageBucket:"earning-bd-1e902.firebasestorage.app",
+messagingSenderId:"504547016236",
+appId:"1:504547016236:web:8c5b2cfc733aaf16175b89",
+measurementId:"G-JYN5BL9RJV"
 };
 
 firebase.initializeApp(firebaseConfig);
-
 const auth=firebase.auth();
 const db=firebase.firestore();
 const provider=new firebase.auth.GoogleAuthProvider();
@@ -972,719 +927,671 @@ let appSettings={dailyBonus:10,adReward:0,minWithdraw:0};
 let userData={balance:0};
 
 function toast(message){
- const t=document.getElementById('toast');
- t.textContent=message;
- t.style.display='block';
- clearTimeout(window.toastTimer);
- window.toastTimer=setTimeout(()=>t.style.display='none',2600);
+const t=document.getElementById('toast');
+t.textContent=currentLanguage==='en'?translateText(message):restoreBangla(message);
+t.style.display='block';
+clearTimeout(window.toastTimer);
+window.toastTimer=setTimeout(()=>t.style.display='none',2600);
 }
 
 function todayKey(){
- const d=new Date();
- return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const d=new Date();
+return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+/* PASSWORD SHOW / HIDE */
+function togglePassword(inputId,buttonId){
+const input=document.getElementById(inputId);
+const button=document.getElementById(buttonId);
+if(!input||!button)return;
+
+const icon=button.querySelector('svg');
+if(!icon)return;
+
+if(input.type==='password'){
+input.type='text';
+icon.innerHTML=`
+<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path>
+<circle cx="12" cy="12" r="3"></circle>`;
+button.setAttribute('aria-label',currentLanguage==='en'?'Hide password':'পাসওয়ার্ড লুকান');
+}else{
+input.type='password';
+icon.innerHTML=`
+<path d="M3 3l18 18"></path>
+<path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
+<path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.5 15.5 0 0 1-3.1 3.8"></path>
+<path d="M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7c1.4 0 2.7-.3 3.8-.8"></path>`;
+button.setAttribute('aria-label',currentLanguage==='en'?'Show password':'পাসওয়ার্ড দেখুন');
+}
 }
 
 /* LOGIN FORM NAVIGATION */
 function showLoginForm(){
- document.getElementById('loginForm').style.display='block';
- document.getElementById('registerForm').style.display='none';
- document.getElementById('forgotForm').style.display='none';
- document.getElementById('authTitle').textContent='Welcome Earning Money BD!';
- document.getElementById('authSubtitle').textContent='তোমার অ্যাকাউন্টে লগইন করো';
- authStatus('');
+document.getElementById('loginForm').style.display='block';
+document.getElementById('registerForm').style.display='none';
+document.getElementById('forgotForm').style.display='none';
+document.getElementById('authTitle').textContent='Welcome Earning Money BD!';
+document.getElementById('authSubtitle').textContent=currentLanguage==='en'
+?'Log in to your account'
+:'আপনার অ্যাকাউন্টে লগইন করুন';
+authStatus('');
+applyLanguage();
 }
 
 function showRegisterForm(){
- document.getElementById('loginForm').style.display='none';
- document.getElementById('registerForm').style.display='block';
- document.getElementById('forgotForm').style.display='none';
- document.getElementById('authTitle').textContent='Create New Account';
- document.getElementById('authSubtitle').textContent='নতুন অ্যাকাউন্ট তৈরি করো';
- authStatus('');
+document.getElementById('loginForm').style.display='none';
+document.getElementById('registerForm').style.display='block';
+document.getElementById('forgotForm').style.display='none';
+document.getElementById('authTitle').textContent=currentLanguage==='en'
+?'Create New Account':'নতুন অ্যাকাউন্ট তৈরি করুন';
+document.getElementById('authSubtitle').textContent=currentLanguage==='en'
+?'Create a new account':'নতুন অ্যাকাউন্ট তৈরি করুন';
+authStatus('');
+applyLanguage();
 }
 
 function showForgotForm(){
- document.getElementById('loginForm').style.display='none';
- document.getElementById('registerForm').style.display='none';
- document.getElementById('forgotForm').style.display='block';
- document.getElementById('authTitle').textContent='Forgot Password';
- document.getElementById('authSubtitle').textContent='পাসওয়ার্ড রিসেট করার লিংক পাঠাও';
- document.getElementById('forgotEmail').value=
-  document.getElementById('loginEmail').value.trim();
- authStatus('');
+document.getElementById('loginForm').style.display='none';
+document.getElementById('registerForm').style.display='none';
+document.getElementById('forgotForm').style.display='block';
+document.getElementById('authTitle').textContent=currentLanguage==='en'
+?'Forgot Password':'পাসওয়ার্ড ভুলে গেছেন?';
+document.getElementById('authSubtitle').textContent=currentLanguage==='en'
+?'Send a password reset link':'পাসওয়ার্ড রিসেট করার লিংক পাঠান';
+document.getElementById('forgotEmail').value=document.getElementById('loginEmail').value.trim();
+authStatus('');
+applyLanguage();
 }
 
 function authStatus(message,error=false){
- const s=document.getElementById('status');
- s.textContent=message;
- s.classList.toggle('auth-error',error);
+const s=document.getElementById('status');
+s.textContent=currentLanguage==='en'?translateText(message):restoreBangla(message);
+s.classList.toggle('auth-error',error);
 }
 
 /* EMAIL LOGIN */
 async function emailLogin(){
- const email=document.getElementById('loginEmail').value.trim().toLowerCase();
- const password=document.getElementById('loginPassword').value;
- const btn=document.querySelector('#loginForm .auth-main-btn');
+const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+const password=document.getElementById('loginPassword').value;
+const btn=document.querySelector('#loginForm .auth-main-btn');
 
- if(!/^[a-z0-9._%+-]+@gmail\.com$/i.test(email)){
-  authStatus('সঠিক Gmail Address দাও।',true);
-  return;
- }
+if(!/^[a-z0-9._%+-]+@gmail.com$/i.test(email)){
+authStatus('অনুগ্রহ করে সঠিক Gmail Address দিন।',true);
+return;
+}
+if(!password){
+authStatus('অনুগ্রহ করে Password লিখুন।',true);
+return;
+}
 
- if(!password){
-  authStatus('Password লিখো।',true);
-  return;
- }
+btn.disabled=true;
+authStatus('Login হচ্ছে...');
 
- btn.disabled=true;
- authStatus('Login হচ্ছে...');
-
- try{
-  await auth.signInWithEmailAndPassword(email,password);
-  authStatus('Login সফল হয়েছে!');
- }catch(e){
-  console.error(e);
-  let msg='Login করা যায়নি। আবার চেষ্টা করো।';
-
-  if(e.code==='auth/user-not-found'||e.code==='auth/invalid-credential'){
-   msg='Gmail অথবা Password ভুল।';
-  }
-  if(e.code==='auth/wrong-password'){
-   msg='Password ভুল হয়েছে।';
-  }
-  if(e.code==='auth/too-many-requests'){
-   msg='অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে চেষ্টা করো।';
-  }
-
-  authStatus(msg,true);
- }finally{
-  btn.disabled=false;
- }
+try{
+await auth.signInWithEmailAndPassword(email,password);
+authStatus('Login সফল হয়েছে!');
+}catch(e){
+console.error(e);
+let msg='Login করা যায়নি। আবার চেষ্টা করুন।';
+if(e.code==='auth/user-not-found'||e.code==='auth/invalid-credential')msg='Gmail অথবা Password ভুল।';
+if(e.code==='auth/wrong-password')msg='Password ভুল হয়েছে।';
+if(e.code==='auth/too-many-requests')msg='অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে চেষ্টা করুন।';
+authStatus(msg,true);
+}finally{
+btn.disabled=false;
+}
 }
 
 /* CREATE ACCOUNT */
 async function registerAccount(){
- const name=document.getElementById('registerName').value.trim();
- const email=document.getElementById('registerEmail').value.trim().toLowerCase();
- const password=document.getElementById('registerPassword').value;
- const confirm=document.getElementById('confirmPassword').value;
- const btn=document.querySelector('#registerForm .auth-main-btn');
+const name=document.getElementById('registerName').value.trim();
+const email=document.getElementById('registerEmail').value.trim().toLowerCase();
+const password=document.getElementById('registerPassword').value;
+const confirm=document.getElementById('confirmPassword').value;
+const btn=document.querySelector('#registerForm .auth-main-btn');
 
- if(name.length<2){
-  authStatus('তোমার পুরো নাম লিখো।',true);
-  return;
- }
+if(name.length<2){
+authStatus('অনুগ্রহ করে আপনার পুরো নাম লিখুন।',true);
+return;
+}
+if(!/^[a-z0-9._%+-]+@gmail.com$/i.test(email)){
+authStatus('অনুগ্রহ করে শুধু Gmail Address ব্যবহার করুন।',true);
+return;
+}
+if(password.length<6){
+authStatus('Password কমপক্ষে ৬ অক্ষরের হতে হবে।',true);
+return;
+}
+if(password!==confirm){
+authStatus('দুটি Password মিলছে না।',true);
+return;
+}
 
- if(!/^[a-z0-9._%+-]+@gmail\.com$/i.test(email)){
-  authStatus('শুধু Gmail Address ব্যবহার করো।',true);
-  return;
- }
+btn.disabled=true;
+authStatus('অ্যাকাউন্ট তৈরি হচ্ছে...');
 
- if(password.length<6){
-  authStatus('Password কমপক্ষে ৬ অক্ষরের হতে হবে।',true);
-  return;
- }
-
- if(password!==confirm){
-  authStatus('দুইটি Password মিলছে না।',true);
-  return;
- }
-
- btn.disabled=true;
- authStatus('অ্যাকাউন্ট তৈরি হচ্ছে...');
-
- try{
-  const credential=await auth.createUserWithEmailAndPassword(email,password);
-
-  await credential.user.updateProfile({displayName:name});
-
-  await db.collection('users').doc(credential.user.uid).set({
-   name:name,
-   email:email,
-   photoURL:'',
-   balance:0,
-   createdAt:firebase.firestore.FieldValue.serverTimestamp()
-  },{merge:true});
-
-  authStatus('অ্যাকাউন্ট তৈরি হয়েছে! Dashboard খুলছে...');
-
- }catch(e){
-  console.error(e);
-
-  let msg='অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করো।';
-
-  if(e.code==='auth/email-already-in-use'){
-   msg='এই Gmail দিয়ে আগে অ্যাকাউন্ট খোলা হয়েছে। Login করো।';
-  }
-  if(e.code==='auth/weak-password'){
-   msg='আরও শক্তিশালী Password দাও।';
-  }
-  if(e.code==='auth/invalid-email'){
-   msg='Gmail Address সঠিক নয়।';
-  }
-  if(e.code==='auth/operation-not-allowed'){
-   msg='Firebase Console থেকে Email/Password Login চালু করো।';
-  }
-
-  authStatus(msg,true);
- }finally{
-  btn.disabled=false;
- }
+try{
+const credential=await auth.createUserWithEmailAndPassword(email,password);
+await credential.user.updateProfile({displayName:name});
+await db.collection('users').doc(credential.user.uid).set({
+name:name,email:email,photoURL:'',balance:0,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+},{merge:true});
+authStatus('অ্যাকাউন্ট তৈরি হয়েছে! Dashboard খুলছে...');
+}catch(e){
+console.error(e);
+let msg='অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।';
+if(e.code==='auth/email-already-in-use')msg='এই Gmail দিয়ে আগে অ্যাকাউন্ট খোলা হয়েছে। Login করুন।';
+if(e.code==='auth/weak-password')msg='আরও শক্তিশালী Password ব্যবহার করুন।';
+if(e.code==='auth/invalid-email')msg='Gmail Address সঠিক নয়।';
+if(e.code==='auth/operation-not-allowed')msg='Firebase Console থেকে Email/Password Login চালু করুন।';
+authStatus(msg,true);
+}finally{
+btn.disabled=false;
+}
 }
 
 /* FORGOT PASSWORD */
 async function resetPassword(){
- const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
- const btn=document.querySelector('#forgotForm .auth-main-btn');
+const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
+const btn=document.querySelector('#forgotForm .auth-main-btn');
 
- if(!/^[a-z0-9._%+-]+@gmail\.com$/i.test(email)){
-  authStatus('সঠিক Gmail Address দাও।',true);
-  return;
- }
+if(!/^[a-z0-9._%+-]+@gmail.com$/i.test(email)){
+authStatus('অনুগ্রহ করে সঠিক Gmail Address দিন।',true);
+return;
+}
 
- btn.disabled=true;
- authStatus('Reset Link পাঠানো হচ্ছে...');
+btn.disabled=true;
+authStatus('Reset Link পাঠানো হচ্ছে...');
 
- try{
-  await auth.sendPasswordResetEmail(email);
-  authStatus('Reset Link পাঠানো হয়েছে। Gmail Inbox দেখো।');
- }catch(e){
-  console.error(e);
-
-  let msg='Reset Link পাঠানো যায়নি। আবার চেষ্টা করো।';
-
-  if(e.code==='auth/user-not-found'){
-   msg='এই Gmail দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।';
-  }
-  if(e.code==='auth/invalid-email'){
-   msg='Gmail Address সঠিক নয়।';
-  }
-
-  authStatus(msg,true);
- }finally{
-  btn.disabled=false;
- }
+try{
+await auth.sendPasswordResetEmail(email);
+authStatus('Reset Link পাঠানো হয়েছে। Gmail Inbox দেখুন।');
+}catch(e){
+console.error(e);
+let msg='Reset Link পাঠানো যায়নি। আবার চেষ্টা করুন।';
+if(e.code==='auth/user-not-found')msg='এই Gmail দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।';
+if(e.code==='auth/invalid-email')msg='Gmail Address সঠিক নয়।';
+authStatus(msg,true);
+}finally{
+btn.disabled=false;
+}
 }
 
 /* GOOGLE LOGIN */
 async function googleLogin(){
- const btn=document.getElementById('googleBtn');
- btn.disabled=true;
- authStatus('Google-এর সাথে সংযোগ হচ্ছে...');
+const btn=document.getElementById('googleBtn');
+btn.disabled=true;
+authStatus('Google-এর সাথে সংযোগ হচ্ছে...');
 
- try{
-  await auth.signInWithPopup(provider);
- }catch(e){
-  console.error(e);
-  authStatus('Google Login করা যায়নি: '+e.message,true);
-  btn.disabled=false;
- }
+try{
+await auth.signInWithPopup(provider);
+}catch(e){
+console.error(e);
+authStatus('Google Login করা যায়নি: '+e.message,true);
+btn.disabled=false;
+}
 }
 
-/* Navigation with page memory */
+/* NAVIGATION */
 function openPage(id,savePage=true){
+const page=document.getElementById(id);
+if(!page)return;
 
- const page=document.getElementById(id);
- if(!page)return;
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+page.classList.add('active');
+document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
 
- document.querySelectorAll('.page').forEach(p=>{
-  p.classList.remove('active');
- });
+let navName='home';
+if(id==='tasksPage')navName='tasks';
+else if(id==='walletPage'||id==='withdrawPage'||id==='historyPage')navName='wallet';
+else if(id==='referralPage')navName='refer';
+else if(id==='profilePage')navName='me';
 
- page.classList.add('active');
+const nav=document.querySelector('.nav-btn[data-nav="'+navName+'"]');
+if(nav)nav.classList.add('active');
 
- document.querySelectorAll('.nav-btn').forEach(b=>{
-  b.classList.remove('active');
- });
-
- let navName='home';
-
- if(id==='tasksPage')navName='tasks';
- else if(id==='walletPage'||id==='withdrawPage'||id==='historyPage')navName='wallet';
- else if(id==='referralPage')navName='refer';
- else if(id==='profilePage')navName='me';
-
- const nav=document.querySelector('.nav-btn[data-nav="'+navName+'"]');
- if(nav)nav.classList.add('active');
-
- if(savePage && currentUser){
-  sessionStorage.setItem('embd_page_'+currentUser.uid,id);
- }
-
- window.scrollTo(0,0);
-
- if(id==='historyPage')loadHistory();
- if(id==='tasksPage')loadTasks();
-
- if(id==='walletPage'){
-  const amount=Number(userData.balance||0).toFixed(2);
-  document.getElementById('walletBalance').textContent=amount;
-  document.getElementById('walletBalance2').textContent=amount;
- }
+if(savePage&&currentUser){
+sessionStorage.setItem('embd_page_'+currentUser.uid,id);
 }
 
-/* FIREBASE AUTH + RESTORE LAST PAGE */
+window.scrollTo(0,0);
+
+if(id==='historyPage')loadHistory();
+if(id==='tasksPage')loadTasks();
+
+if(id==='walletPage'){
+const amount=Number(userData.balance||0).toFixed(2);
+document.getElementById('walletBalance').textContent=amount;
+document.getElementById('walletBalance2').textContent=amount;
+}
+}
+
+/* FIREBASE AUTH + RESTORE PAGE */
 auth.onAuthStateChanged(async user=>{
+const loading=document.getElementById('authLoading');
+const login=document.getElementById('loginScreen');
+const app=document.getElementById('appScreen');
+const nav=document.getElementById('bottomNav');
 
- const loading=document.getElementById('authLoading');
- const login=document.getElementById('loginScreen');
- const app=document.getElementById('appScreen');
- const nav=document.getElementById('bottomNav');
+if(!user){
+currentUser=null;
+loading.style.display='none';
+login.style.display='flex';
+app.style.display='none';
+nav.style.display='none';
+document.getElementById('googleBtn').disabled=false;
+return;
+}
 
- if(!user){
+loading.style.display='flex';
+login.style.display='none';
+app.style.display='none';
+nav.style.display='none';
+currentUser=user;
 
-  currentUser=null;
+try{
+const ref=db.collection('users').doc(user.uid);
+const snap=await ref.get();
 
-  loading.style.display='none';
-  login.style.display='flex';
-  app.style.display='none';
-  nav.style.display='none';
+if(!snap.exists){
+await ref.set({
+name:user.displayName||user.email?.split('@')[0]||'User',
+email:user.email,photoURL:user.photoURL||'',balance:0,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+}
 
-  document.getElementById('googleBtn').disabled=false;
+const fresh=await ref.get();
+userData=fresh.data()||{balance:0};
+renderUserData();
 
-  return;
- }
+const finalName=userData.name||user.displayName||user.email?.split('@')[0]||'User';
+document.getElementById('userName').textContent=finalName;
 
- loading.style.display='flex';
- login.style.display='none';
- app.style.display='none';
- nav.style.display='none';
+const welcomeName=finalName.split(' ')[0];
+const welcomeTitle=document.querySelector('.welcome-copy strong');
+if(welcomeTitle){
+welcomeTitle.dataset.welcomeName=welcomeName;
+}
 
- currentUser=user;
+document.getElementById('userPhoto').src=user.photoURL||'https://via.placeholder.com/80';
+document.getElementById('profilePhoto').src=user.photoURL||'https://via.placeholder.com/100';
+document.getElementById('profileName').textContent=finalName;
+document.getElementById('profileEmail').textContent=user.email||'';
+document.getElementById('profileUid').textContent=user.uid;
 
- try{
+document.getElementById('accountType').textContent=
+user.providerData.some(p=>p.providerId==='password')
+?'Email & Password':'Google Login';
 
-  const ref=db.collection('users').doc(user.uid);
-  const snap=await ref.get();
+document.getElementById('refCode').value=user.uid.slice(0,8).toUpperCase();
 
-  if(!snap.exists){
+await loadSettings();
+await loadTodayStats();
 
-   await ref.set({
-    name:user.displayName||user.email?.split('@')[0]||'User',
-    email:user.email,
-    photoURL:user.photoURL||'',
-    balance:0,
-    createdAt:firebase.firestore.FieldValue.serverTimestamp()
-   });
+const savedPage=sessionStorage.getItem('embd_page_'+user.uid);
+const allowedPages=['homePage','tasksPage','walletPage','referralPage','profilePage','bonusPage','adsPage','withdrawPage','historyPage'];
+const restorePage=allowedPages.includes(savedPage)?savedPage:'homePage';
 
-  }
+app.style.display='block';
+nav.style.display='grid';
+applyLanguage();
+openPage(restorePage,false);
+loading.style.display='none';
 
-  const fresh=await ref.get();
-  userData=fresh.data()||{balance:0};
-
-  renderUserData();
-
-  const finalName=userData.name||user.displayName||user.email?.split('@')[0]||'User';
-
-  document.getElementById('userName').textContent=finalName;
-
-  const welcomeName=finalName.split(' ')[0];
-
-  const welcomeTitle=document.querySelector('.welcome-copy strong');
-
-  if(welcomeTitle){
-   welcomeTitle.textContent='Hello, '+welcomeName+' 👋';
-  }
-
-  document.getElementById('userPhoto').src=
-   user.photoURL||'https://via.placeholder.com/80';
-
-  document.getElementById('profilePhoto').src=
-   user.photoURL||'https://via.placeholder.com/100';
-
-  document.getElementById('profileName').textContent=finalName;
-
-  document.getElementById('profileEmail').textContent=
-   user.email||'';
-
-  document.getElementById('profileUid').textContent=user.uid;
-
-  document.getElementById('accountType').textContent=
-   user.providerData.some(p=>p.providerId==='password')
-   ?'Email & Password'
-   :'Google Login';
-
-  document.getElementById('refCode').value=
-   user.uid.slice(0,8).toUpperCase();
-
-  await loadSettings();
-  await loadTodayStats();
-
-  const savedPage=sessionStorage.getItem(
-   'embd_page_'+user.uid
-  );
-
-  const allowedPages=[
-   'homePage',
-   'tasksPage',
-   'walletPage',
-   'referralPage',
-   'profilePage',
-   'bonusPage',
-   'adsPage',
-   'withdrawPage',
-   'historyPage'
-  ];
-
-  const restorePage=allowedPages.includes(savedPage)
-   ? savedPage
-   : 'homePage';
-
-  app.style.display='block';
-  nav.style.display='grid';
-
-  openPage(restorePage,false);
-
-  loading.style.display='none';
-
- }catch(e){
-
-  console.error(e);
-
-  app.style.display='block';
-  nav.style.display='grid';
-
-  openPage('homePage',false);
-
-  loading.style.display='none';
-
-  toast('ডেটাবেস সংযোগে সমস্যা হয়েছে');
-
- }
-
+}catch(e){
+console.error(e);
+app.style.display='block';
+nav.style.display='grid';
+openPage('homePage',false);
+loading.style.display='none';
+toast('ডেটাবেস সংযোগে সমস্যা হয়েছে');
+}
 });
 
 function renderUserData(){
- const amount=Number(userData.balance||0).toFixed(2);
- document.getElementById('balance').textContent=amount;
- document.getElementById('walletBalance').textContent=amount;
- document.getElementById('walletBalance2').textContent=amount;
+const amount=Number(userData.balance||0).toFixed(2);
+document.getElementById('balance').textContent=amount;
+document.getElementById('walletBalance').textContent=amount;
+document.getElementById('walletBalance2').textContent=amount;
 }
 
 async function loadSettings(){
- try{
-  const s=await db.collection('appConfig').doc('public').get();
-  if(s.exists)appSettings={...appSettings,...s.data()};
- }catch(e){
-  console.error('Settings read error',e);
-  toast('Admin-এর Bonus Settings পড়া যায়নি');
- }
+try{
+const s=await db.collection('appConfig').doc('public').get();
+if(s.exists)appSettings={...appSettings,...s.data()};
+}catch(e){
+console.error('Settings read error',e);
+toast('Admin-এর Bonus Settings পড়া যায়নি');
+}
 
- document.getElementById('bonusAmount').textContent=Number(appSettings.dailyBonus??10).toFixed(2);
- document.getElementById('adReward').textContent=Number(appSettings.adReward??0).toFixed(2);
+document.getElementById('bonusAmount').textContent=Number(appSettings.dailyBonus??10).toFixed(2);
+document.getElementById('adReward').textContent=Number(appSettings.adReward??0).toFixed(2);
 }
 
 async function loadTodayStats(){
- try{
-  const start=new Date();
-  start.setHours(0,0,0,0);
+try{
+const start=new Date();
+start.setHours(0,0,0,0);
 
-  const q=await db.collection('users').doc(currentUser.uid)
-   .collection('transactions')
-   .where('createdAt','>=',firebase.firestore.Timestamp.fromDate(start))
-   .get();
+const q=await db.collection('users').doc(currentUser.uid).collection('transactions')
+.where('createdAt','>=',firebase.firestore.Timestamp.fromDate(start)).get();
 
-  let total=0,count=0;
+let total=0,count=0;
+q.forEach(d=>{
+const x=d.data();
+if(x.status==='approved'&&Number(x.amount)>0){
+total+=Number(x.amount);
+if(x.type==='task')count++;
+}
+});
 
-  q.forEach(d=>{
-   const x=d.data();
-   if(x.status==='approved'&&Number(x.amount)>0){
-    total+=Number(x.amount);
-    if(x.type==='task')count++;
-   }
-  });
-
-  document.getElementById('todayEarn').textContent=total.toFixed(2);
-  document.getElementById('taskCount').textContent=count;
-
- }catch(e){
-  console.log('Stats:',e.message);
- }
+document.getElementById('todayEarn').textContent=total.toFixed(2);
+document.getElementById('taskCount').textContent=count;
+}catch(e){
+console.log('Stats:',e.message);
+}
 }
 
+/* DAILY BONUS */
 async function claimBonus(){
- if(!currentUser)return;
+if(!currentUser)return;
 
- const btn=document.getElementById('claimBonusBtn');
- btn.disabled=true;
+const btn=document.getElementById('claimBonusBtn');
+btn.disabled=true;
 
- try{
-  const uid=currentUser.uid;
-  const today=todayKey();
-  const amount=Number(appSettings.dailyBonus);
+try{
+const uid=currentUser.uid;
+const today=todayKey();
+const amount=Number(appSettings.dailyBonus);
 
-  if(!Number.isFinite(amount)||amount<=0)
-   throw new Error('Admin-এর Bonus amount সঠিক নয়');
-
-  const userRef=db.collection('users').doc(uid);
-  const claimRef=db.collection('bonusClaims').doc(uid+'_'+today);
-  const historyRef=userRef.collection('transactions').doc('bonus_'+today);
-
-  await db.runTransaction(async transaction=>{
-   const [userSnap,claimSnap,configSnap]=await Promise.all([
-    transaction.get(userRef),
-    transaction.get(claimRef),
-    transaction.get(db.collection('appConfig').doc('public'))
-   ]);
-
-   if(!userSnap.exists)throw new Error('User account পাওয়া যায়নি');
-   if(claimSnap.exists)throw new Error('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');
-   if(!configSnap.exists)throw new Error('Admin Bonus Settings পাওয়া যায়নি');
-
-   const liveAmount=Number(configSnap.data().dailyBonus);
-   if(!Number.isFinite(liveAmount)||liveAmount<=0)
-    throw new Error('Admin Bonus amount সঠিক নয়');
-
-   const oldBalance=Number(userSnap.data().balance||0);
-
-   transaction.create(claimRef,{
-    uid:uid,
-    email:currentUser.email||'',
-    name:currentUser.displayName||userData.name||'User',
-    amount:liveAmount,
-    date:today,
-    status:'approved',
-    createdAt:firebase.firestore.FieldValue.serverTimestamp()
-   });
-
-   transaction.update(userRef,{
-    balance:oldBalance+liveAmount,
-    totalEarned:firebase.firestore.FieldValue.increment(liveAmount),
-    lastBonusDate:today,
-    lastBonusClaimId:uid+'_'+today
-   });
-
-   transaction.set(historyRef,{
-    type:'daily_bonus',
-    amount:liveAmount,
-    status:'approved',
-    date:today,
-    createdAt:firebase.firestore.FieldValue.serverTimestamp()
-   });
-  });
-
-  const updated=await userRef.get();
-  userData=updated.data()||userData;
-
-  renderUserData();
-  await loadTodayStats();
-
-  toast('অভিনন্দন! ৳'+amount.toFixed(2)+' Wallet-এ যোগ হয়েছে।');
-
- }catch(e){
-  console.error('Daily bonus claim:',e);
-  if(e.message&&e.message.toLowerCase().includes('already'))
-   toast('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');
-  else
-   toast(e.message||'বোনাস যোগ হয়নি। Firestore Rules পরীক্ষা করো');
- }finally{
-  btn.disabled=false;
- }
+if(!Number.isFinite(amount)||amount<=0){
+throw new Error('Admin-এর Bonus amount সঠিক নয়');
 }
 
+const userRef=db.collection('users').doc(uid);
+const claimRef=db.collection('bonusClaims').doc(uid+''+today);
+const historyRef=userRef.collection('transactions').doc('bonus'+today);
+
+await db.runTransaction(async transaction=>{
+const [userSnap,claimSnap,configSnap]=await Promise.all([
+transaction.get(userRef),
+transaction.get(claimRef),
+transaction.get(db.collection('appConfig').doc('public'))
+]);
+
+if(!userSnap.exists)throw new Error('User account পাওয়া যায়নি');
+if(claimSnap.exists)throw new Error('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');
+if(!configSnap.exists)throw new Error('Admin Bonus Settings পাওয়া যায়নি');
+
+const liveAmount=Number(configSnap.data().dailyBonus);
+if(!Number.isFinite(liveAmount)||liveAmount<=0){
+throw new Error('Admin Bonus amount সঠিক নয়');
+}
+
+const oldBalance=Number(userSnap.data().balance||0);
+
+transaction.create(claimRef,{
+uid:uid,email:currentUser.email||'',name:currentUser.displayName||userData.name||'User',
+amount:liveAmount,date:today,status:'approved',
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+
+transaction.update(userRef,{
+balance:oldBalance+liveAmount,
+totalEarned:firebase.firestore.FieldValue.increment(liveAmount),
+lastBonusDate:today,lastBonusClaimId:uid+'_'+today
+});
+
+transaction.set(historyRef,{
+type:'daily_bonus',amount:liveAmount,status:'approved',date:today,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+});
+
+const updated=await userRef.get();
+userData=updated.data()||userData;
+
+renderUserData();
+await loadTodayStats();
+
+toast(currentLanguage==='en'
+?'Congratulations! ৳'+amount.toFixed(2)+' added to your wallet.'
+:'অভিনন্দন! ৳'+amount.toFixed(2)+' আপনার Wallet-এ যোগ হয়েছে।');
+
+}catch(e){
+console.error('Daily bonus claim:',e);
+
+if(e.message&&e.message.toLowerCase().includes('already')){
+toast('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');
+}else{
+toast(e.message||'বোনাস যোগ হয়নি। Firestore Rules পরীক্ষা করুন');
+}
+}finally{
+btn.disabled=false;
+}
+}
+
+/* WITHDRAW */
 async function submitWithdraw(){
- if(!currentUser)return;
+if(!currentUser)return;
 
- const method=document.getElementById('payMethod').value;
- const number=document.getElementById('payNumber').value.trim();
- const amount=Number(document.getElementById('withdrawAmount').value);
+const method=document.getElementById('payMethod').value;
+const number=document.getElementById('payNumber').value.trim();
+const amount=Number(document.getElementById('withdrawAmount').value);
 
- if(!/^01[0-9]{9}$/.test(number)){
-  toast('সঠিক ১১ সংখ্যার মোবাইল নম্বর দাও');
-  return;
- }
-
- if(!Number.isFinite(amount)||amount<=0){
-  toast('সঠিক টাকার পরিমাণ দাও');
-  return;
- }
-
- if(amount<Number(appSettings.minWithdraw||0)){
-  toast('ন্যূনতম উত্তোলন ৳'+appSettings.minWithdraw);
-  return;
- }
-
- if(amount>Number(userData.balance||0)){
-  toast('পর্যাপ্ত ব্যালেন্স নেই');
-  return;
- }
-
- try{
-  await db.collection('withdrawRequests').add({
-   uid:currentUser.uid,
-   email:currentUser.email,
-   method,
-   number,
-   amount,
-   status:'pending',
-   createdAt:firebase.firestore.FieldValue.serverTimestamp()
-  });
-
-  toast('উত্তোলনের আবেদন জমা হয়েছে');
-  document.getElementById('payNumber').value='';
-  document.getElementById('withdrawAmount').value='';
-
- }catch(e){
-  console.error(e);
-  toast('আবেদন জমা হয়নি: Firestore Rules পরীক্ষা করো');
- }
+if(!/^01[0-9]{9}$/.test(number)){
+toast('অনুগ্রহ করে সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন।');
+return;
 }
 
+if(!Number.isFinite(amount)||amount<=0){
+toast('অনুগ্রহ করে সঠিক টাকার পরিমাণ দিন।');
+return;
+}
+
+if(amount<Number(appSettings.minWithdraw||0)){
+toast('ন্যূনতম উত্তোলন ৳'+appSettings.minWithdraw);
+return;
+}
+
+if(amount>Number(userData.balance||0)){
+toast('আপনার পর্যাপ্ত ব্যালেন্স নেই।');
+return;
+}
+
+try{
+await db.collection('withdrawRequests').add({
+uid:currentUser.uid,email:currentUser.email,method,number,amount,
+status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+
+toast('উত্তোলনের আবেদন জমা হয়েছে');
+document.getElementById('payNumber').value='';
+document.getElementById('withdrawAmount').value='';
+
+}catch(e){
+console.error(e);
+toast('আবেদন জমা হয়নি: Firestore Rules পরীক্ষা করুন');
+}
+}
+
+/* REFERRAL */
 async function copyReferral(){
- const code=document.getElementById('refCode').value;
+const code=document.getElementById('refCode').value;
 
- try{
-  await navigator.clipboard.writeText(code);
-  toast('Referral code কপি হয়েছে');
- }catch(e){
-  document.getElementById('refCode').select();
-  document.execCommand('copy');
-  toast('Referral code কপি হয়েছে');
- }
+try{
+await navigator.clipboard.writeText(code);
+toast('Referral code কপি হয়েছে');
+}catch(e){
+document.getElementById('refCode').select();
+document.execCommand('copy');
+toast('Referral code কপি হয়েছে');
+}
 }
 
+/* TASKS */
 async function loadTasks(){
- const box=document.getElementById('taskList');
- box.innerHTML='<div class="empty">কাজ লোড হচ্ছে...</div>';
+const box=document.getElementById('taskList');
+box.innerHTML='<div class="empty">কাজ লোড হচ্ছে...</div>';
 
- try{
-  const s=await db.collection('tasks').where('active','==',true).get();
+try{
+const s=await db.collection('tasks').where('active','==',true).get();
 
-  if(s.empty){
-   box.innerHTML='<div class="empty">এখনো কোনো কাজ যোগ করা হয়নি।</div>';
-   return;
-  }
-
-  box.innerHTML='';
-
-  s.forEach(doc=>{
-   const d=doc.data();
-   const item=document.createElement('div');
-   item.className='list-item';
-
-   const title=document.createElement('strong');
-   title.textContent=d.title||'Task';
-
-   const desc=document.createElement('p');
-   desc.className='muted';
-   desc.textContent=d.description||'';
-
-   const meta=document.createElement('div');
-   meta.className='row';
-   meta.style.marginTop='8px';
-
-   const reward=document.createElement('span');
-   reward.textContent='রিওয়ার্ড: ৳'+Number(d.reward||0).toFixed(2);
-
-   const btn=document.createElement('button');
-   btn.className='back';
-   btn.textContent='আবেদন';
-   btn.onclick=()=>submitTask(doc.id,d);
-
-   meta.append(reward,btn);
-   item.append(title,desc,meta);
-   box.append(item);
-  });
-
- }catch(e){
-  box.innerHTML='<div class="empty">Tasks লোড করা যায়নি। Firestore Rules / Admin setup বাকি।</div>';
- }
+if(s.empty){
+box.innerHTML='<div class="empty">এখনো কোনো কাজ যোগ করা হয়নি।</div>';
+applyLanguage();
+return;
 }
 
+box.innerHTML='';
+
+s.forEach(doc=>{
+const d=doc.data();
+const item=document.createElement('div');
+item.className='list-item';
+
+const title=document.createElement('strong');
+title.textContent=d.title||'Task';
+
+const desc=document.createElement('p');
+desc.className='muted';
+desc.textContent=d.description||'';
+
+const meta=document.createElement('div');
+meta.className='row';
+meta.style.marginTop='8px';
+
+const reward=document.createElement('span');
+reward.textContent='রিওয়ার্ড: ৳'+Number(d.reward||0).toFixed(2);
+
+const btn=document.createElement('button');
+btn.className='back';
+btn.textContent='আবেদন';
+btn.onclick=()=>submitTask(doc.id,d);
+
+meta.append(reward,btn);
+item.append(title,desc,meta);
+box.append(item);
+});
+
+applyLanguage();
+
+}catch(e){
+box.innerHTML='<div class="empty">Tasks লোড করা যায়নি। Firestore Rules / Admin setup বাকি।</div>';
+applyLanguage();
+}
+}
+
+/* TASK SUBMISSION */
 async function submitTask(taskId,task){
- try{
-  await db.collection('taskSubmissions').add({
-   uid:currentUser.uid,
-   email:currentUser.email,
-   taskId,
-   title:task.title||'Task',
-   reward:Number(task.reward||0),
-   status:'pending',
-   createdAt:firebase.firestore.FieldValue.serverTimestamp()
-  });
+try{
+await db.collection('taskSubmissions').add({
+uid:currentUser.uid,email:currentUser.email,taskId,
+title:task.title||'Task',reward:Number(task.reward||0),
+status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
 
-  toast('Task submission জমা হয়েছে');
+toast('Task submission জমা হয়েছে');
 
- }catch(e){
-  console.error(e);
-  toast('জমা হয়নি: Firestore Rules পরীক্ষা করো');
- }
+}catch(e){
+console.error(e);
+toast('জমা হয়নি: Firestore Rules পরীক্ষা করুন');
+}
 }
 
+/* HISTORY */
 async function loadHistory(){
- const box=document.getElementById('historyList');
- box.innerHTML='<div class="empty">হিসাব লোড হচ্ছে...</div>';
+const box=document.getElementById('historyList');
+box.innerHTML='<div class="empty">হিসাব লোড হচ্ছে...</div>';
 
- try{
-  const [tx,claims,withdrawals]=await Promise.all([
-   db.collection('users').doc(currentUser.uid)
-    .collection('transactions').limit(30).get(),
+try{
+const [tx,claims,withdrawals]=await Promise.all([
+db.collection('users').doc(currentUser.uid).collection('transactions').limit(30).get(),
+db.collection('bonusClaims').where('uid','==',currentUser.uid).limit(20).get(),
+db.collection('withdrawRequests').where('uid','==',currentUser.uid).limit(20).get()
+]);
 
-   db.collection('bonusClaims')
-    .where('uid','==',currentUser.uid).limit(20).get(),
+const rows=[];
+const transactionIds=new Set();
 
-   db.collection('withdrawRequests')
-    .where('uid','==',currentUser.uid).limit(20).get()
-  ]);
+tx.forEach(d=>{
+const data=d.data();
+rows.push({...data,kind:data.type||'transaction'});
+if(data.type==='daily_bonus')transactionIds.add(d.id);
+});
 
-  const rows=[];
+claims.forEach(d=>{
+const data=d.data();
+const date=data.date||'';
+const bonusId='bonus'+date;
 
-  tx.forEach(d=>rows.push({...d.data(),kind:d.data().type||'transaction'}));
-  claims.forEach(d=>rows.push({...d.data(),kind:'Daily Bonus'}));
-  withdrawals.forEach(d=>rows.push({...d.data(),kind:'Withdraw'}));
+if(!transactionIds.has(bonusId)){
+rows.push({...data,kind:'Daily Bonus'});
+}
+});
 
-  rows.sort((a,b)=>
-   (b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0)
-  );
+withdrawals.forEach(d=>{
+rows.push({...d.data(),kind:'Withdraw'});
+});
 
-  if(!rows.length){
-   box.innerHTML='<div class="empty">এখনো কোনো হিসাব নেই।</div>';
-   return;
-  }
+rows.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
 
-  box.innerHTML='';
-
-  rows.slice(0,40).forEach(r=>{
-   const el=document.createElement('div');
-   el.className='list-item';
-
-   const top=document.createElement('div');
-   top.className='row';
-
-   const name=document.createElement('strong');
-   name.textContent=r.kind;
-
-   const status=document.createElement('span');
-   status.className='pill';
-   status.textContent=r.status||'approved';
-
-   top.append(name,status);
-
-   const detail=document.createElement('p');
-   detail.className='muted';
-   detail.style.marginTop='5px';
-   detail.textContent='৳'+Number(r.amount||r.reward||0).toFixed(2);
-
-   el.append(top,detail);
-   box.append(el);
-  });
-
- }catch(e){
-  console.error(e);
-  box.innerHTML='<div class="empty">History দেখতে Firestore Rules আপডেট করতে হবে।</div>';
- }
+if(!rows.length){
+box.innerHTML='<div class="empty">এখনো কোনো হিসাব নেই।</div>';
+applyLanguage();
+return;
 }
 
+box.innerHTML='';
+
+rows.slice(0,40).forEach(r=>{
+const el=document.createElement('div');
+el.className='list-item';
+
+const top=document.createElement('div');
+top.className='row';
+
+const name=document.createElement('strong');
+name.textContent=r.kind;
+
+const status=document.createElement('span');
+status.className='pill';
+status.textContent=r.status||'approved';
+
+top.append(name,status);
+
+const detail=document.createElement('p');
+detail.className='muted';
+detail.style.marginTop='5px';
+detail.textContent='৳'+Number(r.amount||r.reward||0).toFixed(2);
+
+el.append(top,detail);
+box.append(el);
+});
+
+applyLanguage();
+
+}catch(e){
+console.error(e);
+box.innerHTML='<div class="empty">History দেখতে Firestore Rules আপডেট করতে হবে।</div>';
+applyLanguage();
+}
+}
+
+/* LOGOUT */
 async function logout(){
- if(currentUser){
-  sessionStorage.removeItem('embd_page_'+currentUser.uid);
- }
-
- await auth.signOut();
-
- toast('লগআউট হয়েছে');
+if(currentUser){
+sessionStorage.removeItem('embd_page_'+currentUser.uid);
 }
-</script>
 
+await auth.signOut();
+toast('লগআউট সম্পন্ন হয়েছে');
+}
+
+/* INITIAL LANGUAGE */
+applyLanguage();
+</script>
 </body>
 </html>
