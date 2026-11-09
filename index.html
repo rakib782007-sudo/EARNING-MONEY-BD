@@ -1,1342 +1,1111 @@
-
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#08020f">
-<title>Earning Money BD</title>
-
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
-
-:root{
- --bg:#08020f;
- --gold:#ffdc65;
- --gold2:#ffad24;
- --purple:#a83cff;
- --purple2:#5d16b5;
- --pink:#e34aff;
- --muted:#d0b8e9;
- --panel:#1b0d2b;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
- min-height:100vh;
- color:#fff;
- font-family:'Hind Siliguri',sans-serif;
- background:
- radial-gradient(ellipse at 5% 0%,#7116a755,transparent 35%),
- radial-gradient(ellipse at 100% 40%,#4a087455,transparent 40%),
- #08020f;
-}
-button,input,select{font:inherit}
-button{cursor:pointer;-webkit-tap-highlight-color:transparent}
-
-/* LOGIN PAGE — আগের ডিজাইন */
-.screen{max-width:520px;margin:auto;padding:20px 18px 115px}
-#loginScreen{
- min-height:100vh;display:flex;flex-direction:column;
- justify-content:center;padding:25px 18px;
-}
-.brand{text-align:center;margin-bottom:35px}
-.brand h1{
- font:800 29px Poppins;letter-spacing:-1px;
- text-shadow:0 5px 25px #8b55ff55
-}
-.brand h1 span{color:#b18aff}
-.brand p{color:#929bb2;font-size:12px;margin-top:8px}
-.login-card{
- background:radial-gradient(circle at 50% 0%,#8652e52a,transparent 55%),linear-gradient(145deg,#1a2340,#0d1428);
- border:1px solid #a879ff55;border-radius:28px;
- padding:32px 22px;text-align:center;
- box-shadow:0 20px 55px #0007,0 0 35px #8b55ff12;
-}
-.login-card h2{font-size:21px;margin-bottom:10px}
-.login-card p{font-size:12px;color:#9ba5bd;margin-bottom:27px}
-.google-btn{
- width:100%;padding:15px;border:0;border-radius:16px;
- background:#fff;color:#252525;font-size:14px;font-weight:700;
- display:flex;align-items:center;justify-content:center;gap:12px;
- box-shadow:0 7px 20px #0003;
-}
-.google-btn:disabled{opacity:.5}
-.google-logo{width:21px;height:21px;flex-shrink:0}
-#status{font-size:11px;color:#c4b5fd;margin-top:17px;min-height:18px;overflow-wrap:anywhere}
-
-/* MAIN APP */
-.app-shell{
- max-width:560px;margin:auto;
- padding:10px 13px 120px;
-}
-
-/* TOP HEADER */
-.main-header{
- display:flex;align-items:center;justify-content:space-between;
- padding:9px 3px 13px;margin-bottom:12px;
- border-bottom:1px solid #dba83e66;
-}
-.brand-area{display:flex;align-items:center;gap:8px;min-width:0}
-.brand-crown{
- font-size:39px;line-height:1;
- color:var(--gold);
- filter:drop-shadow(0 0 10px #ffc83e);
-}
-.brand-name{
- font:800 19px/1.05 Poppins,sans-serif;
- font-style:italic;letter-spacing:-.7px;
- color:#ffdb67;
- text-shadow:0 2px 13px #ffbd3b77;
-}
-.brand-name span{display:block;color:#fff;font-size:17px}
-.brand-tagline{font-size:10px;color:#f5e4ff;margin-top:4px}
-.header-right{display:flex;align-items:center;gap:10px}
-.icon-btn{
- width:42px;height:42px;border-radius:50%;
- border:1px solid #e6c45b;
- background:linear-gradient(145deg,#32143e,#13091e);
- color:#ffdf72;font-size:22px;
- box-shadow:0 0 15px #a33dff55;
-}
-.profile-wrap{position:relative;text-align:center}
-.profile-avatar{
- width:57px;height:57px;display:block;
- object-fit:cover;border-radius:50%;
- border:3px solid var(--gold);
- box-shadow:0 0 0 3px #a83cff55,0 0 18px #ffca4e77;
-}
-.premium-tag{
- position:absolute;left:50%;transform:translateX(-50%);
- bottom:-11px;white-space:nowrap;
- padding:2px 12px;border-radius:20px;
- border:1px solid var(--gold);
- background:linear-gradient(90deg,#35113e,#15091e);
- color:#ffe47b;font-size:10px;font-weight:700;
- box-shadow:0 0 12px #ffcf4d55;
-}
-
-/* PAGES */
-.page{display:none;animation:fade .22s ease}
-.page.active{display:block}
-@keyframes fade{from{opacity:.4;transform:translateY(5px)}to{opacity:1;transform:none}}
-
-/* WELCOME */
-.welcome-strip{
- display:flex;align-items:center;gap:12px;
- padding:13px 14px;margin-bottom:12px;
- border:1px solid #a83cff99;border-radius:20px;
- background:linear-gradient(110deg,#301044,#15091f 70%,#24102e);
- box-shadow:0 0 18px #a83cff25,inset 0 1px 0 #fff3;
-}
-.welcome-crown{
- font-size:36px;color:#e5aaff;
- filter:drop-shadow(0 0 10px #c34cff);
-}
-.welcome-copy{min-width:0}
-.welcome-copy strong{display:block;font-size:19px;font-weight:700}
-.welcome-copy span{font-size:12px;color:#d4aaf5}
-
-/* WALLET */
-.balance{
- position:relative;overflow:hidden;
- display:grid;grid-template-columns:100px 1fr;
- align-items:center;gap:8px;
- min-height:150px;padding:17px 13px;
- border:1.5px solid #ffdb62;border-radius:24px;
- background:
- radial-gradient(ellipse at 90% 5%,#ffb72e66,transparent 43%),
- radial-gradient(ellipse at 0% 100%,#a02de777,transparent 50%),
- linear-gradient(120deg,#321542,#180b25 65%,#10091c);
- box-shadow:0 0 8px #ffca4c88,0 10px 28px #000b,inset 0 1px 0 #fff5;
-}
-.balance:before{
- content:"";position:absolute;width:190px;height:190px;
- right:-65px;top:-90px;border-radius:50%;
- border:1px solid #ffdf6b55;
- box-shadow:0 0 0 12px #ffdf6b0c,0 0 0 25px #ffdf6b09;
-}
-.balance:after{
- content:"↗";position:absolute;right:12px;top:-2px;
- font:800 76px Poppins;color:#ffdb57;
- opacity:.17;transform:rotate(-8deg);
-}
-.wallet-icon{
- font-size:65px;text-align:center;
- filter:drop-shadow(0 7px 9px #ffb82c99);
-}
-.balance-content{position:relative;z-index:2;min-width:0}
-.balance small{font-size:14px;color:#fff4d4}
-.balance h2{
- font:800 35px Poppins;color:#ffdb55;
- margin:3px 0 8px;letter-spacing:-1px;
- text-shadow:0 0 18px #ffbb35aa;
- overflow-wrap:anywhere;
-}
-.balance-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.balance .muted{font-size:10px;color:#e8d1f6}
-.withdraw-shortcut{
- border:1px solid #fff2a6;border-radius:30px;
- padding:8px 14px;
- background:linear-gradient(135deg,#ffe987,#ffbd35 60%,#d98117);
- color:#281407;font-size:12px;font-weight:800;
- box-shadow:0 4px 15px #ffba3555;
-}
-
-/* FOUR STAT CARDS */
-.stats{
- display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
- gap:8px;margin:13px 0 19px;
-}
-.stat{
- min-width:0;min-height:103px;
- display:flex;flex-direction:column;
- align-items:center;justify-content:center;gap:3px;
- text-align:center;padding:9px 4px;
- border:1px solid #b979ff99;border-radius:17px;
- background:linear-gradient(145deg,#301542,#160b25 70%,#10091d);
- box-shadow:0 6px 17px #0009,inset 0 1px 0 #fff4;
-}
-.stat:nth-child(1){border-color:#ffcc4d;box-shadow:0 0 12px #ffbd3b33}
-.stat:nth-child(2){border-color:#72c9ff;box-shadow:0 0 12px #4baaff33}
-.stat:nth-child(3){border-color:#df55ff;box-shadow:0 0 12px #d13cff33}
-.stat:nth-child(4){border-color:#a83cff;box-shadow:0 0 12px #a83cff33}
-.stat .emoji{font-size:27px;line-height:1.2}
-.stat small{font-size:10px;color:#ead8ff;line-height:1.2}
-.stat strong{
- font:700 17px Poppins;color:#fff;
- margin-top:1px;overflow-wrap:anywhere;
-}
-
-/* SECTION TITLE */
-.section-title{
- display:flex;align-items:center;gap:8px;
- font-size:19px;margin:18px 2px 11px;
- color:#f7eaff;
-}
-.section-title .bolt{font-size:26px;color:#ffdb4f}
-.section-title:after{
- content:"";height:1px;flex:1;
- background:linear-gradient(90deg,#ffcf4b,#b83fff66,transparent);
-}
-
-/* QUICK ACTIONS */
-.feature-grid{
- display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
- gap:9px;
-}
-.feature{
- position:relative;overflow:hidden;
- min-width:0;min-height:119px;
- display:flex;flex-direction:column;
- align-items:center;justify-content:center;gap:7px;
- padding:10px 4px;
- border:1px solid #d08bff;border-radius:19px;
- background:linear-gradient(145deg,#35154a,#150b25 75%);
- color:white;
- box-shadow:0 7px 18px #000a,inset 0 1px 0 #fff5,inset 0 -7px 13px #0008;
- transition:.18s;
-}
-.feature:before{
- content:"";position:absolute;top:0;left:15%;width:70%;height:1px;
- background:linear-gradient(90deg,transparent,#fff2b4,transparent);
-}
-.feature b{
- width:49px;height:49px;
- display:flex;align-items:center;justify-content:center;
- border-radius:15px;font-size:28px;
- border:1px solid #fff7;
- background:linear-gradient(145deg,#ffdf76,#d78b18);
- box-shadow:0 5px 13px #0008,0 0 13px #ffcf4b55;
-}
-.feature span{
- font-size:11px;font-weight:700;
- text-align:center;line-height:1.25;
- color:#fff;
-}
-.feature small{font-size:9px;color:#d7c2eb;text-align:center}
-.feature:active{transform:scale(.95);filter:brightness(1.2)}
-.feature-video{
- background:linear-gradient(145deg,#075caa,#071a42 75%);
- border-color:#40c9ff;box-shadow:0 0 12px #23baff55;
-}
-.feature-video b{background:linear-gradient(145deg,#ffe878,#f6a51c)}
-.feature-invite{
- background:linear-gradient(145deg,#68400c,#291307 75%);
- border-color:#ffcf4d;box-shadow:0 0 12px #ffbd3b55;
-}
-.feature-invite b{background:linear-gradient(145deg,#ffe67c,#d98b19)}
-.feature-spin{
- background:linear-gradient(145deg,#6411a5,#220644 75%);
- border-color:#e24bff;box-shadow:0 0 13px #dc32ff66;
-}
-.feature-spin b{background:linear-gradient(145deg,#ffb6fa,#8d31cb)}
-
-/* SPECIAL BONUS */
-.invite{
- display:flex;align-items:center;gap:9px;
- margin-top:17px;padding:12px 10px;
- border:1px solid #ffda60;border-radius:19px;
- background:
- radial-gradient(circle at 0 50%,#b337ff77,transparent 45%),
- linear-gradient(110deg,#351143,#190b25 75%);
- box-shadow:0 0 15px #ffcb4b33,0 8px 20px #0009;
-}
-.invite .meg{font-size:43px;filter:drop-shadow(0 0 8px #e34bff)}
-.invite p{flex:1;min-width:0;font-size:11px;line-height:1.4;color:#fff}
-.invite p strong{
- display:block;font-size:17px;color:#ffdf6a;
- font-style:italic;
-}
-.invite button{
- border:1px solid #fff2a6;border-radius:30px;
- padding:9px 12px;white-space:nowrap;
- background:linear-gradient(135deg,#ffe986,#ffba2e 65%,#d77e16);
- color:#241306;font-size:11px;font-weight:800;
- box-shadow:0 4px 12px #ffb82e55;
-}
-
-/* RECENT ACTIVITY */
-.activity,.card{
- border:1px solid #a85de788;border-radius:20px;
- padding:15px;margin-bottom:13px;
- background:linear-gradient(145deg,#261237,#12091d);
- box-shadow:0 8px 22px #0009,inset 0 1px 0 #fff2;
-}
-.activity{margin-top:17px}
-.activity-head{
- display:flex;justify-content:space-between;
- align-items:center;gap:8px;margin-bottom:8px;
-}
-.activity-head h3{font-size:16px;color:#f4e6ff}
-.activity-head button{
- border:1px solid #d7b46a88;
- background:#2b1638;color:#ffe6ad;
- border-radius:22px;padding:6px 10px;font-size:10px;
-}
-.empty{text-align:center;color:var(--muted);font-size:13px;padding:20px 5px}
-
-/* INNER PAGES */
-.topline{display:flex;align-items:center;gap:10px;margin:8px 0 17px}
-.back{
- min-width:42px;min-height:42px;
- border:1px solid #d7b46a88;
- background:linear-gradient(135deg,#382044,#21112e);
- color:#ffe6ad;border-radius:14px;padding:8px 13px;font-size:19px;
-}
-.page h2{font-size:21px;color:#f4e8ff}
-.page-desc{font-size:13px;color:var(--muted);margin:5px 0 15px}
-.action{
- width:100%;border:1px solid #fff0a6;border-radius:15px;
- padding:13px;margin-top:12px;
- background:linear-gradient(120deg,#ffe17a,#ffb82e 60%,#d47b15);
- color:#241306;font-weight:800;
- box-shadow:0 7px 19px #ffb52d33;
-}
-.action:active{transform:scale(.97)}
-.action:disabled{opacity:.5;cursor:not-allowed}
-.field{
- width:100%;background:#10091a;
- border:1px solid #a77acb77;border-radius:14px;
- color:white;padding:13px;margin-top:7px;outline:none;
-}
-.field:focus{border-color:#ffd56c;box-shadow:0 0 0 3px #ffce5a20}
-label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px}
-.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
-.list-item{padding:14px 2px;border-bottom:1px solid #ffffff18}
-.list-item:last-child{border:0}
-.list-item strong{color:#ffdf91}
-.pill{
- font-size:11px;border-radius:20px;padding:5px 11px;
- background:#30203e;border:1px solid #d3a65c66;color:#ffe5a5;
-}
-.notice{
- font-size:12px;color:#f6dfad;
- background:linear-gradient(120deg,#3a2b1a,#241a20);
- border:1px solid #e6bd6244;
- padding:11px;border-radius:14px;margin-top:12px;line-height:1.7;
-}
-.logout{
- width:100%;padding:12px;
- border:1px solid #e1a66c77;
- background:linear-gradient(120deg,#51233c,#2b172c);
- color:#ffe9d7;border-radius:15px;margin-top:16px;
-}
-
-/* WALLET PAGE */
-.wallet-summary{
- padding:20px;border:1px solid #e8bd66;border-radius:22px;
- background:linear-gradient(135deg,#3b1d4e,#170d25);
- text-align:center;box-shadow:0 10px 25px #0008,0 0 20px #ffca4b18;
-}
-.wallet-summary small{color:#e5c9fa}
-.wallet-summary h2{font:800 32px Poppins;color:#ffd45a;margin:7px 0}
-.wallet-menu{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.wallet-menu button{
- border:1px solid #bd8aef77;border-radius:17px;
- background:linear-gradient(145deg,#38204e,#1a1029);
- color:#f4e5ff;padding:16px 8px;font-weight:700;
-}
-.wallet-menu button b{display:block;font-size:25px;margin-bottom:5px}
-
-/* PROFILE */
-#profilePhoto{
- border:3px solid #ffd36a;
- box-shadow:0 0 0 5px #ffcf4b22,0 0 24px #ffbd4e55;
-}
-
-/* PREMIUM BOTTOM NAV — ছবির মতো */
-.bottom-nav{
- position:fixed;z-index:50;
- left:50%;bottom:calc(9px + env(safe-area-inset-bottom));
- transform:translateX(-50%);
- width:min(560px,calc(100% - 22px));
- display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
- align-items:center;gap:2px;
- padding:7px 6px;
- border:2px solid #a83cff;
- border-radius:45px;
- background:
- radial-gradient(ellipse at 50% 0%,#5b167d88,transparent 75%),
- linear-gradient(110deg,#100619f7,#0b0615fa);
- box-shadow:0 0 7px #d66aff,0 0 17px #9b35ff,0 0 30px #6813b9aa,
- inset 0 1px 8px #ffffff19,0 10px 30px #000c;
-}
-.bottom-nav:before{
- content:"";position:absolute;inset:3px;
- border:1px solid #d77aff55;border-radius:40px;
- pointer-events:none;
-}
-.nav-btn{
- position:relative;z-index:1;
- min-width:0;min-height:67px;
- padding:5px 1px;
- display:flex;flex-direction:column;
- align-items:center;justify-content:center;gap:3px;
- border:0;border-radius:35px;
- background:transparent;color:#c78cff;
- font-family:'Hind Siliguri',sans-serif;
- transition:.2s;
-}
-.nav-btn b{
- width:40px;height:37px;
- display:flex;align-items:center;justify-content:center;
- font-size:29px;line-height:1;font-weight:500;
- color:#c77dff;filter:drop-shadow(0 0 7px #a64aff88);
-}
-.nav-btn span{
- font-size:12px;font-weight:600;
- line-height:1.1;white-space:nowrap;color:#d6b2f2;
-}
-.nav-btn.active{
- color:#fff0a6;
- background:linear-gradient(180deg,#ffcf4b18,#a83cff20);
- box-shadow:inset 0 0 18px #c04dff22;
-}
-.nav-btn.active b{
- color:#ffe477;filter:drop-shadow(0 0 8px #ffcf4b);
-}
-.nav-btn.active span{
- color:#ffe99a;text-shadow:0 0 9px #ffcb55;
-}
-.nav-btn:active{transform:scale(.91)}
-
-.toast{
- position:fixed;bottom:105px;left:50%;
- transform:translateX(-50%);
- background:linear-gradient(135deg,#3b234b,#21132f);
- border:1px solid #e2bb6a;padding:11px 16px;
- border-radius:15px;font-size:13px;display:none;
- z-index:80;max-width:90%;text-align:center;
- box-shadow:0 8px 30px #0008;
-}
-
-@media(max-width:390px){
- .app-shell{padding-left:10px;padding-right:10px}
- .brand-crown{font-size:33px}
- .brand-name{font-size:16px}
- .brand-name span{font-size:15px}
- .profile-avatar{width:50px;height:50px}
- .header-right{gap:7px}
- .icon-btn{width:37px;height:37px}
- .balance{grid-template-columns:70px 1fr;padding:14px 9px;gap:5px}
- .wallet-icon{font-size:49px}
- .balance h2{font-size:28px}
- .stats{gap:5px}
- .stat{min-height:94px;padding:7px 2px}
- .stat .emoji{font-size:23px}
- .stat small{font-size:9px}
- .stat strong{font-size:14px}
- .feature-grid{gap:6px}
- .feature{min-height:108px;padding:8px 2px}
- .feature b{width:42px;height:42px;font-size:24px}
- .feature span{font-size:10px}
- .feature small{font-size:8px}
- .invite{gap:6px;padding:10px 7px}
- .invite .meg{font-size:34px}
- .invite p{font-size:10px}
- .invite p strong{font-size:14px}
- .invite button{padding:8px 9px;font-size:10px}
- .bottom-nav{width:calc(100% - 16px);padding:6px 4px}
- .nav-btn{min-height:62px}
- .nav-btn b{font-size:26px;width:34px;height:33px}
- .nav-btn span{font-size:10px}
-}
-</style>
-</head>
-
-<body>
-
-<!-- LOGIN PAGE: আগের মতোই রাখা হয়েছে -->
-<div id="loginScreen" class="screen">
- <div class="brand">
-  <h1>EARNING <span>MONEY BD</span></h1>
-  <p>Your earning journey starts here</p>
- </div>
- <div class="login-card">
-  <h2>Welcome Earning Money BD!</h2>
-  <p>Login or create your account with Google</p>
-  <button class="google-btn" id="googleBtn" onclick="googleLogin()">
-   <svg class="google-logo" viewBox="0 0 48 48">
-    <path fill="#4285F4" d="M43.6 24.5c0-1.5-.1-3-.4-4.4H24v8.3h11a9.4 9.4 0 0 1-4.1 6.2v5.4h6.6c3.9-3.6 6.1-9 6.1-15.5z"/>
-    <path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.9l-6.6-5.4c-1.8 1.2-4 1.9-6.9 1.9-5.3 0-9.8-3.6-11.4-8.5H5.8v5.5C9.2 39.4 16.1 44 24 44z"/>
-    <path fill="#FBBC05" d="M12.6 27.1a12 12 0 0 1 0-7.2v-5.5H5.8a20 20 0 0 0 0 18.2z"/>
-    <path fill="#EA4335" d="M24 11.4c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 5.3 29.5 3.5 24 3.5c-7.9 0-14.8 4.6-18.2 10.9l6.8 5.5c1.6-4.9 6.1-8.5 11.4-8.5z"/>
-   </svg>
-   Continue with Google
-  </button>
-  <div id="status"></div>
- </div>
-</div>
-
-<!-- MAIN APP -->
-<div id="appScreen" class="app-shell" style="display:none">
-
-<header class="main-header">
- <div class="brand-area">
-  <div class="brand-crown">♛</div>
-  <div>
-   <div class="brand-name">Earning <span>Money BD</span></div>
-   <div class="brand-tagline">Earn • Play • Withdraw</div>
-  </div>
- </div>
-
- <div class="header-right">
-  <button class="icon-btn" onclick="showNotifications()" aria-label="Notifications">♧</button>
-  <div class="profile-wrap">
-   <img id="userPhoto" class="profile-avatar" src="https://via.placeholder.com/80" alt="Profile">
-   <span class="premium-tag">Premium</span>
-  </div>
- </div>
-</header>
-
-<!-- HOME -->
-<main id="homePage" class="page active">
-
- <section class="welcome-strip">
-  <div class="welcome-crown">♛</div>
-  <div class="welcome-copy">
-   <strong>Hello, User 👋</strong>
-   <span>Keep earning, keep growing!</span>
-  </div>
- </section>
-
- <section class="balance">
-  <div class="wallet-icon">👛</div>
-  <div class="balance-content">
-   <small>Wallet Balance</small>
-   <h2>৳ <span id="balance">0.00</span></h2>
-   <div class="balance-actions">
-    <button class="withdraw-shortcut" onclick="openPage('withdrawPage')">Withdraw ➜</button>
-   </div>
-  </div>
- </section>
-
- <section class="stats">
-  <div class="stat">
-   <span class="emoji">🎁</span>
-   <small>Total Tasks</small>
-   <strong id="totalTasks">0</strong>
-  </div>
-  <div class="stat">
-   <span class="emoji">✅</span>
-   <small>Completed</small>
-   <strong id="completedTasks">0</strong>
-  </div>
-  <div class="stat">
-   <span class="emoji">⭐</span>
-   <small>Today Earn</small>
-   <strong>৳<span id="todayEarn">0.00</span></strong>
-  </div>
-  <div class="stat">
-   <span class="emoji">👥</span>
-   <small>Referrals</small>
-   <strong id="referralCount">0</strong>
-  </div>
- </section>
-
- <h3 class="section-title"><span class="bolt">ϟ</span> Quick Actions</h3>
-
- <section class="feature-grid">
-  <button class="feature" onclick="openPage('tasksPage')">
-   <b>📋</b><span>Take Task<br>& Earn</span>
-  </button>
-
-  <button class="feature feature-video" onclick="openPage('adsPage')">
-   <b>▶</b><span>Watch Video<br>& Earn</span>
-  </button>
-
-  <button class="feature feature-invite" onclick="openPage('referralPage')">
-   <b>👥</b><span>Invite Friends<br>& Earn</span>
-  </button>
-
-  <button class="feature feature-spin" onclick="spinUnavailable()">
-   <b>🎡</b><span>Spin & Win</span>
-  </button>
- </section>
-
- <div class="invite">
-  <span class="meg">🎁</span>
-  <p>
-   <strong>Special Bonus!</strong>
-   Invite 5 Friends & Get<br>
-   ৳ 100 Bonus
-  </p>
-  <button onclick="openPage('bonusPage')">Claim Now</button>
- </div>
-
- <section class="activity">
-  <div class="activity-head">
-   <h3>Recent Activity</h3>
-   <button onclick="openPage('historyPage')">View All ➜</button>
-  </div>
-  <div id="recentActivity" class="empty">সাম্প্রতিক হিসাব দেখতে History খুলুন।</div>
- </section>
-</main>
-
-<!-- TASKS -->
-<main id="tasksPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('homePage')">←</button>
-  <h2>📋 Tasks</h2>
- </div>
- <p class="page-desc">Admin-এর দেওয়া কাজগুলো এখানে দেখা যাবে।</p>
- <div id="taskList" class="card"><div class="empty">কাজ লোড হচ্ছে...</div></div>
-</main>
-
-<!-- WALLET -->
-<main id="walletPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('homePage')">←</button>
-  <h2>👛 My Wallet</h2>
- </div>
-
- <div class="wallet-summary">
-  <small>তোমার মোট Wallet Balance</small>
-  <h2>৳ <span id="walletBalance">0.00</span></h2>
-  <span class="pill">Earning Money BD Wallet</span>
- </div>
-
- <div class="wallet-menu">
-  <button onclick="openPage('withdrawPage')"><b>💸</b>Withdraw</button>
-  <button onclick="openPage('historyPage')"><b>📜</b>History</button>
- </div>
-
- <div class="card" style="margin-top:14px">
-  <h3>Wallet Information</h3>
-  <p class="page-desc">তোমার আয় এবং উত্তোলনের হিসাব এখানে দেখতে পারবে।</p>
-  <div class="row"><span>Available Balance</span><strong>৳ <span id="walletBalance2">0.00</span></strong></div>
-  <button class="action" onclick="openPage('withdrawPage')">Withdraw Money ➜</button>
-  <button class="action" style="background:linear-gradient(120deg,#b77aff,#7534c7);color:white;border-color:#e0baff" onclick="openPage('historyPage')">View Transaction History</button>
- </div>
-</main>
-
-<!-- REFERRAL -->
-<main id="referralPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('homePage')">←</button>
-  <h2>👥 Referral</h2>
- </div>
- <div class="card">
-  <p class="page-desc">বন্ধুকে আমন্ত্রণ জানাও।</p>
-  <label>তোমার Referral Code</label>
-  <input class="field" id="refCode" readonly>
-  <button class="action" onclick="copyReferral()">কোড কপি করো</button>
-  <div class="notice">Referral tracking নিরাপদভাবে চালু করতে Admin-এর referral system যুক্ত করতে হবে।</div>
- </div>
-</main>
-
-<!-- SETTINGS / PROFILE -->
-<main id="profilePage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('homePage')">←</button>
-  <h2>⚙️ Settings</h2>
- </div>
-
- <div class="card">
-  <div style="text-align:center">
-   <img id="profilePhoto" src="https://via.placeholder.com/100" style="width:76px;height:76px;border-radius:50%;object-fit:cover" alt="">
-   <h3 id="profileName" style="margin-top:8px">User</h3>
-   <p class="muted" id="profileEmail"></p>
-  </div>
-
-  <div class="list-item">
-   <span class="muted">User ID</span>
-   <p id="profileUid" style="font-size:11px;overflow-wrap:anywhere"></p>
-  </div>
-  <div class="list-item">
-   <div class="row"><strong>Account</strong><span class="pill">Google Login</span></div>
-  </div>
-  <div class="list-item">
-   <div class="row"><strong>App Version</strong><span class="muted">Earning Money BD</span></div>
-  </div>
-  <button class="logout" onclick="logout()">Log Out</button>
- </div>
-</main>
-
-<!-- DAILY BONUS -->
-<main id="bonusPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('homePage')">←</button>
-  <h2>🎁 Daily Bonus</h2>
- </div>
- <div class="card">
-  <p class="page-desc">প্রতিদিন একবার বোনাস ক্লেইম করতে পারবে।</p>
-  <h2 style="font:700 34px Poppins;margin:12px 0;color:#ffd45a">৳ <span id="bonusAmount">10.00</span></h2>
-  <span class="pill">প্রতিদিন ১ বার</span>
-  <button class="action" id="claimBonusBtn" onclick="claimBonus()">আজকের বোনাস ক্লেইম</button>
-  <p class="notice">Claim করলে বোনাস Wallet-এ যোগ হবে, যদি Firebase Rules অনুমতি দেয়।</p>
- </div>
-</main>
-
-<!-- ADS -->
-<main id="adsPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('homePage')">←</button>
-  <h2>▶️ Watch Video & Earn</h2>
- </div>
- <div class="card">
-  <h3>বিজ্ঞাপন দেখে আয়</h3>
-  <p class="page-desc">অ্যাড নেটওয়ার্ক যুক্ত হলে এখানে বিজ্ঞাপন দেখা ও রিওয়ার্ড পাওয়া যাবে।</p>
-  <div class="row">
-   <span class="muted">প্রতি বিজ্ঞাপনের রিওয়ার্ড</span>
-   <strong>৳ <span id="adReward">0.00</span></strong>
-  </div>
-  <button class="action" disabled>বিজ্ঞাপন এখনো চালু হয়নি</button>
- </div>
-</main>
-
-<!-- WITHDRAW -->
-<main id="withdrawPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('walletPage')">←</button>
-  <h2>💸 Withdraw</h2>
- </div>
- <div class="card">
-  <p class="page-desc">উত্তোলনের আবেদন জমা দাও। Admin যাচাই করে প্রসেস করবে।</p>
-  <label>পেমেন্ট মাধ্যম</label>
-  <select class="field" id="payMethod">
-   <option value="bKash">bKash</option>
-   <option value="Nagad">Nagad</option>
-   <option value="Rocket">Rocket</option>
-  </select>
-  <label>অ্যাকাউন্ট নম্বর</label>
-  <input class="field" id="payNumber" inputmode="numeric" placeholder="01XXXXXXXXX" maxlength="11">
-  <label>টাকার পরিমাণ</label>
-  <input class="field" id="withdrawAmount" type="number" min="1" step="1" placeholder="টাকার পরিমাণ">
-  <button class="action" onclick="submitWithdraw()">উত্তোলনের আবেদন</button>
-  <p class="notice">উত্তোলনের আবেদন Pending থাকবে যতক্ষণ Admin যাচাই না করে।</p>
- </div>
-</main>
-
-<!-- HISTORY -->
-<main id="historyPage" class="page">
- <div class="topline">
-  <button class="back" onclick="openPage('walletPage')">←</button>
-  <h2>📜 History</h2>
- </div>
- <div class="card" id="historyList">
-  <div class="empty">হিসাব লোড হচ্ছে...</div>
- </div>
-</main>
-
-</div>
-
-<!-- NEW BOTTOM NAVIGATION — ছবির মতো ৫টি বাটন -->
-<nav class="bottom-nav" id="bottomNav" style="display:none">
-
- <button class="nav-btn active" data-nav="home" onclick="openPage('homePage')">
-  <b>⌂</b>
-  <span>Home</span>
- </button>
-
- <button class="nav-btn" data-nav="tasks" onclick="openPage('tasksPage')">
-  <b>▤</b>
-  <span>Tasks</span>
- </button>
-
- <button class="nav-btn" data-nav="wallet" onclick="openPage('walletPage')">
-  <b>▣</b>
-  <span>Wallet</span>
- </button>
-
- <button class="nav-btn" data-nav="refer" onclick="openPage('referralPage')">
-  <b>♧</b>
-  <span>Refer</span>
- </button>
-
- <button class="nav-btn" data-nav="settings" onclick="openPage('profilePage')">
-  <b>⚙</b>
-  <span>Settings</span>
- </button>
-
-</nav>
-
-<div id="toast" class="toast"></div>
-
-<script>
-const firebaseConfig={
- apiKey:"AIzaSyDDDwkjIa7NecN7CnpyQxPja4KH0vLqCJ4",
- authDomain:"earning-bd-1e902.firebaseapp.com",
- projectId:"earning-bd-1e902",
- storageBucket:"earning-bd-1e902.firebasestorage.app",
- messagingSenderId:"504547016236",
- appId:"1:504547016236:web:8c5b2cfc733aaf16175b89",
- measurementId:"G-JYN5BL9RJV"
-};
-
-firebase.initializeApp(firebaseConfig);
-
-const auth=firebase.auth();
-const db=firebase.firestore();
-const provider=new firebase.auth.GoogleAuthProvider();
-
-let currentUser=null;
-let appSettings={dailyBonus:10,adReward:0,minWithdraw:0};
-let userData={balance:0};
-
-function toast(message){
- const t=document.getElementById('toast');
- t.textContent=message;
- t.style.display='block';
- clearTimeout(window.toastTimer);
- window.toastTimer=setTimeout(()=>t.style.display='none',2600);
-}
-
-function todayKey(){
- const d=new Date();
- return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-}
-
-function showNotifications(){
- toast('নতুন Notification এখনো নেই');
-}
-
-function spinUnavailable(){
- toast('Spin & Win ফিচারটি এখনো চালু হয়নি');
-}
-
-/* PAGE NAVIGATION */
-function openPage(id){
- document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-
- const page=document.getElementById(id);
- if(!page)return;
- page.classList.add('active');
-
- document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-
- let navName='home';
- if(id==='tasksPage')navName='tasks';
- else if(id==='walletPage'||id==='withdrawPage'||id==='historyPage')navName='wallet';
- else if(id==='referralPage')navName='refer';
- else if(id==='profilePage')navName='settings';
-
- const nav=document.querySelector('.nav-btn[data-nav="'+navName+'"]');
- if(nav)nav.classList.add('active');
-
- window.scrollTo(0,0);
-
- if(id==='historyPage')loadHistory();
- if(id==='tasksPage')loadTasks();
-
- if(id==='walletPage'){
-  const amount=Number(userData.balance||0).toFixed(2);
-  document.getElementById('walletBalance').textContent=amount;
-  document.getElementById('walletBalance2').textContent=amount;
- }
-}
-
-/* GOOGLE LOGIN */
-async function googleLogin(){
- const btn=document.getElementById('googleBtn');
- const status=document.getElementById('status');
-
- btn.disabled=true;
- status.textContent='Google-এর সাথে সংযোগ হচ্ছে...';
-
- try{
-  await auth.signInWithPopup(provider);
- }catch(e){
-  console.error(e);
-  status.textContent='Login Error: '+e.message;
-  btn.disabled=false;
- }
-}
-
-/* AUTH STATE */
-auth.onAuthStateChanged(async user=>{
- if(!user){
-  currentUser=null;
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('appScreen').style.display='none';
-  document.getElementById('bottomNav').style.display='none';
-  document.getElementById('googleBtn').disabled=false;
-  return;
- }
-
- currentUser=user;
-
- try{
-  const ref=db.collection('users').doc(user.uid);
-  const snap=await ref.get();
-
-  if(!snap.exists){
-   await ref.set({
-    name:user.displayName||'User',
-    email:user.email,
-    photoURL:user.photoURL||'',
-    balance:0,
-    createdAt:firebase.firestore.FieldValue.serverTimestamp()
-   });
-  }
-
-  const fresh=await ref.get();
-  userData=fresh.data()||{balance:0};
-
-  renderUserData();
-
-  const welcomeName=(user.displayName||'User').split(' ')[0];
-  const welcomeTitle=document.querySelector('.welcome-copy strong');
-  if(welcomeTitle)welcomeTitle.textContent='Hello, '+welcomeName+' 👋';
-
-  document.getElementById('userPhoto').src=user.photoURL||'https://via.placeholder.com/80';
-  document.getElementById('profilePhoto').src=user.photoURL||'https://via.placeholder.com/100';
-  document.getElementById('profileName').textContent=user.displayName||'User';
-  document.getElementById('profileEmail').textContent=user.email||'';
-  document.getElementById('profileUid').textContent=user.uid;
-  document.getElementById('refCode').value=user.uid.slice(0,8).toUpperCase();
-
-  await loadSettings();
-  await loadTodayStats();
-  await loadDashboardCounts();
-  await loadRecentActivity();
-
-  document.getElementById('loginScreen').style.display='none';
-  document.getElementById('appScreen').style.display='block';
-  document.getElementById('bottomNav').style.display='grid';
-
- }catch(e){
-  console.error(e);
-  document.getElementById('status').textContent='Database Error: '+e.message;
-  toast('ডেটাবেসে সমস্যা হয়েছে');
- }
-});
-
-/* BALANCE */
-function renderUserData(){
- const amount=Number(userData.balance||0).toFixed(2);
- document.getElementById('balance').textContent=amount;
- document.getElementById('walletBalance').textContent=amount;
- document.getElementById('walletBalance2').textContent=amount;
-}
-
-/* SETTINGS */
-async function loadSettings(){
- try{
-  const s=await db.collection('appConfig').doc('public').get();
-  if(s.exists)appSettings={...appSettings,...s.data()};
- }catch(e){
-  console.error('Settings read error',e);
-  toast('Admin-এর Bonus Settings পড়া যায়নি');
- }
-
- document.getElementById('bonusAmount').textContent=Number(appSettings.dailyBonus??10).toFixed(2);
- document.getElementById('adReward').textContent=Number(appSettings.adReward??0).toFixed(2);
-}
-
-/* TODAY STATS */
-async function loadTodayStats(){
- try{
-  const start=new Date();
-  start.setHours(0,0,0,0);
-
-  const q=await db.collection('users').doc(currentUser.uid)
-   .collection('transactions')
-   .where('createdAt','>=',firebase.firestore.Timestamp.fromDate(start))
-   .get();
-
-  let total=0,count=0;
-
-  q.forEach(d=>{
-   const x=d.data();
-   if(x.status==='approved'&&Number(x.amount)>0){
-    total+=Number(x.amount);
-    if(x.type==='task')count++;
-   }
-  });
-
-  document.getElementById('todayEarn').textContent=total.toFixed(2);
-  document.getElementById('completedTasks').textContent=
-   Number(userData.completedTasks||userData.totalCompletedTasks||count);
-
- }catch(e){
-  console.log('Stats:',e.message);
- }
-}
-
-/* DASHBOARD COUNTS */
-async function loadDashboardCounts(){
- document.getElementById('totalTasks').textContent=
-  Number(userData.totalTasks||0);
-
- document.getElementById('referralCount').textContent=
-  Number(userData.referralCount||0);
-
- try{
-  const taskSnap=await db.collection('tasks')
-   .where('active','==',true).get();
-
-  document.getElementById('totalTasks').textContent=taskSnap.size;
- }catch(e){
-  console.log('Task count unavailable:',e.message);
- }
-}
-
-/* DAILY BONUS */
-async function claimBonus(){
- if(!currentUser)return;
-
- const btn=document.getElementById('claimBonusBtn');
- btn.disabled=true;
-
- try{
-  const uid=currentUser.uid;
-  const today=todayKey();
-  const amount=Number(appSettings.dailyBonus);
-
-  if(!Number.isFinite(amount)||amount<=0)
-   throw new Error('Admin-এর Bonus amount সঠিক নয়');
-
-  const userRef=db.collection('users').doc(uid);
-  const claimRef=db.collection('bonusClaims').doc(uid+'_'+today);
-  const historyRef=userRef.collection('transactions').doc('bonus_'+today);
-
-  await db.runTransaction(async transaction=>{
-   const [userSnap,claimSnap,configSnap]=await Promise.all([
-    transaction.get(userRef),
-    transaction.get(claimRef),
-    transaction.get(db.collection('appConfig').doc('public'))
-   ]);
-
-   if(!userSnap.exists)throw new Error('User account পাওয়া যায়নি');
-   if(claimSnap.exists)throw new Error('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');
-   if(!configSnap.exists)throw new Error('Admin Bonus Settings পাওয়া যায়নি');
-
-   const liveAmount=Number(configSnap.data().dailyBonus);
-   if(!Number.isFinite(liveAmount)||liveAmount<=0)
-    throw new Error('Admin Bonus amount সঠিক নয়');
-
-   const oldBalance=Number(userSnap.data().balance||0);
-
-   transaction.create(claimRef,{
-    uid:uid,
-    email:currentUser.email||'',
-    name:currentUser.displayName||'User',
-    amount:liveAmount,
-    date:today,
-    status:'approved',
-    createdAt:firebase.firestore.FieldValue.serverTimestamp()
-   });
-
-   transaction.update(userRef,{
-    balance:oldBalance+liveAmount,
-    totalEarned:firebase.firestore.FieldValue.increment(liveAmount),
-    lastBonusDate:today,
-    lastBonusClaimId:uid+'_'+today
-   });
-
-   transaction.set(historyRef,{
-    type:'daily_bonus',
-    amount:liveAmount,
-    status:'approved',
-    date:today,
-    createdAt:firebase.firestore.FieldValue.serverTimestamp()
-   });
-  });
-
-  const updated=await userRef.get();
-  userData=updated.data()||userData;
-  renderUserData();
-  await loadTodayStats();
-
-  toast('অভিনন্দন! ৳'+amount.toFixed(2)+' Wallet-এ যোগ হয়েছে।');
-
- }catch(e){
-  console.error('Daily bonus claim:',e);
-  if(e.message&&e.message.toLowerCase().includes('already'))
-   toast('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');
-  else
-   toast(e.message||'বোনাস যোগ হয়নি। Firestore Rules পরীক্ষা করো');
- }finally{
-  btn.disabled=false;
- }
-}
-
-/* WITHDRAW */
-async function submitWithdraw(){
- if(!currentUser)return;
-
- const method=document.getElementById('payMethod').value;
- const number=document.getElementById('payNumber').value.trim();
- const amount=Number(document.getElementById('withdrawAmount').value);
-
- if(!/^01[0-9]{9}$/.test(number)){
-  toast('সঠিক ১১ সংখ্যার মোবাইল নম্বর দাও');
-  return;
- }
- if(!Number.isFinite(amount)||amount<=0){
-  toast('সঠিক টাকার পরিমাণ দাও');
-  return;
- }
- if(amount<Number(appSettings.minWithdraw||0)){
-  toast('ন্যূনতম উত্তোলন ৳'+appSettings.minWithdraw);
-  return;
- }
- if(amount>Number(userData.balance||0)){
-  toast('পর্যাপ্ত ব্যালেন্স নেই');
-  return;
- }
-
- try{
-  await db.collection('withdrawRequests').add({
-   uid:currentUser.uid,
-   email:currentUser.email,
-   method,
-   number,
-   amount,
-   status:'pending',
-   createdAt:firebase.firestore.FieldValue.serverTimestamp()
-  });
-
-  toast('উত্তোলনের আবেদন জমা হয়েছে');
-  document.getElementById('payNumber').value='';
-  document.getElementById('withdrawAmount').value='';
- }catch(e){
-  console.error(e);
-  toast('আবেদন জমা হয়নি: Firestore Rules পরীক্ষা করো');
- }
-}
-
-/* REFERRAL COPY */
-async function copyReferral(){
- const code=document.getElementById('refCode').value;
- try{
-  await navigator.clipboard.writeText(code);
-  toast('Referral code কপি হয়েছে');
- }catch(e){
-  document.getElementById('refCode').select();
-  document.execCommand('copy');
-  toast('Referral code কপি হয়েছে');
- }
-}
-
-/* TASK LIST */
-async function loadTasks(){
- const box=document.getElementById('taskList');
- box.innerHTML='<div class="empty">কাজ লোড হচ্ছে...</div>';
-
- try{
-  const s=await db.collection('tasks').where('active','==',true).get();
-
-  if(s.empty){
-   box.innerHTML='<div class="empty">এখনো কোনো কাজ যোগ করা হয়নি।</div>';
-   return;
-  }
-
-  box.innerHTML='';
-
-  s.forEach(doc=>{
-   const d=doc.data();
-   const item=document.createElement('div');
-   item.className='list-item';
-
-   const title=document.createElement('strong');
-   title.textContent=d.title||'Task';
-
-   const desc=document.createElement('p');
-   desc.className='muted';
-   desc.textContent=d.description||'';
-
-   const meta=document.createElement('div');
-   meta.className='row';
-   meta.style.marginTop='8px';
-
-   const reward=document.createElement('span');
-   reward.textContent='রিওয়ার্ড: ৳'+Number(d.reward||0).toFixed(2);
-
-   const btn=document.createElement('button');
-   btn.className='back';
-   btn.textContent='আবেদন';
-   btn.onclick=()=>submitTask(doc.id,d);
-
-   meta.append(reward,btn);
-   item.append(title,desc,meta);
-   box.append(item);
-  });
-
- }catch(e){
-  console.error(e);
-  box.innerHTML='<div class="empty">Tasks লোড করা যায়নি। Firestore Rules / Admin setup পরীক্ষা করো।</div>';
- }
-}
-
-/* TASK SUBMISSION */
-async function submitTask(taskId,task){
- try{
-  await db.collection('taskSubmissions').add({
-   uid:currentUser.uid,
-   email:currentUser.email,
-   taskId,
-   title:task.title||'Task',
-   reward:Number(task.reward||0),
-   status:'pending',
-   createdAt:firebase.firestore.FieldValue.serverTimestamp()
-  });
-  toast('Task submission জমা হয়েছে');
- }catch(e){
-  console.error(e);
-  toast('জমা হয়নি: Firestore Rules পরীক্ষা করো');
- }
-}
-
-/* HISTORY */
-async function loadHistory(){
- const box=document.getElementById('historyList');
- box.innerHTML='<div class="empty">হিসাব লোড হচ্ছে...</div>';
-
- try{
-  const [tx,claims,withdrawals]=await Promise.all([
-   db.collection('users').doc(currentUser.uid)
-    .collection('transactions').limit(30).get(),
-   db.collection('bonusClaims')
-    .where('uid','==',currentUser.uid).limit(20).get(),
-   db.collection('withdrawRequests')
-    .where('uid','==',currentUser.uid).limit(20).get()
-  ]);
-
-  const rows=[];
-  tx.forEach(d=>rows.push({...d.data(),kind:d.data().type||'transaction'}));
-  claims.forEach(d=>rows.push({...d.data(),kind:'Daily Bonus'}));
-  withdrawals.forEach(d=>rows.push({...d.data(),kind:'Withdraw'}));
-
-  rows.sort((a,b)=>
-   (b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0)
-  );
-
-  if(!rows.length){
-   box.innerHTML='<div class="empty">এখনো কোনো হিসাব নেই।</div>';
-   return;
-  }
-
-  box.innerHTML='';
-
-  rows.slice(0,40).forEach(r=>{
-   const el=document.createElement('div');
-   el.className='list-item';
-
-   const top=document.createElement('div');
-   top.className='row';
-
-   const name=document.createElement('strong');
-   name.textContent=r.kind;
-
-   const status=document.createElement('span');
-   status.className='pill';
-   status.textContent=r.status||'approved';
-
-   top.append(name,status);
-
-   const detail=document.createElement('p');
-   detail.className='muted';
-   detail.style.marginTop='5px';
-   detail.textContent='৳'+Number(r.amount||r.reward||0).toFixed(2);
-
-   el.append(top,detail);
-   box.append(el);
-  });
-
- }catch(e){
-  console.error(e);
-  box.innerHTML='<div class="empty">History দেখতে Firestore Rules আপডেট করতে হবে।</div>';
- }
-}
-
-/* RECENT ACTIVITY */
-async function loadRecentActivity(){
- const box=document.getElementById('recentActivity');
- try{
-  const q=await db.collection('users').doc(currentUser.uid)
-   .collection('transactions').limit(5).get();
-
-  if(q.empty){
-   box.innerHTML='<div class="empty">এখনো কোনো Activity নেই।</div>';
-   return;
-  }
-
-  const items=[];
-  q.forEach(d=>items.push(d.data()));
-
-  items.sort((a,b)=>
-   (b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0)
-  );
-
-  box.innerHTML='';
-  items.slice(0,4).forEach(r=>{
-   const el=document.createElement('div');
-   el.className='list-item';
-
-   const top=document.createElement('div');
-   top.className='row';
-
-   const title=document.createElement('strong');
-   title.textContent=r.type||'Transaction';
-
-   const amount=document.createElement('span');
-   amount.style.color='#ffdf70';
-   amount.textContent='৳'+Number(r.amount||0).toFixed(2);
-
-   top.append(title,amount);
-   el.append(top);
-   box.append(el);
-  });
-
- }catch(e){
-  console.log('Recent activity:',e.message);
-  box.innerHTML='<div class="empty">Activity এখন দেখা যাচ্ছে না।</div>';
- }
-}
-
-/* LOGOUT */
-async function logout(){
- await auth.signOut();
- toast('লগআউট হয়েছে');
-}
-</script>
-
-</body>
+<!DOCTYPE html>  
+<html lang="bn">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">  
+<meta name="theme-color" content="#080511">  
+<title>Earning Money BD</title>  
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>  
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>  
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>  
+<style>  
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&display=swap');  
+  
+:root{  
+ --bg:#0b0416;  
+ --purple-glow:#bd75ff;  
+ --gold:#ffc72c;  
+ --gold-bright:#ffdf6d;  
+ --gold-grad:linear-gradient(135deg, #ffe17b 0%, #ffb72e 50%, #d77c13 100%);  
+}  
+  
+*{box-sizing:border-box;margin:0;padding:0}  
+html{scroll-behavior:smooth}  
+body{  
+ min-height:100vh;  
+ background: radial-gradient(ellipse at 50% 0%, #2a0845 0%, #090314 70%);  
+ background-attachment:fixed;  
+ color:#fff;  
+ font-family:'Hind Siliguri',Poppins,sans-serif;  
+}  
+button,input,select{font:inherit}  
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}  
+  
+/* LOGIN DESIGN (Unchanged) */  
+.screen{max-width:520px;margin:auto;padding:20px 18px 115px}  
+#loginScreen{  
+ min-height:100vh;  
+ display:flex;  
+ flex-direction:column;  
+ justify-content:center;  
+ padding:25px 18px;  
+}  
+.brand{text-align:center;margin-bottom:35px}  
+.brand h1{  
+ font:800 29px Poppins;  
+ letter-spacing:-1px;  
+ text-shadow:0 5px 25px #8b55ff55  
+}  
+.brand h1 span{color:#b18aff}  
+.brand p{color:#929bb2;font-size:12px;margin-top:8px}  
+.login-card{  
+ background:radial-gradient(circle at 50% 0%,#8652e52a,transparent 55%),linear-gradient(145deg,#1a2340,#0d1428);  
+ border:1px solid #a879ff55;  
+ border-radius:28px;  
+ padding:32px 22px;  
+ text-align:center;  
+ box-shadow:0 20px 55px #0007,0 0 35px #8b55ff12;  
+}  
+.login-card h2{font-size:21px;margin-bottom:10px}  
+.login-card p{font-size:12px;color:#9ba5bd;margin-bottom:27px}  
+.google-btn{  
+ width:100%;padding:15px;border:0;border-radius:16px;  
+ background:#fff;color:#252525;font-size:14px;font-weight:700;  
+ display:flex;align-items:center;justify-content:center;gap:12px;  
+ box-shadow:0 7px 20px #0003;  
+}  
+.google-btn:disabled{opacity:.5}  
+.google-logo{width:21px;height:21px;flex-shrink:0}  
+#status{font-size:11px;color:#c4b5fd;margin-top:17px;min-height:18px;overflow-wrap:anywhere}  
+  
+/* APP SHELL */  
+.app-shell{  
+ max-width:480px;  
+ margin:auto;  
+ padding:15px 16px 110px;  
+}  
+  
+/* HEADER */  
+header{  
+ display:flex;align-items:center;justify-content:space-between;  
+ margin-bottom:18px;  
+}  
+.brand-container{display:flex;align-items:center;gap:10px}  
+.crown-icon-large{  
+ font-size:32px;  
+ background:linear-gradient(180deg,#ffea79,#e39600);  
+ -webkit-background-clip:text;  
+ -webkit-text-fill-color:transparent;  
+ filter:drop-shadow(0 0 10px #ffb700aa);  
+}  
+.logo-title{  
+ font:900 20px Poppins;  
+ line-height:1.1;  
+ background:linear-gradient(180deg,#ffffff,#ffe082);  
+ -webkit-background-clip:text;  
+ -webkit-text-fill-color:transparent;  
+ letter-spacing:-0.5px;  
+}  
+.logo-title span{  
+ font-size:11px;  
+ display:block;  
+ font-weight:600;  
+ letter-spacing:1px;  
+ color:#e0c3ff;  
+ -webkit-text-fill-color:#e0c3ff;  
+ text-transform:uppercase;  
+ margin-top:2px;  
+}  
+.header-right{display:flex;align-items:center;gap:12px}  
+.notif-bell{  
+ font-size:22px;  
+ background:transparent;  
+ border:none;  
+ color:#fff;  
+ position:relative;  
+ filter:drop-shadow(0 0 6px #ffdf6d);  
+}  
+.user-avatar-wrap{  
+ display:flex;  
+ flex-direction:column;  
+ align-items:center;  
+ position:relative;  
+}  
+.user-avatar-wrap img{  
+ width:48px;height:48px;  
+ border-radius:50%;  
+ border:2.5px solid #ffcb36;  
+ object-fit:cover;  
+ box-shadow:0 0 15px #ffb70088;  
+}  
+.badge-premium{  
+ background:linear-gradient(135deg,#ffe57f,#d88a00);  
+ color:#1a0c00;  
+ font:800 9px Poppins;  
+ padding:2px 8px;  
+ border-radius:10px;  
+ margin-top:-9px;  
+ z-index:2;  
+ border:1px solid #ffffff;  
+ text-transform:uppercase;  
+ letter-spacing:0.5px;  
+ box-shadow:0 2px 6px rgba(0,0,0,0.6);  
+}  
+  
+/* WELCOME STRIP */  
+.welcome-strip{  
+ display:flex;align-items:center;gap:10px;  
+ background:linear-gradient(90deg, rgba(80,20,120,0.5), rgba(20,8,40,0.5));  
+ border:1px solid #7c32b5aa;  
+ border-radius:18px;  
+ padding:12px 15px;  
+ margin-bottom:16px;  
+ backdrop-filter:blur(10px);  
+}  
+.welcome-crown{  
+ font-size:24px;  
+ filter:drop-shadow(0 0 8px #d67bff);  
+}  
+.welcome-copy strong{  
+ font:700 16px Poppins, 'Hind Siliguri';  
+ color:#fff;  
+ display:block;  
+}  
+.welcome-copy span{  
+ font-size:12px;  
+ color:#cbb5e5;  
+}  
+  
+/* WALLET CARD (GOLD GLOW) */  
+.balance-card{  
+ position:relative;  
+ border-radius:24px;  
+ padding:20px 22px;  
+ margin-bottom:20px;  
+ background:linear-gradient(135deg, #462c00 0%, #1e1200 50%, #0d0600 100%);  
+ border:1.5px solid #ffcb36;  
+ box-shadow:0 0 25px #ffab0044, inset 0 0 15px #ffc10733;  
+ overflow:hidden;  
+ display:flex;  
+ justify-content:space-between;  
+ align-items:center;  
+}  
+.balance-card::after{  
+ content:'';  
+ position:absolute;  
+ right:-20px; bottom:-20px;  
+ width:120px; height:120px;  
+ background:radial-gradient(circle, #ffb30044 0%, transparent 70%);  
+ pointer-events:none;  
+}  
+.balance-left{display:flex; align-items:center; gap:15px; z-index:1}  
+.wallet-icon-box{  
+ width:54px; height:54px;  
+ background:linear-gradient(135deg,#ffe885,#d68400);  
+ border-radius:16px;  
+ display:flex; align-items:center; justify-content:center;  
+ font-size:30px;  
+ box-shadow:0 4px 12px #0005, inset 0 2px 4px #fff8;  
+}  
+.balance-info small{  
+ font-size:13px;  
+ color:#ffe699;  
+ font-weight:500;  
+ display:block;  
+}  
+.balance-info h2{  
+ font:800 30px Poppins;  
+ color:#ffdf6d;  
+ text-shadow:0 0 12px #ffb30088;  
+ margin-top:2px;  
+}  
+.withdraw-btn-main{  
+ z-index:1;  
+ background:var(--gold-grad);  
+ border:none;  
+ border-radius:30px;  
+ padding:10px 18px;  
+ color:#1c0e00;  
+ font:800 13px Poppins;  
+ display:flex; align-items:center; gap:6px;  
+ box-shadow:0 4px 15px #ff980066;  
+ transition:transform 0.2s;  
+}  
+.withdraw-btn-main:active{transform:scale(0.95)}  
+  
+/* STATS 4 GRID */  
+.stats-grid-4{  
+ display:grid;  
+ grid-template-columns:repeat(4, 1fr);  
+ gap:8px;  
+ margin-bottom:22px;  
+}  
+.stat-box{  
+ border-radius:16px;  
+ padding:12px 6px;  
+ text-align:center;  
+ border:1px solid rgba(255,255,255,0.15);  
+ backdrop-filter:blur(5px);  
+}  
+.stat-box.purple{  
+ background:linear-gradient(180deg, #2a084c, #15002b);  
+ border-color:#8e36e677;  
+ box-shadow:0 4px 12px #6a0dad33;  
+}  
+.stat-box.blue{  
+ background:linear-gradient(180deg, #092047, #020d24);  
+ border-color:#2a75d377;  
+ box-shadow:0 4px 12px #1e88e533;  
+}  
+.stat-box.dark-purple{  
+ background:linear-gradient(180deg, #38004d, #190024);  
+ border-color:#b526d677;  
+ box-shadow:0 4px 12px #ab47bc33;  
+}  
+.stat-icon{  
+ font-size:18px;  
+ margin-bottom:4px;  
+ display:inline-block;  
+}  
+.stat-box small{  
+ font-size:10px;  
+ color:#d5c3ea;  
+ display:block;  
+ font-weight:500;  
+ white-space:nowrap;  
+}  
+.stat-box strong{  
+ font:700 14px Poppins;  
+ color:#fff;  
+ margin-top:2px;  
+ display:block;  
+}  
+  
+/* QUICK ACTIONS SECTION */  
+.section-header-title{  
+ font:700 16px Poppins, 'Hind Siliguri';  
+ color:#fff;  
+ display:flex; align-items:center; gap:8px;  
+ margin-bottom:12px;  
+}  
+.section-header-title span{color:#ffc107}  
+  
+.quick-actions-grid{  
+ display:grid;  
+ grid-template-columns:repeat(4, 1fr);  
+ gap:10px;  
+ margin-bottom:20px;  
+}  
+.action-card{  
+ border-radius:18px;  
+ padding:14px 4px 10px;  
+ display:flex;  
+ flex-direction:column;  
+ align-items:center;  
+ justify-content:center;  
+ gap:8px;  
+ border:1px solid transparent;  
+ text-align:center;  
+ border:1px solid rgba(255,255,255,0.2);  
+ transition:0.2s;  
+}  
+.action-card:active{transform:scale(0.94)}  
+.action-card.btn-pink{  
+ background:linear-gradient(180deg, #4a0033, #220017);  
+ border-color:#ff2a8d66;  
+ box-shadow:0 6px 16px #ff177933;  
+}  
+.action-card.btn-blue{  
+ background:linear-gradient(180deg, #003366, #00152d);  
+ border-color:#0099ff66;  
+ box-shadow:0 6px 16px #0088ff33;  
+}  
+.action-card.btn-gold{  
+ background:linear-gradient(180deg, #5e3a00, #2b1a00);  
+ border-color:#ffaa0066;  
+ box-shadow:0 6px 16px #ff910033;  
+}  
+.action-card.btn-purple{  
+ background:linear-gradient(180deg, #3d0066, #1a002e);  
+ border-color:#aa00ff66;  
+ box-shadow:0 6px 16px #aa00ff33;  
+}  
+.action-icon-circle{  
+ font-size:22px;  
+}  
+.action-card span{  
+ font-size:11px;  
+ font-weight:700;  
+ color:#ffffff;  
+ line-height:1.2;  
+ font-family:'Hind Siliguri', Poppins;  
+}  
+  
+/* SPECIAL BONUS BANNER */  
+.special-bonus-card{  
+ background:linear-gradient(135deg, #380054 0%, #150024 100%);  
+ border:1.5px solid #d442ff;  
+ border-radius:22px;  
+ padding:15px;  
+ display:flex;  
+ align-items:center;  
+ justify-content:space-between;  
+ gap:10px;  
+ box-shadow:0 8px 25px #b026ff44;  
+ margin-bottom:20px;  
+ position:relative;  
+ overflow:hidden;  
+}  
+.gift-icon{  
+ font-size:42px;  
+ filter:drop-shadow(0 0 10px #ff3df1);  
+}  
+.bonus-info{flex:1}  
+.bonus-info h4{  
+ font:800 15px Poppins;  
+ color:#ff80ff;  
+ text-shadow:0 0 8px #ff00ffaa;  
+}  
+.bonus-info p{  
+ font-size:11px;  
+ color:#e0c2ff;  
+ margin-top:2px;  
+ line-height:1.3;  
+}  
+.claim-btn{  
+ background:var(--gold-grad);  
+ border:none;  
+ border-radius:20px;  
+ padding:8px 14px;  
+ font:800 12px Poppins;  
+ color:#211000;  
+ box-shadow:0 4px 12px #ff980055;  
+ white-space:nowrap;  
+}  
+  
+/* PAGES & INNER STYLES */  
+.page{display:none;animation:fade .2s ease}  
+.page.active{display:block}  
+@keyframes fade{  
+ from{opacity:.5;transform:translateY(5px)}  
+ to{opacity:1;transform:none}  
+}  
+.topline{display:flex;align-items:center;gap:10px;margin:5px 0 20px}  
+.back{  
+ min-width:40px;height:40px;  
+ border:1px solid #d7b46a88;  
+ background:linear-gradient(135deg,#382044,#21112e);  
+ color:#ffe6ad;border-radius:12px;font-size:18px;  
+}  
+.card{  
+ border:1px solid #aa78d077;  
+ border-radius:20px;padding:16px;margin-bottom:14px;  
+ background:linear-gradient(145deg,#241532,#120c1e);  
+ box-shadow:0 11px 26px #0009;  
+}  
+.action{  
+ width:100%;border:1px solid #fff0a6;border-radius:14px;  
+ padding:13px;margin-top:12px;  
+ background:linear-gradient(120deg,#ffe17a,#ffb82e 60%,#d47b15);  
+ color:#241306;font-weight:800;  
+ box-shadow:0 7px 19px #ffb52d33;  
+}  
+.field{  
+ width:100%;background:#100b1b;  
+ border:1px solid #a77acb77;border-radius:12px;  
+ color:white;padding:12px;margin-top:7px;outline:none;  
+}  
+label{display:block;color:#f0dcae;font-size:12px;font-weight:600;margin-top:10px}  
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}  
+.list-item{padding:12px 0;border-bottom:1px solid #ffffff18}  
+.pill{  
+ font-size:10px;border-radius:20px;padding:4px 9px;  
+ background:#30203e;border:1px solid #d3a65c66;color:#ffe5a5;  
+}  
+.notice{  
+ font-size:11px;color:#f6dfad;  
+ background:linear-gradient(120deg,#3a2b1a,#241a20);  
+ border:1px solid #e6bd6244;  
+ padding:10px;border-radius:12px;margin-top:10px;line-height:1.5;  
+}  
+.logout{  
+ width:100%;padding:12px;  
+ border:1px solid #e1a66c77;  
+ background:linear-gradient(120deg,#51233c,#2b172c);  
+ color:#ffe9d7;border-radius:14px;margin-top:16px;  
+}  
+  
+/* NAVIGATION BAR (MATCHING IMAGE) */  
+.bottom-nav{  
+ position:fixed;  
+ left:50%; bottom:15px;  
+ transform:translateX(-50%);  
+ width:min(450px, calc(100% - 24px));  
+ display:grid;  
+ grid-template-columns:repeat(5, 1fr);  
+ align-items:center;  
+ padding:8px 6px;  
+ border:1.5px solid #ab47bc;  
+ border-radius:40px;  
+ background:linear-gradient(180deg, rgba(25, 5, 45, 0.95), rgba(10, 2, 20, 0.98));  
+ box-shadow:0 0 15px #9c27b0aa, inset 0 1px 3px rgba(255,255,255,0.2);  
+ z-index:100;  
+ backdrop-filter:blur(10px);  
+}  
+.nav-btn{  
+ display:flex;  
+ flex-direction:column;  
+ align-items:center;  
+ justify-content:center;  
+ gap:3px;  
+ border:none;  
+ background:transparent;  
+ color:#b388ff;  
+ font-family:Poppins, sans-serif;  
+ padding:6px 0;  
+ border-radius:25px;  
+ transition:0.2s;  
+}  
+.nav-btn b{  
+ font-size:20px;  
+ line-height:1;  
+ font-weight:normal;  
+}  
+.nav-btn span{  
+ font-size:10px;  
+ font-weight:600;  
+ color:#d1c4e9;  
+}  
+.nav-btn.active{  
+ color:#ffe082;  
+}  
+.nav-btn.active b{  
+ color:#ffe082;  
+ filter:drop-shadow(0 0 6px #ffb300);  
+}  
+.nav-btn.active span{  
+ color:#ffe082;  
+ text-shadow:0 0 5px #ffb30088;  
+}  
+  
+.toast{  
+ position:fixed;bottom:90px;left:50%;  
+ transform:translateX(-50%);  
+ background:linear-gradient(135deg,#3b234b,#21132f);  
+ border:1px solid #e2bb6a;  
+ padding:10px 18px;border-radius:20px;  
+ font-size:12px;display:none;z-index:120;  
+ max-width:85%;text-align:center;  
+ box-shadow:0 8px 25px #000c;  
+}  
+</style>  
+</head>  
+<body>  
+
+<!-- LOGIN -->  
+<div id="loginScreen" class="screen">  
+ <div class="brand">  
+  <h1>EARNING <span>MONEY BD</span></h1>  
+  <p>Your earning journey starts here</p>  
+ </div>  
+ <div class="login-card">  
+  <h2>Welcome Earning Money BD!</h2>  
+  <p>Login or create your account with Google</p>  
+  <button class="google-btn" id="googleBtn" onclick="googleLogin()">  
+   <svg class="google-logo" viewBox="0 0 48 48">  
+    <path fill="#4285F4" d="M43.6 24.5c0-1.5-.1-3-.4-4.4H24v8.3h11a9.4 9.4 0 0 1-4.1 6.2v5.4h6.6c3.9-3.6 6.1-9 6.1-15.5z"/>  
+    <path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.9l-6.6-5.4c-1.8 1.2-4 1.9-6.9 1.9-5.3 0-9.8-3.6-11.4-8.5H5.8v5.5C9.2 39.4 16.1 44 24 44z"/>  
+    <path fill="#FBBC05" d="M12.6 27.1a12 12 0 0 1 0-7.2v-5.5H5.8a20 20 0 0 0 0 18.2z"/>  
+    <path fill="#EA4335" d="M24 11.4c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 5.3 29.5 3.5 24 3.5c-7.9 0-14.8 4.6-18.2 10.9l6.8 5.5c1.6-4.9 6.1-8.5 11.4-8.5z"/>  
+   </svg>  
+   Continue with Google  
+  </button>  
+  <div id="status"></div>  
+ </div>  
+</div>  
+
+<!-- APP SCREEN -->  
+<div id="appScreen" class="app-shell" style="display:none">  
+
+ <!-- HEADER -->  
+ <header>  
+  <div class="brand-container">  
+   <span class="crown-icon-large">👑</span>  
+   <div class="logo-title">  
+    Earning  
+    <span>Money BD</span>  
+   </div>  
+  </div>  
+  <div class="header-right">  
+   <button class="notif-bell">🔔</button>  
+   <div class="user-avatar-wrap">  
+    <img id="userPhoto" src="https://via.placeholder.com/80" alt="User">  
+    <span class="badge-premium">Premium</span>  
+   </div>  
+  </div>  
+ </header>  
+
+ <!-- HOME PAGE -->  
+ <main id="homePage" class="page active">  
+
+  <!-- WELCOME STRIP -->  
+  <section class="welcome-strip">  
+   <div class="welcome-crown">👑</div>  
+   <div class="welcome-copy">  
+    <strong id="welcomeUser">Hello, Rahat 👋</strong>  
+    <span>Keep earning, keep growing!</span>  
+   </div>  
+  </section>  
+
+  <!-- GOLD WALLET CARD -->  
+  <section class="balance-card">  
+   <div class="balance-left">  
+    <div class="wallet-icon-box">👛</div>  
+    <div class="balance-info">  
+     <small>Wallet Balance</small>  
+     <h2>৳ <span id="balance">0.00</span></h2>  
+    </div>  
+   </div>  
+   <button class="withdraw-btn-main" onclick="openPage('withdrawPage')">Withdraw ➔</button>  
+  </section>  
+
+  <!-- 4 STATS GRID -->  
+  <section class="stats-grid-4">  
+   <div class="stat-box purple">  
+    <span class="stat-icon">🎁</span>  
+    <small>Total Tasks</small>  
+    <strong id="totalTaskCount">42</strong>  
+   </div>  
+   <div class="stat-box blue">  
+    <span class="stat-icon">✅</span>  
+    <small>Completed</small>  
+    <strong id="taskCount">0</strong>  
+   </div>  
+   <div class="stat-box purple">  
+    <span class="stat-icon">⭐</span>  
+    <small>Today Earn</small>  
+    <strong>৳ <span id="todayEarn">0.00</span></strong>  
+   </div>  
+   <div class="stat-box dark-purple">  
+    <span class="stat-icon">👥</span>  
+    <small>Referrals</small>  
+    <strong id="refCount">0</strong>  
+   </div>  
+  </section>  
+
+  <!-- QUICK ACTIONS -->  
+  <div class="section-header-title">  
+   <span>⚡</span> Quick Actions  
+  </div>  
+  <section class="quick-actions-grid">  
+   <button class="action-card btn-pink" onclick="openPage('tasksPage')">  
+    <span class="action-icon-circle">📋</span>  
+    <span>Take Task<br>& Earn</span>  
+   </button>  
+   <button class="action-card btn-blue" onclick="openPage('adsPage')">  
+    <span class="action-icon-circle">▶️</span>  
+    <span>Watch Video<br>& Earn</span>  
+   </button>  
+   <button class="action-card btn-gold" onclick="openPage('referralPage')">  
+    <span class="action-icon-circle">👥</span>  
+    <span>Invite Friends<br>& Earn</span>  
+   </button>  
+   <button class="action-card btn-purple" onclick="openPage('bonusPage')">  
+    <span class="action-icon-circle">🎡</span>  
+    <span>Spin & Win</span>  
+   </button>  
+  </section>  
+
+  <!-- SPECIAL BONUS BANNER -->  
+  <section class="special-bonus-card">  
+   <div class="gift-icon">🎁</div>  
+   <div class="bonus-info">  
+    <h4>Special Bonus!</h4>  
+    <p>Invite 5 Friends & Get<br>৳ 100 Bonus</p>  
+   </div>  
+   <button class="claim-btn" onclick="openPage('referralPage')">Claim Now</button>  
+  </section>  
+
+ </main>  
+
+ <!-- TASKS PAGE -->  
+ <main id="tasksPage" class="page">  
+  <div class="topline">  
+   <button class="back" onclick="openPage('homePage')">←</button>  
+   <h2>📋 Tasks</h2>  
+  </div>  
+  <p style="font-size:12px;color:#c5b4d9;margin-bottom:12px;">Admin-এর দেওয়া কাজগুলো নিচে থেকে সম্পূর্ণ করুন।</p>  
+  <div id="taskList" class="card"><div style="text-align:center;color:#aaa">কাজ লোড হচ্ছে...</div></div>  
+ </main>  
+
+ <!-- WALLET PAGE -->  
+ <main id="walletPage" class="page">  
+  <div class="topline">  
+   <button class="back" onclick="openPage('homePage')">←</button>  
+   <h2>👛 My Wallet</h2>  
+  </div>  
+  <div class="card" style="text-align:center;background:linear-gradient(135deg,#3b1d4e,#170d25);">  
+   <small style="color:#e5c9fa">তোমার মোট Wallet Balance</small>  
+   <h2 style="font:800 32px Poppins;color:#ffd45a;margin:8px 0">৳ <span id="walletBalance">0.00</span></h2>  
+   <span class="pill">Earning Money BD Wallet</span>  
+  </div>  
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">  
+   <button class="action" onclick="openPage('withdrawPage')">💸 Withdraw</button>  
+   <button class="action" style="background:linear-gradient(120deg,#b77aff,#7534c7);color:white;" onclick="openPage('historyPage')">📜 History</button>  
+  </div>  
+ </main>  
+
+ <!-- REFERRAL PAGE -->  
+ <main id="referralPage" class="page">  
+  <div class="topline">  
+   <button class="back" onclick="openPage('homePage')">←</button>  
+   <h2>👥 Referral</h2>  
+  </div>  
+  <div class="card">  
+   <p style="font-size:12px;color:#cbb6df">বন্ধুকে আমন্ত্রণ জানিয়ে কমিশন আয় করো।</p>  
+   <label>তোমার Referral Code</label>  
+   <input class="field" id="refCode" readonly>  
+   <button class="action" onclick="copyReferral()">কোড কপি করো</button>  
+   <div class="notice">বন্ধুদের সাথে শেয়ার করে বোনাস উপভোগ করো।</div>  
+  </div>  
+ </main>  
+
+ <!-- PROFILE / SETTINGS PAGE -->  
+ <main id="profilePage" class="page">  
+  <div class="topline">  
+   <button class="back" onclick="openPage('homePage')">←</button>  
+   <h2>⚙️ Settings</h2>  
+  </div>  
+  <div class="card" style="text-align:center">  
+   <img id="profilePhoto" src="https://via.placeholder.com/100" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:3px solid #ffd36a;" alt="">  
+   <h3 id="profileName" style="margin-top:8px">User</h3>  
+   <p style="font-size:12px;color:#aaa" id="profileEmail"></p>  
+   <div class="list-item" style="margin-top:15px;text-align:left">  
+    <span style="color:#aaa;font-size:11px">User ID</span>  
+    <p id="profileUid" style="font-size:11px;overflow-wrap:anywhere"></p>  
+   </div>  
+   <button class="logout" onclick="logout()">Log Out</button>  
+  </div>  
+ </main>  
+
+ <!-- DAILY BONUS PAGE -->  
+ <main id="bonusPage" class="page">  
+  <div class="topline">  
+   <button class="back" onclick="openPage('homePage')">←</button>  
+   <h2>🎁 Daily Bonus / Spin</h2>  
+  </div>  
+  <div class="card" style="text-align:center">  
+   <p style="font-size:12px;color:#cbb6df">প্রতিদিন একবার বোনাস ক্লেইম করতে পারবে।</p>  
+   <h2 style="font:700 34px Poppins;margin:12px 0;color:#ffd45a">৳ <span id="bonusAmount">10.00</span></h2>  
+   <span class="pill">প্রতিদিন ১ বার</span>  
+   <button class="action" id="claimBonusBtn" onclick="claimBonus()">আজকের বোনাস ক্লেইম</button>  
+  </div>  
+ </main>  
+
+ <!-- ADS PAGE -->  
+ <main id="adsPage" class="page">  
+  <div class="topline">  
+   <button class="back" onclick="openPage('homePage')">←</button>  
+   <h2>▶️ Watch Ads</h2>  
+  </div>  
+  <div class="card">  
+   <h3>বিজ্ঞাপন দেখে আয়</h3>  
+   <p style="font-size:12px;color:#aaa;margin-top:4px">ভিডিও বিজ্ঞাপন দেখে পয়েন্ট আয় করুন।</p>  
+   <div class="row" style="margin-top:15px">  
+    <span style="color:#aaa;font-size:12px">প্রতি বিজ্ঞাপনের রিওয়ার্ড</span>  
+    <strong style="color:#ffd75d">৳ <span id="adReward">0.00</span></strong>  
+   </div>  
+   <button class="action" disabled style="opacity:0.6;margin-top:15px">বিজ্ঞাপন এখনো চালু হয়নি</button>  
+  </div>  
+ </main>  
+
+ <!-- WITHDRAW PAGE -->  
+ <main id="withdrawPage" class="page">  
+  <div class="topline">  
+   <button class="back" onclick="openPage('walletPage')">←</button>  
+   <h2>💸 Withdraw</h2>  
+  </div>  
+  <div class="card">  
+   <label>পেমেন্ট মাধ্যম</label>  
+   <select class="field" id="payMethod">  
+    <option value="bKash">bKash</option>  
+    <option value="Nagad">Nagad</option>  
+    <option value="Rocket">Rocket</option>  
+   </select>  
+   <label>অ্যাকাউন্ট নম্বর</label>  
+   <input class="field" id="payNumber" inputmode="numeric" placeholder="01XXXXXXXXX" maxlength="11">  
+   <label>টাকার পরিমাণ</label>  
+   <input class="field" id="withdrawAmount" type="number" placeholder="টাকার পরিমাণ">  
+   <button class="action" onclick="submitWithdraw()">উত্তোলনের আবেদন</button>  
+  </div>  
+ </main>  
+
+ <!-- HISTORY PAGE -->  
+ <main id="historyPage" class="page">  
+  <div class="topline">  
+   <button class="back" onclick="openPage('walletPage')">←</button>  
+   <h2>📜 History</h2>  
+  </div>  
+  <div class="card" id="historyList">  
+   <div style="text-align:center;color:#aaa">হিসাব লোড হচ্ছে...</div>  
+  </div>  
+ </main>  
+
+</div>  
+
+<!-- BOTTOM NAVIGATION -->  
+<nav class="bottom-nav" id="bottomNav" style="display:none">  
+ <button class="nav-btn active" data-nav="home" onclick="openPage('homePage')">  
+  <b>⌂</b>  
+  <span>Home</span>  
+ </button>  
+ <button class="nav-btn" data-nav="tasks" onclick="openPage('tasksPage')">  
+  <b>▤</b>  
+  <span>Tasks</span>  
+ </button>  
+ <button class="nav-btn" data-nav="wallet" onclick="openPage('walletPage')">  
+  <b>▣</b>  
+  <span>Wallet</span>  
+ </button>  
+ <button class="nav-btn" data-nav="refer" onclick="openPage('referralPage')">  
+  <b>♧</b>  
+  <span>Refer</span>  
+ </button>  
+ <button class="nav-btn" data-nav="settings" onclick="openPage('profilePage')">  
+  <b>⚙</b>  
+  <span>Settings</span>  
+ </button>  
+</nav>  
+
+<div id="toast" class="toast"></div>  
+
+<script>  
+const firebaseConfig={  
+ apiKey:"AIzaSyDDDwkjIa7NecN7CnpyQxPja4KH0vLqCJ4",  
+ authDomain:"earning-bd-1e902.firebaseapp.com",  
+ projectId:"earning-bd-1e902",  
+ storageBucket:"earning-bd-1e902.firebasestorage.app",  
+ messagingSenderId:"504547016236",  
+ appId:"1:504547016236:web:8c5b2cfc733aaf16175b89",  
+ measurementId:"G-JYN5BL9RJV"  
+};  
+  
+firebase.initializeApp(firebaseConfig);  
+  
+const auth=firebase.auth();  
+const db=firebase.firestore();  
+const provider=new firebase.auth.GoogleAuthProvider();  
+  
+let currentUser=null;  
+let appSettings={dailyBonus:10,adReward:0,minWithdraw:0};  
+let userData={balance:0};  
+  
+function toast(message){  
+ const t=document.getElementById('toast');  
+ t.textContent=message;  
+ t.style.display='block';  
+ clearTimeout(window.toastTimer);  
+ window.toastTimer=setTimeout(()=>t.style.display='none',2600);  
+}  
+  
+function todayKey(){  
+ const d=new Date();  
+ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');  
+}  
+  
+function openPage(id){  
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));  
+ const page=document.getElementById(id);  
+ if(!page)return;  
+ page.classList.add('active');  
+  
+ document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));  
+  
+ let navName='home';  
+ if(id==='tasksPage')navName='tasks';  
+ else if(id==='walletPage'||id==='withdrawPage'||id==='historyPage')navName='wallet';  
+ else if(id==='referralPage')navName='refer';  
+ else if(id==='profilePage')navName='settings';  
+ else navName='home';  
+  
+ const nav=document.querySelector('.nav-btn[data-nav="'+navName+'"]');  
+ if(nav)nav.classList.add('active');  
+  
+ window.scrollTo(0,0);  
+  
+ if(id==='historyPage')loadHistory();  
+ if(id==='tasksPage')loadTasks();  
+  
+ if(id==='walletPage'){  
+  const amount=Number(userData.balance||0).toFixed(2);  
+  document.getElementById('walletBalance').textContent=amount;  
+ }  
+}  
+  
+async function googleLogin(){  
+ const btn=document.getElementById('googleBtn');  
+ const status=document.getElementById('status');  
+ btn.disabled=true;  
+ status.textContent='Google-এর সাথে সংযোগ হচ্ছে...';  
+ try{  
+  await auth.signInWithPopup(provider);  
+ }catch(e){  
+  console.error(e);  
+  status.textContent='Login Error: '+e.message;  
+  btn.disabled=false;  
+ }  
+}  
+  
+auth.onAuthStateChanged(async user=>{  
+ if(!user){  
+  currentUser=null;  
+  document.getElementById('loginScreen').style.display='flex';  
+  document.getElementById('appScreen').style.display='none';  
+  document.getElementById('bottomNav').style.display='none';  
+  document.getElementById('googleBtn').disabled=false;  
+  return;  
+ }  
+  
+ currentUser=user;  
+  
+ try{  
+  const ref=db.collection('users').doc(user.uid);  
+  const snap=await ref.get();  
+  
+  if(!snap.exists){  
+   await ref.set({  
+    name:user.displayName||'User',  
+    email:user.email,  
+    photoURL:user.photoURL||'',  
+    balance:0,  
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()  
+   });  
+  }  
+  
+  const fresh=await ref.get();  
+  userData=fresh.data()||{balance:0};  
+  
+  renderUserData();  
+  
+  const welcomeName=(user.displayName||'User').split(' ')[0];  
+  document.getElementById('welcomeUser').textContent='Hello, '+welcomeName+' 👋';  
+  document.getElementById('userPhoto').src=user.photoURL||'https://via.placeholder.com/80';  
+  document.getElementById('profilePhoto').src=user.photoURL||'https://via.placeholder.com/100';  
+  document.getElementById('profileName').textContent=user.displayName||'User';  
+  document.getElementById('profileEmail').textContent=user.email||'';  
+  document.getElementById('profileUid').textContent=user.uid;  
+  document.getElementById('refCode').value=user.uid.slice(0,8).toUpperCase();  
+  
+  await loadSettings();  
+  await loadTodayStats();  
+  
+  document.getElementById('loginScreen').style.display='none';  
+  document.getElementById('appScreen').style.display='block';  
+  document.getElementById('bottomNav').style.display='grid';  
+  
+ }catch(e){  
+  console.error(e);  
+  document.getElementById('status').textContent='Database Error: '+e.message;  
+  toast('ডেটাবেসে সমস্যা হয়েছে');  
+ }  
+});  
+  
+function renderUserData(){  
+ const amount=Number(userData.balance||0).toFixed(2);  
+ document.getElementById('balance').textContent=amount;  
+ document.getElementById('walletBalance').textContent=amount;  
+}  
+  
+async function loadSettings(){  
+ try{  
+  const s=await db.collection('appConfig').doc('public').get();  
+  if(s.exists)appSettings={...appSettings,...s.data()};  
+ }catch(e){  
+  console.error('Settings read error',e);  
+ }  
+ document.getElementById('bonusAmount').textContent=Number(appSettings.dailyBonus??10).toFixed(2);  
+ document.getElementById('adReward').textContent=Number(appSettings.adReward??0).toFixed(2);  
+}  
+  
+async function loadTodayStats(){  
+ try{  
+  const start=new Date();  
+  start.setHours(0,0,0,0);  
+  const q=await db.collection('users').doc(currentUser.uid)  
+   .collection('transactions')  
+   .where('createdAt','>=',firebase.firestore.Timestamp.fromDate(start))  
+   .get();  
+  
+  let total=0,count=0;  
+  q.forEach(d=>{  
+   const x=d.data();  
+   if(x.status==='approved'&&Number(x.amount)>0){  
+    total+=Number(x.amount);  
+    if(x.type==='task')count++;  
+   }  
+  });  
+  document.getElementById('todayEarn').textContent=total.toFixed(2);  
+  document.getElementById('taskCount').textContent=count;  
+ }catch(e){  
+  console.log('Stats:',e.message);  
+ }  
+}  
+  
+async function claimBonus(){  
+ if(!currentUser)return;  
+ const btn=document.getElementById('claimBonusBtn');  
+ btn.disabled=true;  
+ try{  
+  const uid=currentUser.uid;  
+  const today=todayKey();  
+  const amount=Number(appSettings.dailyBonus);  
+  if(!Number.isFinite(amount)||amount<=0)throw new Error('Bonus amount সঠিক নয়');  
+  
+  const userRef=db.collection('users').doc(uid);  
+  const claimRef=db.collection('bonusClaims').doc(uid+'_'+today);  
+  const historyRef=userRef.collection('transactions').doc('bonus_'+today);  
+  
+  await db.runTransaction(async transaction=>{  
+   const [userSnap,claimSnap,configSnap]=await Promise.all([  
+    transaction.get(userRef),  
+    transaction.get(claimRef),  
+    transaction.get(db.collection('appConfig').doc('public'))  
+   ]);  
+   if(!userSnap.exists)throw new Error('User account পাওয়া যায়নি');  
+   if(claimSnap.exists)throw new Error('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');  
+   
+   const liveAmount=Number(configSnap.data()?.dailyBonus||amount);  
+   const oldBalance=Number(userSnap.data().balance||0);  
+  
+   transaction.create(claimRef,{  
+    uid:uid,email:currentUser.email||'',  
+    name:currentUser.displayName||'User',  
+    amount:liveAmount,date:today,status:'approved',  
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()  
+   });  
+   transaction.update(userRef,{  
+    balance:oldBalance+liveAmount,  
+    totalEarned:firebase.firestore.FieldValue.increment(liveAmount),  
+    lastBonusDate:today,  
+    lastBonusClaimId:uid+'_'+today  
+   });  
+   transaction.set(historyRef,{  
+    type:'daily_bonus',amount:liveAmount,status:'approved',  
+    date:today,createdAt:firebase.firestore.FieldValue.serverTimestamp()  
+   });  
+  });  
+  
+  const updated=await userRef.get();  
+  userData=updated.data()||userData;  
+  renderUserData();  
+  await loadTodayStats();  
+  toast('অভিনন্দন! ৳'+amount.toFixed(2)+' Wallet-এ যোগ হয়েছে।');  
+ }catch(e){  
+  toast(e.message||'বোনাস যোগ হয়নি।');  
+ }finally{  
+  btn.disabled=false;  
+ }  
+}  
+  
+async function submitWithdraw(){  
+ if(!currentUser)return;  
+ const method=document.getElementById('payMethod').value;  
+ const number=document.getElementById('payNumber').value.trim();  
+ const amount=Number(document.getElementById('withdrawAmount').value);  
+  
+ if(!/^01[0-9]{9}$/.test(number)){toast('সঠিক ১১ সংখ্যার নম্বর দাও');return;}  
+ if(!Number.isFinite(amount)||amount<=0){toast('সঠিক পরিমাণ দাও');return;}  
+ if(amount>Number(userData.balance||0)){toast('পর্যাপ্ত ব্যালেন্স নেই');return;}  
+  
+ try{  
+  await db.collection('withdrawRequests').add({  
+   uid:currentUser.uid,email:currentUser.email,  
+   method,number,amount,status:'pending',  
+   createdAt:firebase.firestore.FieldValue.serverTimestamp()  
+  });  
+  toast('উত্তোলনের আবেদন জমা হয়েছে');  
+  document.getElementById('payNumber').value='';  
+  document.getElementById('withdrawAmount').value='';  
+ }catch(e){  
+  toast('আবেদন জমা হয়নি');  
+ }  
+}  
+  
+async function copyReferral(){  
+ const code=document.getElementById('refCode').value;  
+ try{  
+  await navigator.clipboard.writeText(code);  
+  toast('Referral code কপি হয়েছে');  
+ }catch(e){  
+  document.getElementById('refCode').select();  
+  document.execCommand('copy');  
+  toast('Referral code কপি হয়েছে');  
+ }  
+}  
+  
+async function loadTasks(){  
+ const box=document.getElementById('taskList');  
+ box.innerHTML='<div style="text-align:center;color:#aaa">কাজ লোড হচ্ছে...</div>';  
+ try{  
+  const s=await db.collection('tasks').where('active','==',true).get();  
+  if(s.empty){box.innerHTML='<div style="text-align:center;color:#aaa">কোনো কাজ নেই।</div>';return;}  
+  box.innerHTML='';  
+  s.forEach(doc=>{  
+   const d=doc.data();  
+   const item=document.createElement('div');  
+   item.className='list-item';  
+   item.innerHTML=`<strong>${d.title||'Task'}</strong>  
+    <p style="font-size:11px;color:#aaa">${d.description||''}</p>  
+    <div class="row" style="margin-top:5px">  
+     <span style="color:#ffd45a;font-size:12px">রিওয়ার্ড: ৳${Number(d.reward||0).toFixed(2)}</span>  
+     <button class="back" style="height:30px;font-size:12px;padding:0 10px;" onclick="submitTask('${doc.id}', ${JSON.stringify(d).replace(/"/g, '&quot;')})">আবেদন</button>  
+    </div>`;  
+   box.append(item);  
+  });  
+ }catch(e){  
+  box.innerHTML='<div style="text-align:center;color:#aaa">Tasks লোড করা যায়নি।</div>';  
+ }  
+}  
+  
+async function submitTask(taskId,task){  
+ try{  
+  await db.collection('taskSubmissions').add({  
+   uid:currentUser.uid,email:currentUser.email,  
+   taskId,title:task.title||'Task',reward:Number(task.reward||0),  
+   status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()  
+  });  
+  toast('Task submission জমা হয়েছে');  
+ }catch(e){  
+  toast('জমা হয়নি');  
+ }  
+}  
+  
+async function loadHistory(){  
+ const box=document.getElementById('historyList');  
+ box.innerHTML='<div style="text-align:center;color:#aaa">হিসাব লোড হচ্ছে...</div>';  
+ try{  
+  const [tx,claims,withdrawals]=await Promise.all([  
+   db.collection('users').doc(currentUser.uid).collection('transactions').limit(20).get(),  
+   db.collection('bonusClaims').where('uid','==',currentUser.uid).limit(20).get(),  
+   db.collection('withdrawRequests').where('uid','==',currentUser.uid).limit(20).get()  
+  ]);  
+  const rows=[];  
+  tx.forEach(d=>rows.push({...d.data(),kind:d.data().type||'Transaction'}));  
+  claims.forEach(d=>rows.push({...d.data(),kind:'Daily Bonus'}));  
+  withdrawals.forEach(d=>rows.push({...d.data(),kind:'Withdraw'}));  
+  rows.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));  
+  
+  if(!rows.length){box.innerHTML='<div style="text-align:center;color:#aaa">কোনো হিসাব নেই।</div>';return;}  
+  box.innerHTML='';  
+  rows.forEach(r=>{  
+   const el=document.createElement('div');  
+   el.className='list-item';  
+   el.innerHTML=`<div class="row">  
+    <strong>${r.kind}</strong>  
+    <span class="pill">${r.status||'approved'}</span>  
+   </div>  
+   <p style="font-size:11px;color:#aaa;margin-top:3px">৳${Number(r.amount||r.reward||0).toFixed(2)}</p>`;  
+   box.append(el);  
+  });  
+ }catch(e){  
+  box.innerHTML='<div style="text-align:center;color:#aaa">History লোড করা যায়নি।</div>';  
+ }  
+}  
+  
+async function logout(){  
+ await auth.signOut();  
+ toast('লগআউট হয়েছে');  
+}  
+</script>  
+</body>  
 </html>
