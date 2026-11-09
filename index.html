@@ -61,9 +61,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
  border-radius:50%;
  animation:authSpin .8s linear infinite;
 }
-@keyframes authSpin{
- to{transform:rotate(360deg)}
-}
+@keyframes authSpin{to{transform:rotate(360deg)}}
 
 /* LOGIN */
 .screen{max-width:520px;margin:auto;padding:20px 18px 115px}
@@ -91,7 +89,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
  box-shadow:0 20px 55px #0007,0 0 35px #8b55ff12;
 }
 .login-card h2{font-size:21px;margin-bottom:10px}
-.login-card p{font-size:12px;color:#9ba5bd;margin-bottom:27px}
+.login-card p{font-size:12px;color:#9ba5bd;margin-bottom:20px}
 .google-btn{
  width:100%;padding:15px;border:0;border-radius:16px;
  background:#fff;color:#252525;font-size:14px;font-weight:700;
@@ -100,7 +98,69 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 }
 .google-btn:disabled{opacity:.5}
 .google-logo{width:21px;height:21px;flex-shrink:0}
-#status{font-size:11px;color:#c4b5fd;margin-top:17px;min-height:18px;overflow-wrap:anywhere}
+#status{
+ font-size:11px;color:#c4b5fd;margin-top:17px;
+ min-height:18px;overflow-wrap:anywhere
+}
+
+/* NEW LOGIN INPUTS */
+.auth-input{
+ width:100%;
+ background:#100b1b;
+ border:1px solid #a77acb77;
+ border-radius:14px;
+ color:white;
+ padding:14px;
+ margin-top:10px;
+ outline:none;
+}
+.auth-input:focus{
+ border-color:#ffd56c;
+ box-shadow:0 0 0 3px #ffce5a20;
+}
+.auth-main-btn{
+ width:100%;
+ padding:14px;
+ margin-top:13px;
+ border:1px solid #fff0a6;
+ border-radius:15px;
+ background:linear-gradient(120deg,#ffe17a,#ffb82e 60%,#d47b15);
+ color:#241306;
+ font-weight:800;
+}
+.auth-main-btn:disabled{opacity:.5}
+.auth-link{
+ border:0;
+ background:transparent;
+ color:#d7aaff;
+ padding:12px 5px 0;
+ font-size:12px;
+}
+.auth-divider{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ color:#9ba5bd;
+ font-size:11px;
+ margin:17px 0;
+}
+.auth-divider:before,.auth-divider:after{
+ content:"";
+ flex:1;
+ height:1px;
+ background:#ffffff25;
+}
+.auth-secondary{
+ width:100%;
+ padding:13px;
+ border:1px solid #a879ff66;
+ border-radius:14px;
+ background:#241532;
+ color:#fff;
+ font-weight:700;
+ margin-top:10px;
+}
+.auth-error{color:#ff9b9b!important}
 
 /* MAIN APP */
 .app-shell{
@@ -480,10 +540,7 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
   min-height:68px;
   padding:3px;
  }
- .nav-btn{
-  min-height:56px;
-  height:56px;
- }
+ .nav-btn{min-height:56px;height:56px}
  .nav-btn b{font-size:23px}
  .nav-btn span{font-size:9px}
  .invite p{font-size:11px}
@@ -511,9 +568,72 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
   <h1>EARNING <span>MONEY BD</span></h1>
   <p>Your earning journey starts here</p>
  </div>
+
  <div class="login-card">
-  <h2>Welcome Earning Money BD!</h2>
-  <p>Login or create your account with Google</p>
+  <h2 id="authTitle">Welcome Earning Money BD!</h2>
+  <p id="authSubtitle">তোমার অ্যাকাউন্টে লগইন করো</p>
+
+  <!-- LOGIN FORM -->
+  <div id="loginForm">
+   <input class="auth-input" id="loginEmail"
+    type="email" placeholder="Gmail Address">
+
+   <input class="auth-input" id="loginPassword"
+    type="password" placeholder="Password">
+
+   <button class="auth-main-btn" onclick="emailLogin()">
+    Login
+   </button>
+
+   <button class="auth-link" onclick="showForgotForm()">
+    Forgot Password?
+   </button>
+
+   <button class="auth-secondary" onclick="showRegisterForm()">
+    Create New Account
+   </button>
+  </div>
+
+  <!-- REGISTER FORM -->
+  <div id="registerForm" style="display:none">
+   <input class="auth-input" id="registerName"
+    type="text" placeholder="Full Name">
+
+   <input class="auth-input" id="registerEmail"
+    type="email" placeholder="Gmail Address">
+
+   <input class="auth-input" id="registerPassword"
+    type="password" placeholder="Create Password">
+
+   <input class="auth-input" id="confirmPassword"
+    type="password" placeholder="Confirm Password">
+
+   <button class="auth-main-btn" onclick="registerAccount()">
+    Create Account
+   </button>
+
+   <button class="auth-link" onclick="showLoginForm()">
+    Already have an account? Login
+   </button>
+  </div>
+
+  <!-- FORGOT PASSWORD FORM -->
+  <div id="forgotForm" style="display:none">
+   <input class="auth-input" id="forgotEmail"
+    type="email" placeholder="তোমার Gmail Address">
+
+   <button class="auth-main-btn" onclick="resetPassword()">
+    Send Reset Link
+   </button>
+
+   <button class="auth-link" onclick="showLoginForm()">
+    Back to Login
+   </button>
+  </div>
+
+  <div class="auth-divider">OR</div>
+
+  <!-- GOOGLE LOGIN -->
   <button class="google-btn" id="googleBtn" onclick="googleLogin()">
    <svg class="google-logo" viewBox="0 0 48 48">
     <path fill="#4285F4" d="M43.6 24.5c0-1.5-.1-3-.4-4.4H24v8.3h11a9.4 9.4 0 0 1-4.1 6.2v5.4h6.6c3.9-3.6 6.1-9 6.1-15.5z"/>
@@ -523,6 +643,7 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
    </svg>
    Continue with Google
   </button>
+
   <div id="status"></div>
  </div>
 </div>
@@ -684,7 +805,7 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
   </div>
 
   <div class="list-item">
-   <div class="row"><strong>Account</strong><span class="pill">Google Login</span></div>
+   <div class="row"><strong>Account</strong><span class="pill" id="accountType">Google Login</span></div>
   </div>
 
   <div class="list-item">
@@ -812,7 +933,6 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
   <span>Refer</span>
  </button>
 
- <!-- PREMIUM ME BUTTON -->
  <button class="nav-btn" data-nav="me" onclick="openPage('profilePage')">
   <b>
    <svg viewBox="0 0 24 24" width="29" height="29"
@@ -864,6 +984,203 @@ function todayKey(){
  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 
+/* LOGIN FORM NAVIGATION */
+function showLoginForm(){
+ document.getElementById('loginForm').style.display='block';
+ document.getElementById('registerForm').style.display='none';
+ document.getElementById('forgotForm').style.display='none';
+ document.getElementById('authTitle').textContent='Welcome Earning Money BD!';
+ document.getElementById('authSubtitle').textContent='তোমার অ্যাকাউন্টে লগইন করো';
+ authStatus('');
+}
+
+function showRegisterForm(){
+ document.getElementById('loginForm').style.display='none';
+ document.getElementById('registerForm').style.display='block';
+ document.getElementById('forgotForm').style.display='none';
+ document.getElementById('authTitle').textContent='Create New Account';
+ document.getElementById('authSubtitle').textContent='নতুন অ্যাকাউন্ট তৈরি করো';
+ authStatus('');
+}
+
+function showForgotForm(){
+ document.getElementById('loginForm').style.display='none';
+ document.getElementById('registerForm').style.display='none';
+ document.getElementById('forgotForm').style.display='block';
+ document.getElementById('authTitle').textContent='Forgot Password';
+ document.getElementById('authSubtitle').textContent='পাসওয়ার্ড রিসেট করার লিংক পাঠাও';
+ document.getElementById('forgotEmail').value=
+  document.getElementById('loginEmail').value.trim();
+ authStatus('');
+}
+
+function authStatus(message,error=false){
+ const s=document.getElementById('status');
+ s.textContent=message;
+ s.classList.toggle('auth-error',error);
+}
+
+/* EMAIL LOGIN */
+async function emailLogin(){
+ const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+ const password=document.getElementById('loginPassword').value;
+ const btn=document.querySelector('#loginForm .auth-main-btn');
+
+ if(!/^[a-z0-9._%+-]+@gmail\.com$/i.test(email)){
+  authStatus('সঠিক Gmail Address দাও।',true);
+  return;
+ }
+
+ if(!password){
+  authStatus('Password লিখো।',true);
+  return;
+ }
+
+ btn.disabled=true;
+ authStatus('Login হচ্ছে...');
+
+ try{
+  await auth.signInWithEmailAndPassword(email,password);
+  authStatus('Login সফল হয়েছে!');
+ }catch(e){
+  console.error(e);
+  let msg='Login করা যায়নি। আবার চেষ্টা করো।';
+
+  if(e.code==='auth/user-not-found'||e.code==='auth/invalid-credential'){
+   msg='Gmail অথবা Password ভুল।';
+  }
+  if(e.code==='auth/wrong-password'){
+   msg='Password ভুল হয়েছে।';
+  }
+  if(e.code==='auth/too-many-requests'){
+   msg='অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে চেষ্টা করো।';
+  }
+
+  authStatus(msg,true);
+ }finally{
+  btn.disabled=false;
+ }
+}
+
+/* CREATE ACCOUNT */
+async function registerAccount(){
+ const name=document.getElementById('registerName').value.trim();
+ const email=document.getElementById('registerEmail').value.trim().toLowerCase();
+ const password=document.getElementById('registerPassword').value;
+ const confirm=document.getElementById('confirmPassword').value;
+ const btn=document.querySelector('#registerForm .auth-main-btn');
+
+ if(name.length<2){
+  authStatus('তোমার পুরো নাম লিখো।',true);
+  return;
+ }
+
+ if(!/^[a-z0-9._%+-]+@gmail\.com$/i.test(email)){
+  authStatus('শুধু Gmail Address ব্যবহার করো।',true);
+  return;
+ }
+
+ if(password.length<6){
+  authStatus('Password কমপক্ষে ৬ অক্ষরের হতে হবে।',true);
+  return;
+ }
+
+ if(password!==confirm){
+  authStatus('দুইটি Password মিলছে না।',true);
+  return;
+ }
+
+ btn.disabled=true;
+ authStatus('অ্যাকাউন্ট তৈরি হচ্ছে...');
+
+ try{
+  const credential=await auth.createUserWithEmailAndPassword(email,password);
+
+  await credential.user.updateProfile({displayName:name});
+
+  await db.collection('users').doc(credential.user.uid).set({
+   name:name,
+   email:email,
+   photoURL:'',
+   balance:0,
+   createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  },{merge:true});
+
+  authStatus('অ্যাকাউন্ট তৈরি হয়েছে! Dashboard খুলছে...');
+
+ }catch(e){
+  console.error(e);
+
+  let msg='অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করো।';
+
+  if(e.code==='auth/email-already-in-use'){
+   msg='এই Gmail দিয়ে আগে অ্যাকাউন্ট খোলা হয়েছে। Login করো।';
+  }
+  if(e.code==='auth/weak-password'){
+   msg='আরও শক্তিশালী Password দাও।';
+  }
+  if(e.code==='auth/invalid-email'){
+   msg='Gmail Address সঠিক নয়।';
+  }
+  if(e.code==='auth/operation-not-allowed'){
+   msg='Firebase Console থেকে Email/Password Login চালু করো।';
+  }
+
+  authStatus(msg,true);
+ }finally{
+  btn.disabled=false;
+ }
+}
+
+/* FORGOT PASSWORD */
+async function resetPassword(){
+ const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
+ const btn=document.querySelector('#forgotForm .auth-main-btn');
+
+ if(!/^[a-z0-9._%+-]+@gmail\.com$/i.test(email)){
+  authStatus('সঠিক Gmail Address দাও।',true);
+  return;
+ }
+
+ btn.disabled=true;
+ authStatus('Reset Link পাঠানো হচ্ছে...');
+
+ try{
+  await auth.sendPasswordResetEmail(email);
+  authStatus('Reset Link পাঠানো হয়েছে। Gmail Inbox দেখো।');
+ }catch(e){
+  console.error(e);
+
+  let msg='Reset Link পাঠানো যায়নি। আবার চেষ্টা করো।';
+
+  if(e.code==='auth/user-not-found'){
+   msg='এই Gmail দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।';
+  }
+  if(e.code==='auth/invalid-email'){
+   msg='Gmail Address সঠিক নয়।';
+  }
+
+  authStatus(msg,true);
+ }finally{
+  btn.disabled=false;
+ }
+}
+
+/* GOOGLE LOGIN */
+async function googleLogin(){
+ const btn=document.getElementById('googleBtn');
+ btn.disabled=true;
+ authStatus('Google-এর সাথে সংযোগ হচ্ছে...');
+
+ try{
+  await auth.signInWithPopup(provider);
+ }catch(e){
+  console.error(e);
+  authStatus('Google Login করা যায়নি: '+e.message,true);
+  btn.disabled=false;
+ }
+}
+
 /* Navigation with page memory */
 function openPage(id,savePage=true){
 
@@ -890,7 +1207,6 @@ function openPage(id,savePage=true){
  const nav=document.querySelector('.nav-btn[data-nav="'+navName+'"]');
  if(nav)nav.classList.add('active');
 
- // বর্তমান পেজ মনে রাখা
  if(savePage && currentUser){
   sessionStorage.setItem('embd_page_'+currentUser.uid,id);
  }
@@ -904,22 +1220,6 @@ function openPage(id,savePage=true){
   const amount=Number(userData.balance||0).toFixed(2);
   document.getElementById('walletBalance').textContent=amount;
   document.getElementById('walletBalance2').textContent=amount;
- }
-}
-
-async function googleLogin(){
- const btn=document.getElementById('googleBtn');
- const status=document.getElementById('status');
-
- btn.disabled=true;
- status.textContent='Google-এর সাথে সংযোগ হচ্ছে...';
-
- try{
-  await auth.signInWithPopup(provider);
- }catch(e){
-  console.error(e);
-  status.textContent='Login Error: '+e.message;
-  btn.disabled=false;
  }
 }
 
@@ -945,7 +1245,6 @@ auth.onAuthStateChanged(async user=>{
   return;
  }
 
- // লগইন যাচাই চলার সময় Login Page লুকানো থাকবে
  loading.style.display='flex';
  login.style.display='none';
  app.style.display='none';
@@ -961,7 +1260,7 @@ auth.onAuthStateChanged(async user=>{
   if(!snap.exists){
 
    await ref.set({
-    name:user.displayName||'User',
+    name:user.displayName||user.email?.split('@')[0]||'User',
     email:user.email,
     photoURL:user.photoURL||'',
     balance:0,
@@ -975,9 +1274,11 @@ auth.onAuthStateChanged(async user=>{
 
   renderUserData();
 
-  document.getElementById('userName').textContent=user.displayName||'User';
+  const finalName=userData.name||user.displayName||user.email?.split('@')[0]||'User';
 
-  const welcomeName=(user.displayName||'User').split(' ')[0];
+  document.getElementById('userName').textContent=finalName;
+
+  const welcomeName=finalName.split(' ')[0];
 
   const welcomeTitle=document.querySelector('.welcome-copy strong');
 
@@ -991,13 +1292,17 @@ auth.onAuthStateChanged(async user=>{
   document.getElementById('profilePhoto').src=
    user.photoURL||'https://via.placeholder.com/100';
 
-  document.getElementById('profileName').textContent=
-   user.displayName||'User';
+  document.getElementById('profileName').textContent=finalName;
 
   document.getElementById('profileEmail').textContent=
    user.email||'';
 
   document.getElementById('profileUid').textContent=user.uid;
+
+  document.getElementById('accountType').textContent=
+   user.providerData.some(p=>p.providerId==='password')
+   ?'Email & Password'
+   :'Google Login';
 
   document.getElementById('refCode').value=
    user.uid.slice(0,8).toUpperCase();
@@ -1005,7 +1310,6 @@ auth.onAuthStateChanged(async user=>{
   await loadSettings();
   await loadTodayStats();
 
-  // আগের পেজ বের করা
   const savedPage=sessionStorage.getItem(
    'embd_page_'+user.uid
   );
@@ -1026,21 +1330,17 @@ auth.onAuthStateChanged(async user=>{
    ? savedPage
    : 'homePage';
 
-  // অ্যাপ চালু করা
   app.style.display='block';
   nav.style.display='grid';
 
-  // আগের পেজেই ফেরত যাওয়া
   openPage(restorePage,false);
 
-  // সবশেষে Loading বন্ধ
   loading.style.display='none';
 
  }catch(e){
 
   console.error(e);
 
-  // ডেটাবেস সমস্যা হলে Login Page নয়
   app.style.display='block';
   nav.style.display='grid';
 
@@ -1140,7 +1440,7 @@ async function claimBonus(){
    transaction.create(claimRef,{
     uid:uid,
     email:currentUser.email||'',
-    name:currentUser.displayName||'User',
+    name:currentUser.displayName||userData.name||'User',
     amount:liveAmount,
     date:today,
     status:'approved',
@@ -1376,7 +1676,6 @@ async function loadHistory(){
 }
 
 async function logout(){
-
  if(currentUser){
   sessionStorage.removeItem('embd_page_'+currentUser.uid);
  }
