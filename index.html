@@ -106,6 +106,90 @@ label{display:block;color:#e2d3f5;font-size:13px;font-weight:600;margin-top:13px
  .nav-btn.center-nav{width:74px;height:74px;min-height:74px;margin-top:-36px}.nav-btn.center-nav b{font-size:27px}
  .invite p{font-size:11px}.invite p strong{font-size:14px}.invite button{font-size:10px;padding:8px}
 }
+
+/* ULTRA PREMIUM BOTTOM NAV */
+.bottom-nav{
+ background:linear-gradient(180deg,#211331f5,#0c0716fc);
+ border:1px solid #bd8aff66;border-bottom:0;border-radius:28px 28px 0 0;
+ padding:12px 8px calc(12px + env(safe-area-inset-bottom));
+ box-shadow:0 -10px 35px #000b,0 0 25px #a45bff22;
+}
+.nav-btn{color:#a99abf;border-radius:18px;gap:6px;transition:.25s ease}
+.nav-btn b{
+ width:42px;height:34px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+ font-size:25px;background:linear-gradient(145deg,#30203f,#171020);
+ border:1px solid #9e6ac733;box-shadow:inset 0 1px 3px #ffffff18,0 5px 12px #0006;
+}
+.nav-btn span{font-size:10px;font-weight:700}
+.nav-btn.active:not(.center-nav){
+ color:#f1dfff;background:linear-gradient(145deg,#8d50c52c,#54227a22);
+ border:1px solid #b77aff66;box-shadow:0 0 18px #a45bff22;
+}
+.nav-btn.active:not(.center-nav) b{
+ color:white;background:linear-gradient(145deg,#a96be5,#54247f);
+ border-color:#dfbaff;box-shadow:0 0 18px #b16be899,inset 0 2px 8px #ffffff55;
+}
+.nav-btn.center-nav{
+ width:88px;height:88px;min-height:88px;margin-top:-46px;border-radius:50%;
+ background:radial-gradient(circle at 30% 20%,#f0d9ff,#bd79f0 30%,#7136ad 68%,#32134c);
+ border:2px solid #efd8ff;
+ box-shadow:0 0 0 5px #a45bff33,0 0 30px #b16be8bb,0 10px 25px #000b,inset 0 3px 12px #ffffff99;
+}
+.nav-btn.center-nav b{width:42px;height:42px;font-size:31px;background:transparent;border:0;box-shadow:none}
+.nav-btn.center-nav span{color:white;font-size:10px}
+.nav-btn:active{transform:scale(.90)}
+@media(max-width:390px){
+ .nav-btn.center-nav{width:78px;height:78px;min-height:78px;margin-top:-40px}
+ .nav-btn b{width:36px;height:31px;font-size:22px}
+}
+
+/* ===== GOLD & VIOLET PREMIUM USER PANEL THEME ===== */
+:root{--bg:#07040f;--panel:#171022;--muted:#c2b3d6;--purple:#b46cff;--line:#ffffff1c;--green:#42d6a0;--gold:#ffd45a;--gold2:#ffad22}
+body{background:radial-gradient(ellipse at 8% 0%,#4d176d66,transparent 34%),radial-gradient(ellipse at 100% 28%,#31105a66,transparent 38%),radial-gradient(ellipse at 50% 100%,#26103955,transparent 45%),#07040f;background-attachment:fixed}
+.app-shell{max-width:560px;padding:12px 14px 112px}
+header{position:relative;margin:2px 0 14px;padding:10px 2px 13px;border-bottom:1px solid #d4a34d55;box-shadow:none}
+.logo{font-size:16px;line-height:1.3;letter-spacing:.1px;text-shadow:0 0 18px #ffca5544}.logo:before{content:'♛';display:inline-block;margin-right:7px;color:var(--gold);font-size:23px;vertical-align:-2px;text-shadow:0 0 16px #ffc94d}
+.logo span{color:var(--gold)}
+.user-chip{background:linear-gradient(135deg,#382044,#170d24);border:1px solid #e7bd6b99;box-shadow:0 5px 18px #0009,0 0 15px #f5c45b20}
+.user-chip img{border:2px solid var(--gold);box-shadow:0 0 12px #ffc64c77}
+/* Greeting panel */
+.welcome-strip{display:flex;align-items:center;gap:12px;margin:0 0 13px;padding:14px 15px;border:1px solid #b47bdf88;border-radius:21px;background:linear-gradient(110deg,#251238,#160d25 65%,#24112e);box-shadow:0 9px 24px #0008,inset 0 1px 0 #ffffff20}
+.welcome-crown{font-size:34px;filter:drop-shadow(0 0 10px #c16cff)}
+.welcome-copy{min-width:0}.welcome-copy strong{display:block;font:700 18px Poppins,'Hind Siliguri',sans-serif;color:#fff}.welcome-copy span{font-size:12px;color:#d7b8f4}
+.balance{grid-template-columns:76px 1fr;gap:10px;min-height:164px;padding:18px 15px;border:1.5px solid #ffd56d;background:radial-gradient(circle at 90% 10%,#f5b62d44,transparent 43%),radial-gradient(circle at 10% 100%,#8c39c955,transparent 48%),linear-gradient(125deg,#301344,#160d27 62%,#0d0a1b);box-shadow:0 14px 32px #000b,0 0 25px #ffc34b25,inset 0 1px 0 #fff5}
+.balance:after{content:'↗';position:absolute;right:15px;top:6px;color:#ffcf4d;font:800 62px Poppins;opacity:.24;transform:rotate(-5deg);text-shadow:0 0 20px #ffbf39}
+.wallet-icon{font-size:56px;filter:drop-shadow(0 6px 10px #ffbd3d88)}
+.balance small{color:#ffe7a8;font-size:13px}.balance h2{position:relative;z-index:1;color:#ffd75d;font-size:clamp(27px,8vw,36px);text-shadow:0 0 20px #ffc53d55;letter-spacing:-1px}
+.balance .muted{color:#e0cce9}.withdraw-shortcut{position:relative;z-index:2;border:1px solid #fff0a8;background:linear-gradient(135deg,#ffe17b,#ffb72e 58%,#d77c13);color:#21120a;font-weight:800;box-shadow:0 5px 15px #ffb72e55}
+.stats{gap:9px;margin:11px 0 17px}.stat{border:1px solid #a66bd177;background:linear-gradient(145deg,#241532,#120c1d);box-shadow:0 8px 20px #0008,inset 0 1px 0 #fff2}.stat .emoji{filter:drop-shadow(0 0 7px #d2a0ff);font-size:24px}.stat small{color:#d9c5e9}.stat strong{color:#ffdb77;font-size:17px}
+.section-title{margin:19px 0 11px;color:#f7eaff;font-size:19px}.section-title:after{background:linear-gradient(90deg,#e8b84d,#a94cff66,transparent)}
+.feature-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.feature{min-height:130px;border:1px solid #bd8aef88;border-radius:21px;background:radial-gradient(circle at 50% 0%,#a34de633,transparent 62%),linear-gradient(145deg,#2a1740,#150d24 72%,#0d0918);box-shadow:0 10px 22px #0009,inset 0 1px 0 #fff3,inset 0 -8px 16px #0007}
+.feature:before{background:linear-gradient(90deg,transparent,#ffe7a8,transparent)}
+.feature b{width:53px;height:53px;border-radius:17px;border:1px solid #e5c1ff99;background:linear-gradient(145deg,#b26de5,#54216f);box-shadow:0 6px 15px #0009,inset 0 2px 8px #fff5,0 0 16px #a94cff44}
+.feature-bonus b,.feature-withdraw b{background:linear-gradient(145deg,#ffe17a,#d58a1c);border-color:#fff0a6;color:#281608}
+.feature-ads b{background:linear-gradient(145deg,#54d6ff,#1765c9)}.feature-tasks b{background:linear-gradient(145deg,#a87aff,#6430bb)}.feature-referral b{background:linear-gradient(145deg,#ffbf59,#a64a25)}.feature-history b{background:linear-gradient(145deg,#bd83f5,#54218c)}
+.feature span{color:#fff2d6;font-size:14px}.feature small{color:#cbb6df}
+.invite{border:1px solid #e7bd69;background:radial-gradient(circle at 0 50%,#a04bd544,transparent 45%),linear-gradient(120deg,#2c153b,#160d24);box-shadow:0 10px 24px #0009,0 0 18px #ffcb4b1c}.invite .meg{filter:drop-shadow(0 0 9px #ffc84e)}.invite p strong{color:#ffdb70}.invite button{border:1px solid #fff0a6;background:linear-gradient(135deg,#ffe17b,#ffb82e 65%,#d98517);color:#241306;box-shadow:0 5px 14px #ffb52c55}
+.activity,.card{border:1px solid #aa78d077;background:linear-gradient(145deg,#241532,#120c1e);box-shadow:0 11px 26px #0009,inset 0 1px 0 #ffffff18}
+.activity-head h3{color:#f4e6ff}.activity-head button,.back{border:1px solid #d7b46a88;background:linear-gradient(135deg,#382044,#21112e);color:#ffe6ad}
+.page h2{color:#f4e8ff}.page-desc,.muted{color:#c2b2d5}.pill{background:#30203e;border-color:#d3a65c66;color:#ffe5a5}
+.action{border:1px solid #fff0a6;background:linear-gradient(120deg,#ffe17a,#ffb82e 60%,#d47b15);color:#241306;box-shadow:0 7px 19px #ffb52d33}.action:disabled{filter:grayscale(.5)}
+.field{background:#0e0918;border-color:#a77acb77}.field:focus{border-color:#ffd56c;box-shadow:0 0 0 3px #ffce5a20}
+label{color:#f0dcae}.list-item{border-bottom-color:#ffffff18}.list-item strong{color:#ffdf91}
+.notice{color:#f6dfad;background:linear-gradient(120deg,#3a2b1a,#241a20);border-color:#e6bd6244}
+.logout{border:1px solid #e1a66c77;background:linear-gradient(120deg,#51233c,#2b172c);color:#ffe9d7}
+#profilePhoto{border-color:#ffd36a;box-shadow:0 0 0 5px #ffcf4b22,0 0 24px #ffbd4e55}
+/* Slim premium navigation */
+.bottom-nav{width:min(560px,100%);padding:7px 7px calc(7px + env(safe-area-inset-bottom));gap:1px;border:1px solid #b67ae477;border-bottom:0;border-radius:23px 23px 0 0;background:linear-gradient(180deg,#21132ff5,#0c0716fc);box-shadow:0 -8px 28px #000c,0 0 20px #a45bff22}
+.nav-btn{min-height:51px;gap:3px;color:#bba9ce;border-radius:14px}.nav-btn b{width:35px;height:29px;border-radius:10px;font-size:22px;background:linear-gradient(145deg,#33203f,#160e20);border:1px solid #9e6ac744;box-shadow:inset 0 1px 3px #ffffff18,0 4px 10px #0007}.nav-btn span{font-size:9px;font-weight:700}
+.nav-btn.active:not(.center-nav){color:#ffe39b;background:linear-gradient(145deg,#a879ff20,#ffcf4b12);border:1px solid #d4a85a66}.nav-btn.active:not(.center-nav) b{background:linear-gradient(145deg,#ffe17a,#b97823);color:#271506;border-color:#fff0a6;box-shadow:0 0 14px #ffc84d88}
+.nav-btn.center-nav{width:70px;height:70px;min-height:70px;margin-top:-27px;border:2px solid #fff0ad;border-radius:50%;gap:0;background:radial-gradient(circle at 30% 20%,#fff0a9,#ffc64a 33%,#b96b17 72%,#5a2a19);box-shadow:0 0 0 4px #b36be533,0 0 22px #ffca5c99,0 7px 18px #000c,inset 0 3px 10px #fff9;color:#2b1608}
+.nav-btn.center-nav b{width:34px;height:34px;font-size:27px;background:transparent;border:0;box-shadow:none}.nav-btn.center-nav span{font-size:9px;color:#2b1608;font-weight:800}
+.nav-btn.center-nav.active{box-shadow:0 0 0 4px #c18aff55,0 0 27px #ffca5ccc,inset 0 3px 10px #fff9}
+.toast{bottom:91px;background:linear-gradient(135deg,#3b234b,#21132f);border-color:#e2bb6a}
+@media(max-width:390px){.app-shell{padding-left:11px;padding-right:11px}.balance{grid-template-columns:58px 1fr;padding:16px 11px;gap:7px}.wallet-icon{font-size:45px}.balance h2{font-size:28px}.feature{min-height:120px}.feature b{width:48px;height:48px;font-size:25px}.nav-btn{min-height:47px}.nav-btn b{width:31px;height:27px;font-size:20px}.nav-btn.center-nav{width:65px;height:65px;min-height:65px;margin-top:-25px}.nav-btn.center-nav b{font-size:25px}}
+
 </style>
 </head>
 <body>
@@ -123,6 +207,7 @@ label{display:block;color:#e2d3f5;font-size:13px;font-weight:600;margin-top:13px
 
 <div id="appScreen" class="app-shell" style="display:none">
  <header><div class="logo">EARNING <span>MONEY BD</span><div style="font:500 10px 'Hind Siliguri';color:#d0bce8;margin-top:3px">Play • Earn • Withdraw</div></div><div class="user-chip"><img id="userPhoto" src="https://via.placeholder.com/80" alt=""><span id="userName">User</span></div></header>
+ <section class="welcome-strip"><div class="welcome-crown">♛</div><div class="welcome-copy"><strong>Welcome Back! 👋</strong><span>Keep earning, keep growing!</span></div></section>
  <main id="homePage" class="page active">
   <section class="balance">
    <div class="wallet-icon">👛</div>
@@ -202,6 +287,8 @@ auth.onAuthStateChanged(async user=>{
   const fresh=await ref.get();userData=fresh.data()||{balance:0};
   renderUserData();
   document.getElementById('userName').textContent=user.displayName||'User';
+  const welcomeName=(user.displayName||'User').split(' ')[0];
+  const welcomeTitle=document.querySelector('.welcome-copy strong');if(welcomeTitle)welcomeTitle.textContent='Hello, '+welcomeName+' 👋';
   document.getElementById('userPhoto').src=user.photoURL||'https://via.placeholder.com/80';
   document.getElementById('profilePhoto').src=user.photoURL||'https://via.placeholder.com/100';
   document.getElementById('profileName').textContent=user.displayName||'User';
