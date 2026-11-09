@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -39,7 +40,7 @@ body{
 button,input,select{font:inherit}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 
-/* LOGIN PAGE - আগের ডিজাইন */
+/* LOGIN - আগের ডিজাইন */
 .screen{max-width:520px;margin:auto;padding:20px 18px 115px}
 #loginScreen{
  min-height:100vh;
@@ -80,7 +81,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .app-shell{
  max-width:560px;
  margin:auto;
- padding:12px 14px 100px;
+ padding:12px 14px 110px;
 }
 header{
  display:flex;align-items:center;justify-content:space-between;
@@ -89,6 +90,7 @@ header{
 }
 .logo{
  font:800 16px Poppins;
+ letter-spacing:.1px;
  text-shadow:0 0 18px #ffca5544;
 }
 .logo span{color:var(--gold)}
@@ -98,12 +100,12 @@ header{
  background:linear-gradient(135deg,#382044,#170d24);
  border:1px solid #e7bd6b99;
  padding:5px 10px 5px 5px;border-radius:30px;
+ box-shadow:0 5px 18px #0009,0 0 15px #f5c45b20;
 }
 .user-chip img{
  width:36px;height:36px;border-radius:50%;
  object-fit:cover;border:2px solid var(--gold);
 }
-
 .page{display:none;animation:fade .2s ease}
 .page.active{display:block}
 @keyframes fade{
@@ -154,6 +156,7 @@ header{
 .balance h2{
  color:#ffd75d;font:800 34px Poppins;
  margin:4px 0 8px;letter-spacing:-1px;
+ text-shadow:0 0 20px #ffc53d55;
 }
 .balance .muted{color:#e0cce9;font-size:11px}
 .balance-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -162,6 +165,7 @@ header{
  padding:9px 14px;
  background:linear-gradient(135deg,#ffe17b,#ffb72e 58%,#d77c13);
  color:#21120a;font-size:12px;font-weight:800;
+ box-shadow:0 5px 15px #ffb72e55;
 }
 
 /* STATS */
@@ -297,7 +301,6 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
 .row{display:flex;justify-content:space-between;gap:10px;align-items:center}
 .list-item{padding:15px 2px;border-bottom:1px solid #ffffff18}
 .list-item:last-child{border:0}
-.list-item strong{color:#ffdf91}
 .pill{
  font-size:11px;border-radius:20px;padding:5px 11px;
  background:#30203e;border:1px solid #d3a65c66;color:#ffe5a5;
@@ -339,70 +342,73 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
  box-shadow:0 0 0 5px #ffcf4b22,0 0 24px #ffbd4e55;
 }
 
-/* SLIM PREMIUM BOTTOM NAVIGATION */
+/* SLIM PREMIUM BOTTOM NAV */
 .bottom-nav{
  position:fixed;
  left:50%;
- bottom:12px;
+ bottom:10px;
  transform:translateX(-50%);
  width:min(560px,calc(100% - 26px));
+ height:72px;
+ min-height:72px;
  display:grid;
  grid-template-columns:repeat(5,minmax(0,1fr));
  align-items:center;
- gap:2px;
- padding:5px 7px;
- border:1.5px solid #a83cff;
- border-radius:45px;
+ gap:0;
+ padding:4px 5px;
+ border:1px solid #a832ff;
+ border-radius:40px;
  background:
  radial-gradient(ellipse at 50% 0%,#45105c88,transparent 75%),
  linear-gradient(110deg,#100619f7,#0b0615fa);
  box-shadow:
- 0 0 5px #d66aff,
- 0 0 12px #9b35ff,
- 0 5px 20px #000c,
- inset 0 1px 5px #ffffff15;
+ 0 0 5px #c44aff,
+ 0 0 12px #922cff,
+ inset 0 1px 4px #ffffff12,
+ 0 7px 20px #000c;
  z-index:50;
 }
 .bottom-nav:before{
  content:"";
  position:absolute;
  inset:2px;
- border:1px solid #d77aff55;
- border-radius:42px;
+ border:1px solid #c76aff44;
+ border-radius:38px;
  pointer-events:none;
 }
 .nav-btn{
  position:relative;
  z-index:1;
  min-width:0;
- min-height:58px;
- padding:4px 1px;
+ min-height:60px;
+ height:60px;
+ padding:3px 0;
  display:flex;
  flex-direction:column;
  align-items:center;
  justify-content:center;
  gap:2px;
  border:0;
- border-radius:35px;
+ border-radius:30px;
  background:transparent;
- color:#c78cff;
+ color:#c77dff;
  font-family:'Hind Siliguri',Poppins,sans-serif;
  transition:.2s ease;
 }
 .nav-btn b{
- width:32px;
- height:32px;
+ width:30px;
+ height:29px;
  display:flex;
  align-items:center;
  justify-content:center;
- font-size:29px;
+ font-size:25px;
  line-height:1;
  font-weight:500;
  color:#c77dff;
- filter:drop-shadow(0 0 5px #a64aff66);
+ filter:none;
 }
 .nav-btn span{
- font-size:11px;
+ font-size:10px;
  font-weight:600;
  line-height:1;
  white-space:nowrap;
@@ -410,18 +416,21 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
 }
 .nav-btn.active{
  color:#fff0a6;
- background:linear-gradient(180deg,#ffcf4b20,#a83cff18);
- box-shadow:inset 0 0 10px #c04dff20;
+ background:linear-gradient(180deg,#ffcf4b18,#a83cff15);
+ box-shadow:inset 0 0 8px #c04dff18;
 }
-.nav-btn.active b,
-.nav-btn.active span{
+.nav-btn.active b{
  color:#ffe477;
- filter:drop-shadow(0 0 7px #ffcf4b);
+ filter:drop-shadow(0 0 4px #ffcf4b);
 }
-.nav-btn:active{transform:scale(.92)}
+.nav-btn.active span{
+ color:#ffe99a;
+ text-shadow:0 0 5px #ffcb55;
+}
+.nav-btn:active{transform:scale(.94)}
 
 .toast{
- position:fixed;bottom:95px;left:50%;
+ position:fixed;bottom:100px;left:50%;
  transform:translateX(-50%);
  background:linear-gradient(135deg,#3b234b,#21132f);
  border:1px solid #e2bb6a;
@@ -442,13 +451,16 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
  .feature span{font-size:13px}
  .bottom-nav{
   width:calc(100% - 18px);
-  padding:4px 4px;
+  height:68px;
+  min-height:68px;
+  padding:3px;
  }
- .nav-btn{min-height:54px;gap:2px}
- .nav-btn b{
-  width:29px;height:29px;font-size:26px
+ .nav-btn{
+  min-height:56px;
+  height:56px;
  }
- .nav-btn span{font-size:10px}
+ .nav-btn b{font-size:23px}
+ .nav-btn span{font-size:9px}
  .invite p{font-size:11px}
  .invite p strong{font-size:14px}
 }
@@ -580,15 +592,18 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
   <button class="back" onclick="openPage('homePage')">←</button>
   <h2>👛 My Wallet</h2>
  </div>
+
  <div class="wallet-summary">
   <small>তোমার মোট Wallet Balance</small>
   <h2>৳ <span id="walletBalance">0.00</span></h2>
   <span class="pill">Earning Money BD Wallet</span>
  </div>
+
  <div class="wallet-menu">
   <button onclick="openPage('withdrawPage')"><b>💸</b>Withdraw</button>
   <button onclick="openPage('historyPage')"><b>📜</b>History</button>
  </div>
+
  <div class="card" style="margin-top:14px">
   <h3>Wallet Information</h3>
   <p class="page-desc">তোমার আয় এবং উত্তোলনের হিসাব এখানে দেখতে পারবে।</p>
@@ -619,22 +634,27 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
   <button class="back" onclick="openPage('homePage')">←</button>
   <h2>⚙️ Settings</h2>
  </div>
+
  <div class="card">
   <div style="text-align:center">
    <img id="profilePhoto" src="https://via.placeholder.com/100" style="width:76px;height:76px;border-radius:50%;object-fit:cover" alt="">
    <h3 id="profileName" style="margin-top:8px">User</h3>
    <p class="muted" id="profileEmail"></p>
   </div>
+
   <div class="list-item">
    <span class="muted">User ID</span>
    <p id="profileUid" style="font-size:11px;overflow-wrap:anywhere"></p>
   </div>
+
   <div class="list-item">
    <div class="row"><strong>Account</strong><span class="pill">Google Login</span></div>
   </div>
+
   <div class="list-item">
    <div class="row"><strong>App Version</strong><span class="muted">Earning Money BD</span></div>
   </div>
+
   <button class="logout" onclick="logout()">Log Out</button>
  </div>
 </main>
@@ -707,15 +727,15 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
 
 </div>
 
-<!-- BOTTOM NAVIGATION -->
+<!-- FIVE ICON BOTTOM NAV -->
 <nav class="bottom-nav" id="bottomNav" style="display:none">
 
  <button class="nav-btn active" data-nav="home" onclick="openPage('homePage')">
   <b>
-   <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-    <path d="m3 10 9-7 9 7"/>
-    <path d="M5 9v12h14V9"/>
-    <path d="M9 21v-7h6v7"/>
+   <svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m3 10 9-7 9 7"></path>
+    <path d="M5 9v12h14V9"></path>
+    <path d="M9 21v-7h6v7"></path>
    </svg>
   </b>
   <span>Home</span>
@@ -723,9 +743,10 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
 
  <button class="nav-btn" data-nav="tasks" onclick="openPage('tasksPage')">
   <b>
-   <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="5" y="4" width="14" height="18" rx="2"/>
-    <path d="M9 4V2h6v2M9 10h6M9 14h6M9 18h4"/>
+   <svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="5" y="4" width="14" height="18" rx="2"></rect>
+    <path d="M9 4V2h6v2"></path>
+    <path d="M8 10h8M8 14h8M8 18h5"></path>
    </svg>
   </b>
   <span>Tasks</span>
@@ -733,10 +754,11 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
 
  <button class="nav-btn" data-nav="wallet" onclick="openPage('walletPage')">
   <b>
-   <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H21v16H5.5A2.5 2.5 0 0 1 3 17.5z"/>
-    <path d="M3 7h15a3 3 0 0 1 3 3v6h-6a3 3 0 0 1 0-6h6"/>
-    <path d="M16 13h.01"/>
+   <svg viewBox="0 0 24 24" width="29" height="27" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H21v16H5.5A2.5 2.5 0 0 1 3 17.5z"></path>
+    <path d="M3 7h15"></path>
+    <path d="M16 11h5v5h-5a2.5 2.5 0 0 1 0-5z"></path>
+    <path d="M18 13.5h.01"></path>
    </svg>
   </b>
   <span>Wallet</span>
@@ -744,10 +766,11 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
 
  <button class="nav-btn" data-nav="refer" onclick="openPage('referralPage')">
   <b>
-   <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-    <circle cx="9" cy="7" r="4"/>
-    <path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+   <svg viewBox="0 0 24 24" width="29" height="27" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+    <circle cx="9" cy="7" r="4"></circle>
+    <path d="M20 21v-2a4 4 0 0 0-3-3.87"></path>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
    </svg>
   </b>
   <span>Refer</span>
@@ -755,9 +778,9 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
 
  <button class="nav-btn" data-nav="settings" onclick="openPage('profilePage')">
   <b>
-   <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="3"/>
-    <path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.7a8 8 0 0 1-1.5.9l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.5-.9l-1.7.7-1.4-2.4 1.4-1.1a8 8 0 0 1 0-1.8l-1.4-1.1 1.4-2.4 1.7.7a8 8 0 0 1 1.5-.9l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.5.9l1.7-.7 1.4 2.4-1.4 1.1a8 8 0 0 1 0 1.8z"/>
+   <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"></circle>
+    <path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a8 8 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.7-1l-1.7.6-1.4-2.4 1.4-1.1a8 8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.6a8 8 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.7 1l1.7-.6 1.4 2.4-1.4 1.1a8 8 0 0 1 0 2z" transform="translate(-1 -1) scale(1.08)"></path>
    </svg>
   </b>
   <span>Settings</span>
@@ -801,16 +824,19 @@ function todayKey(){
  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 
-/* NAVIGATION */
+/* Navigation */
 function openPage(id){
  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+
  const page=document.getElementById(id);
  if(!page)return;
+
  page.classList.add('active');
 
  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
 
  let navName='home';
+
  if(id==='tasksPage')navName='tasks';
  else if(id==='walletPage'||id==='withdrawPage'||id==='historyPage')navName='wallet';
  else if(id==='referralPage')navName='refer';
@@ -831,10 +857,10 @@ function openPage(id){
  }
 }
 
-/* GOOGLE LOGIN */
 async function googleLogin(){
  const btn=document.getElementById('googleBtn');
  const status=document.getElementById('status');
+
  btn.disabled=true;
  status.textContent='Google-এর সাথে সংযোগ হচ্ছে...';
 
@@ -847,7 +873,6 @@ async function googleLogin(){
  }
 }
 
-/* AUTH */
 auth.onAuthStateChanged(async user=>{
  if(!user){
   currentUser=null;
@@ -876,6 +901,7 @@ auth.onAuthStateChanged(async user=>{
 
   const fresh=await ref.get();
   userData=fresh.data()||{balance:0};
+
   renderUserData();
 
   document.getElementById('userName').textContent=user.displayName||'User';
@@ -897,6 +923,7 @@ auth.onAuthStateChanged(async user=>{
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('appScreen').style.display='block';
   document.getElementById('bottomNav').style.display='grid';
+  openPage('homePage');
 
  }catch(e){
   console.error(e);
@@ -912,7 +939,6 @@ function renderUserData(){
  document.getElementById('walletBalance2').textContent=amount;
 }
 
-/* SETTINGS */
 async function loadSettings(){
  try{
   const s=await db.collection('appConfig').doc('public').get();
@@ -926,7 +952,6 @@ async function loadSettings(){
  document.getElementById('adReward').textContent=Number(appSettings.adReward??0).toFixed(2);
 }
 
-/* TODAY STATS */
 async function loadTodayStats(){
  try{
   const start=new Date();
@@ -955,7 +980,6 @@ async function loadTodayStats(){
  }
 }
 
-/* DAILY BONUS */
 async function claimBonus(){
  if(!currentUser)return;
 
@@ -1019,8 +1043,10 @@ async function claimBonus(){
 
   const updated=await userRef.get();
   userData=updated.data()||userData;
+
   renderUserData();
   await loadTodayStats();
+
   toast('অভিনন্দন! ৳'+amount.toFixed(2)+' Wallet-এ যোগ হয়েছে।');
 
  }catch(e){
@@ -1034,7 +1060,6 @@ async function claimBonus(){
  }
 }
 
-/* WITHDRAW */
 async function submitWithdraw(){
  if(!currentUser)return;
 
@@ -1046,14 +1071,17 @@ async function submitWithdraw(){
   toast('সঠিক ১১ সংখ্যার মোবাইল নম্বর দাও');
   return;
  }
+
  if(!Number.isFinite(amount)||amount<=0){
   toast('সঠিক টাকার পরিমাণ দাও');
   return;
  }
+
  if(amount<Number(appSettings.minWithdraw||0)){
   toast('ন্যূনতম উত্তোলন ৳'+appSettings.minWithdraw);
   return;
  }
+
  if(amount>Number(userData.balance||0)){
   toast('পর্যাপ্ত ব্যালেন্স নেই');
   return;
@@ -1080,9 +1108,9 @@ async function submitWithdraw(){
  }
 }
 
-/* REFERRAL */
 async function copyReferral(){
  const code=document.getElementById('refCode').value;
+
  try{
   await navigator.clipboard.writeText(code);
   toast('Referral code কপি হয়েছে');
@@ -1093,7 +1121,6 @@ async function copyReferral(){
  }
 }
 
-/* TASKS */
 async function loadTasks(){
  const box=document.getElementById('taskList');
  box.innerHTML='<div class="empty">কাজ লোড হচ্ছে...</div>';
@@ -1107,6 +1134,7 @@ async function loadTasks(){
   }
 
   box.innerHTML='';
+
   s.forEach(doc=>{
    const d=doc.data();
    const item=document.createElement('div');
@@ -1141,7 +1169,6 @@ async function loadTasks(){
  }
 }
 
-/* TASK SUBMISSION */
 async function submitTask(taskId,task){
  try{
   await db.collection('taskSubmissions').add({
@@ -1153,14 +1180,15 @@ async function submitTask(taskId,task){
    status:'pending',
    createdAt:firebase.firestore.FieldValue.serverTimestamp()
   });
+
   toast('Task submission জমা হয়েছে');
+
  }catch(e){
   console.error(e);
   toast('জমা হয়নি: Firestore Rules পরীক্ষা করো');
  }
 }
 
-/* HISTORY */
 async function loadHistory(){
  const box=document.getElementById('historyList');
  box.innerHTML='<div class="empty">হিসাব লোড হচ্ছে...</div>';
@@ -1169,13 +1197,16 @@ async function loadHistory(){
   const [tx,claims,withdrawals]=await Promise.all([
    db.collection('users').doc(currentUser.uid)
     .collection('transactions').limit(30).get(),
+
    db.collection('bonusClaims')
     .where('uid','==',currentUser.uid).limit(20).get(),
+
    db.collection('withdrawRequests')
     .where('uid','==',currentUser.uid).limit(20).get()
   ]);
 
   const rows=[];
+
   tx.forEach(d=>rows.push({...d.data(),kind:d.data().type||'transaction'}));
   claims.forEach(d=>rows.push({...d.data(),kind:'Daily Bonus'}));
   withdrawals.forEach(d=>rows.push({...d.data(),kind:'Withdraw'}));
@@ -1190,6 +1221,7 @@ async function loadHistory(){
   }
 
   box.innerHTML='';
+
   rows.slice(0,40).forEach(r=>{
    const el=document.createElement('div');
    el.className='list-item';
@@ -1221,7 +1253,6 @@ async function loadHistory(){
  }
 }
 
-/* LOGOUT */
 async function logout(){
  await auth.signOut();
  toast('লগআউট হয়েছে');
