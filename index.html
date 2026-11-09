@@ -40,7 +40,7 @@ body{
 button,input,select{font:inherit}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 
-/* LOGIN - আগের ডিজাইন */
+/* LOGIN */
 .screen{max-width:520px;margin:auto;padding:20px 18px 115px}
 #loginScreen{
  min-height:100vh;
@@ -628,7 +628,7 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
  </div>
 </main>
 
-<!-- SETTINGS -->
+<!-- PROFILE -->
 <main id="profilePage" class="page">
  <div class="topline">
   <button class="back" onclick="openPage('homePage')">←</button>
@@ -776,14 +776,15 @@ label{display:block;color:#f0dcae;font-size:13px;font-weight:600;margin-top:13px
   <span>Refer</span>
  </button>
 
- <button class="nav-btn" data-nav="settings" onclick="openPage('profilePage')">
+ <!-- ME BUTTON -->
+ <button class="nav-btn" data-nav="me" onclick="openPage('profilePage')">
   <b>
    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="12" cy="12" r="3"></circle>
     <path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a8 8 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.7-1l-1.7.6-1.4-2.4 1.4-1.1a8 8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.6a8 8 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.7 1l1.7-.6 1.4 2.4-1.4 1.1a8 8 0 0 1 0 2z" transform="translate(-1 -1) scale(1.08)"></path>
    </svg>
   </b>
-  <span>Settings</span>
+  <span>Me</span>
  </button>
 
 </nav>
@@ -840,7 +841,7 @@ function openPage(id){
  if(id==='tasksPage')navName='tasks';
  else if(id==='walletPage'||id==='withdrawPage'||id==='historyPage')navName='wallet';
  else if(id==='referralPage')navName='refer';
- else if(id==='profilePage')navName='settings';
+ else if(id==='profilePage')navName='me';
 
  const nav=document.querySelector('.nav-btn[data-nav="'+navName+'"]');
  if(nav)nav.classList.add('active');
