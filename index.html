@@ -29,6 +29,15 @@ font-family:'Hind Siliguri',Poppins,sans-serif;
 button,input,select{font:inherit}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 
+/* AUTH PAGE REFRESH PROTECTION - ONLY AUTH PAGES */
+html.auth-refresh-locked,
+body.auth-refresh-locked{
+overscroll-behavior-y:none;
+}
+#loginScreen{
+overscroll-behavior-y:contain;
+}
+
 /* LANGUAGE SELECTOR */
 .language-selector{
 position:fixed;top:8px;right:8px;left:auto;z-index:10000;
@@ -635,6 +644,59 @@ EARNING <span>MONEY BD</span>
 <div id="toast" class="toast"></div>
 
 <script>
+/* AUTH PAGE REFRESH PROTECTION */
+const AUTH_PAGE_KEY='embd_auth_page';
+
+function setAuthRefreshProtection(enabled){
+document.documentElement.classList.toggle('auth-refresh-locked',enabled);
+document.body.classList.toggle('auth-refresh-locked',enabled);
+}
+
+/* Remember which auth form the user is viewing */
+function saveAuthPage(page){
+sessionStorage.setItem(AUTH_PAGE_KEY,page);
+}
+
+/* Restore the same auth form after website refresh */
+function restoreAuthPage(){
+const saved=sessionStorage.getItem(AUTH_PAGE_KEY);
+
+if(saved==='register'){
+showRegisterForm();
+}else if(saved==='forgot'){
+showForgotForm();
+}else{
+showLoginForm();
+}
+}
+
+/* Stop downward pull-to-refresh on auth screens only */
+let authTouchStartY=0;
+let authTouchStartX=0;
+
+document.addEventListener('touchstart',function(event){
+if(!document.body.classList.contains('auth-refresh-locked'))return;
+if(event.touches.length!==1)return;
+
+authTouchStartY=event.touches[0].clientY;
+authTouchStartX=event.touches[0].clientX;
+},{passive:true});
+
+document.addEventListener('touchmove',function(event){
+if(!document.body.classList.contains('auth-refresh-locked'))return;
+if(event.touches.length!==1)return;
+
+const currentY=event.touches[0].clientY;
+const currentX=event.touches[0].clientX;
+const moveY=currentY-authTouchStartY;
+const moveX=currentX-authTouchStartX;
+
+/* Only block a downward pull when the page is already at the top */
+if(window.scrollY<=0 && moveY>8 && Math.abs(moveY)>Math.abs(moveX)){
+event.preventDefault();
+}
+},{passive:false});
+
 /* LANGUAGE SYSTEM */
 let currentLanguage=localStorage.getItem('embd_language')||'bn';
 let pendingLanguage=null;
@@ -644,7 +706,6 @@ const translations={
 'আপনি কি অ্যাপের ভাষা পরিবর্তন করতে চান?':'Would you like to change the app language?',
 'না':'Cancel',
 'হ্যাঁ':'Yes',
-
 'আপনার অ্যাকাউন্টে লগইন করুন':'Log in to your account',
 'নতুন অ্যাকাউন্ট তৈরি করুন':'Create a New Account',
 'পাসওয়ার্ড ভুলে গেছেন?':'Forgot Password?',
@@ -657,7 +718,7 @@ const translations={
 'আজকের বোনাস ক্লেইম':'Claim Today’s Bonus',
 'প্রতিদিন একবার বোনাস ক্লেইম করতে পারবেন।':'You can claim the bonus once every day.',
 'প্রতিদিন ১ বার':'Once per day',
-'Claim করলেই বোনাস সরাসরি Wallet Balance-এ যোগ হবে।':'The bonus will be added directly to your wallet after claiming.',
+'Claim করলেই বোনাস সরাসরি Wallet Balance-এ যোগ হবে.':'The bonus will be added directly to your wallet after claiming.',
 'বিজ্ঞাপন দেখে আয়':'Earn by watching ads',
 'অ্যাড নেটওয়ার্ক যুক্ত হলে এখানে বিজ্ঞাপন দেখা ও রিওয়ার্ড পাওয়া যাবে।':'Ads and rewards will be available here after an ad network is connected.',
 'প্রতি বিজ্ঞাপনের রিওয়ার্ড':'Reward per advertisement',
@@ -681,7 +742,6 @@ const translations={
 'আপনার আয় এবং উত্তোলনের হিসাব এখানে দেখতে পারবেন।':'You can see your earnings and withdrawal records here.',
 'বন্ধুদের আমন্ত্রণ জানান এবং আপনার আয় বাড়ান!':'Invite friends and increase your earnings!',
 'সাম্প্রতিক হিসাব দেখতে History খুলুন।':'Open History to see recent activity.',
-'আপনার Referral Code':'Your Referral Code',
 'আপনার পুরো নাম লিখুন।':'Enter your full name.',
 'অনুগ্রহ করে সঠিক Gmail Address দিন।':'Enter a valid Gmail address.',
 'অনুগ্রহ করে শুধু Gmail Address ব্যবহার করুন।':'Use a Gmail address only.',
@@ -967,6 +1027,8 @@ button.setAttribute('aria-label',currentLanguage==='en'?'Show password':'পা�
 
 /* LOGIN FORM NAVIGATION */
 function showLoginForm(){
+saveAuthPage('login');
+
 document.getElementById('loginForm').style.display='block';
 document.getElementById('registerForm').style.display='none';
 document.getElementById('forgotForm').style.display='none';
@@ -979,6 +1041,8 @@ applyLanguage();
 }
 
 function showRegisterForm(){
+saveAuthPage('register');
+
 document.getElementById('loginForm').style.display='none';
 document.getElementById('registerForm').style.display='block';
 document.getElementById('forgotForm').style.display='none';
@@ -991,6 +1055,8 @@ applyLanguage();
 }
 
 function showForgotForm(){
+saveAuthPage('forgot');
+
 document.getElementById('loginForm').style.display='none';
 document.getElementById('registerForm').style.display='none';
 document.getElementById('forgotForm').style.display='block';
@@ -1180,9 +1246,20 @@ loading.style.display='none';
 login.style.display='flex';
 app.style.display='none';
 nav.style.display='none';
+
+/* Keep refresh protection active on all auth forms */
+setAuthRefreshProtection(true);
+
+/* Restore login/register/forgot page after website refresh */
+restoreAuthPage();
+
 document.getElementById('googleBtn').disabled=false;
 return;
 }
+
+/* User is logged in: remove auth-only refresh protection */
+setAuthRefreshProtection(false);
+sessionStorage.removeItem(AUTH_PAGE_KEY);
 
 loading.style.display='flex';
 login.style.display='none';
@@ -1585,6 +1662,9 @@ async function logout(){
 if(currentUser){
 sessionStorage.removeItem('embd_page_'+currentUser.uid);
 }
+
+/* Next time after logout, start from Login page */
+sessionStorage.removeItem(AUTH_PAGE_KEY);
 
 await auth.signOut();
 toast('লগআউট সম্পন্ন হয়েছে');
