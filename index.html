@@ -29,14 +29,10 @@ font-family:'Hind Siliguri',Poppins,sans-serif;
 button,input,select{font:inherit}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 
-/* AUTH PAGE REFRESH PROTECTION - ONLY AUTH PAGES */
+/* AUTH PAGE REFRESH PROTECTION - UNCHANGED */
 html.auth-refresh-locked,
-body.auth-refresh-locked{
-overscroll-behavior-y:none;
-}
-#loginScreen{
-overscroll-behavior-y:contain;
-}
+body.auth-refresh-locked{overscroll-behavior-y:none}
+#loginScreen{overscroll-behavior-y:contain}
 
 /* LANGUAGE SELECTOR */
 .language-selector{
@@ -50,19 +46,16 @@ border:0;border-radius:20px;padding:6px 10px;
 font-size:11px;font-weight:700;color:#d7b8f4;background:transparent;
 }
 .language-selector button.active{
-background:linear-gradient(120deg,#ffe17a,#ffb82e);
-color:#241306;
+background:linear-gradient(120deg,#ffe17a,#ffb82e);color:#241306;
 }
 #languageConfirm{
-position:fixed;inset:0;z-index:11000;
-display:none;align-items:center;justify-content:center;
-padding:20px;background:#000b;
+position:fixed;inset:0;z-index:11000;display:none;
+align-items:center;justify-content:center;padding:20px;background:#000b;
 }
 .language-confirm-box{
 width:100%;max-width:320px;padding:22px;
 border:1px solid #bd75ff;border-radius:20px;
-background:#1b1028;text-align:center;
-box-shadow:0 15px 40px #0009;
+background:#1b1028;text-align:center;box-shadow:0 15px 40px #0009;
 }
 .language-confirm-box p{margin:10px 0 18px;color:#e3d3f3;font-size:14px}
 .language-confirm-actions{display:flex;gap:10px}
@@ -379,10 +372,10 @@ max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 <p id="authSubtitle">আপনার অ্যাকাউন্ট লগইন করুন</p>
 
 <div id="loginForm">
-<input class="auth-input" id="loginEmail" type="email" placeholder="Gmail Address">
+<input class="auth-input" id="loginEmail" type="email" placeholder="Email Address" autocomplete="email">
 
 <div class="password-wrap">
-<input class="auth-input" id="loginPassword" type="password" placeholder="Password">
+<input class="auth-input" id="loginPassword" type="password" placeholder="Password" autocomplete="current-password">
 <button type="button" class="password-eye" id="loginPasswordEye" onclick="togglePassword('loginPassword','loginPasswordEye')" aria-label="Show password">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M3 3l18 18"></path>
@@ -402,11 +395,11 @@ max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 </div>
 
 <div id="registerForm" style="display:none">
-<input class="auth-input" id="registerName" type="text" placeholder="Full Name">
-<input class="auth-input" id="registerEmail" type="email" placeholder="Gmail Address">
+<input class="auth-input" id="registerName" type="text" placeholder="Full Name" autocomplete="name">
+<input class="auth-input" id="registerEmail" type="email" placeholder="Email Address" autocomplete="email">
 
 <div class="password-wrap">
-<input class="auth-input" id="registerPassword" type="password" placeholder="Create Password">
+<input class="auth-input" id="registerPassword" type="password" placeholder="Create Password" autocomplete="new-password">
 <button type="button" class="password-eye" id="registerPasswordEye" onclick="togglePassword('registerPassword','registerPasswordEye')" aria-label="Show password">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M3 3l18 18"></path><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
@@ -417,7 +410,7 @@ max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 </div>
 
 <div class="password-wrap">
-<input class="auth-input" id="confirmPassword" type="password" placeholder="Confirm Password">
+<input class="auth-input" id="confirmPassword" type="password" placeholder="Confirm Password" autocomplete="new-password">
 <button type="button" class="password-eye" id="confirmPasswordEye" onclick="togglePassword('confirmPassword','confirmPasswordEye')" aria-label="Show password">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M3 3l18 18"></path><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
@@ -432,8 +425,8 @@ max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 </div>
 
 <div id="forgotForm" style="display:none">
-<input class="auth-input" id="forgotEmail" type="email" placeholder="আপনার Gmail Address">
-<button class="auth-main-btn" onclick="resetPassword()">Send Reset Link</button>
+<input class="auth-input" id="forgotEmail" type="email" placeholder="Email Address" autocomplete="email">
+<button class="auth-main-btn" onclick="resetPassword()">Continue</button>
 <button class="auth-link" onclick="showLoginForm()">Back to Login</button>
 </div>
 
@@ -644,7 +637,7 @@ EARNING <span>MONEY BD</span>
 <div id="toast" class="toast"></div>
 
 <script>
-/* AUTH PAGE REFRESH PROTECTION */
+/* AUTH PAGE REFRESH PROTECTION - ORIGINAL SYSTEM PRESERVED */
 const AUTH_PAGE_KEY='embd_auth_page';
 
 function setAuthRefreshProtection(enabled){
@@ -652,22 +645,91 @@ document.documentElement.classList.toggle('auth-refresh-locked',enabled);
 document.body.classList.toggle('auth-refresh-locked',enabled);
 }
 
-/* Remember which auth form the user is viewing */
 function saveAuthPage(page){
 sessionStorage.setItem(AUTH_PAGE_KEY,page);
 }
 
+/* AUTH FORM INPUT SAVE SYSTEM */
+const AUTH_INPUT_KEY='embd_auth_inputs_v1';
+const AUTH_INPUT_IDS=[
+'loginEmail','loginPassword',
+'registerName','registerEmail','registerPassword','confirmPassword',
+'forgotEmail'
+];
+
+let restoringAuthInputs=false;
+
+function saveAuthInputs(){
+if(restoringAuthInputs)return;
+
+const data={};
+AUTH_INPUT_IDS.forEach(id=>{
+const input=document.getElementById(id);
+if(input)data[id]=input.value;
+});
+
+try{
+sessionStorage.setItem(AUTH_INPUT_KEY,JSON.stringify(data));
+}catch(e){
+console.log('Auth input save error:',e);
+}
+}
+
+function restoreAuthInputs(){
+restoringAuthInputs=true;
+
+try{
+const saved=sessionStorage.getItem(AUTH_INPUT_KEY);
+if(saved){
+const data=JSON.parse(saved);
+AUTH_INPUT_IDS.forEach(id=>{
+const input=document.getElementById(id);
+if(input&&typeof data[id]==='string'){
+input.value=data[id];
+}
+});
+}
+}catch(e){
+console.log('Auth input restore error:',e);
+}
+
+restoringAuthInputs=false;
+}
+
+function clearAuthInputs(){
+try{
+sessionStorage.removeItem(AUTH_INPUT_KEY);
+}catch(e){}
+
+AUTH_INPUT_IDS.forEach(id=>{
+const input=document.getElementById(id);
+if(input)input.value='';
+});
+}
+
+/* Save immediately whenever the user types or deletes text */
+AUTH_INPUT_IDS.forEach(id=>{
+const input=document.getElementById(id);
+if(input){
+input.addEventListener('input',saveAuthInputs);
+input.addEventListener('change',saveAuthInputs);
+}
+});
+
 /* Restore the same auth form after website refresh */
 function restoreAuthPage(){
 const saved=sessionStorage.getItem(AUTH_PAGE_KEY);
+const page=['register','forgot'].includes(saved)?saved:'login';
 
-if(saved==='register'){
-showRegisterForm();
-}else if(saved==='forgot'){
-showForgotForm();
-}else{
-showLoginForm();
+/* Set Login as the first Back destination */
+history.replaceState({embdAuthPage:'login'},'',location.href);
+
+if(page!=='login'){
+history.pushState({embdAuthPage:page},'',location.href);
 }
+
+displayAuthForm(page);
+restoreAuthInputs();
 }
 
 /* Stop downward pull-to-refresh on auth screens only */
@@ -691,7 +753,6 @@ const currentX=event.touches[0].clientX;
 const moveY=currentY-authTouchStartY;
 const moveX=currentX-authTouchStartX;
 
-/* Only block a downward pull when the page is already at the top */
 if(window.scrollY<=0 && moveY>8 && Math.abs(moveY)>Math.abs(moveX)){
 event.preventDefault();
 }
@@ -704,13 +765,13 @@ let pendingLanguage=null;
 const translations={
 'ভাষা পরিবর্তন':'Change Language',
 'আপনি কি অ্যাপের ভাষা পরিবর্তন করতে চান?':'Would you like to change the app language?',
-'না':'Cancel',
+'না':'No',
 'হ্যাঁ':'Yes',
 'আপনার অ্যাকাউন্টে লগইন করুন':'Log in to your account',
 'নতুন অ্যাকাউন্ট তৈরি করুন':'Create a New Account',
 'পাসওয়ার্ড ভুলে গেছেন?':'Forgot Password?',
-'পাসওয়ার্ড রিসেট করার লিংক পাঠান':'Send a password reset link',
-'আপনার Gmail Address':'Your Gmail Address',
+'পাসওয়ার্ড রিসেট করার লিংক পাঠান':'Continue',
+'আপনার Email Address':'Your Email Address',
 'আপনার Wallet Balance':'Your Wallet Balance',
 'আপনার মোট Wallet Balance':'Your Total Wallet Balance',
 'আজকের আয়':"Today's Earnings",
@@ -743,25 +804,25 @@ const translations={
 'বন্ধুদের আমন্ত্রণ জানান এবং আপনার আয় বাড়ান!':'Invite friends and increase your earnings!',
 'সাম্প্রতিক হিসাব দেখতে History খুলুন।':'Open History to see recent activity.',
 'আপনার পুরো নাম লিখুন।':'Enter your full name.',
-'অনুগ্রহ করে সঠিক Gmail Address দিন।':'Enter a valid Gmail address.',
-'অনুগ্রহ করে শুধু Gmail Address ব্যবহার করুন।':'Use a Gmail address only.',
+'অনুগ্রহ করে সঠিক Email Address দিন।':'Enter a valid Email Address.',
+'অনুগ্রহ করে Email Address ব্যবহার করুন।':'Enter an Email Address.',
 'অনুগ্রহ করে Password লিখুন।':'Enter your password.',
 'Password কমপক্ষে ৬ অক্ষরের হতে হবে।':'Password must be at least 6 characters.',
 'দুটি Password মিলছে না।':'The two passwords do not match.',
 'Login হচ্ছে...':'Logging in...',
 'Login সফল হয়েছে!':'Login successful!',
-'Gmail অথবা Password ভুল।':'Incorrect Gmail or password.',
+'Email অথবা Password ভুল।':'Incorrect Email or password.',
 'Password ভুল হয়েছে।':'Incorrect password.',
 'অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে চেষ্টা করুন।':'Too many attempts. Try again later.',
 'অ্যাকাউন্ট তৈরি হচ্ছে...':'Creating account...',
 'অ্যাকাউন্ট তৈরি হয়েছে! Dashboard খুলছে...':'Account created! Opening dashboard...',
-'এই Gmail দিয়ে আগে অ্যাকাউন্ট খোলা হয়েছে। Login করুন।':'An account already exists with this Gmail. Please log in.',
+'এই Email দিয়ে আগে অ্যাকাউন্ট খোলা হয়েছে। Login করুন।':'An account already exists with this Email. Please log in.',
 'আরও শক্তিশালী Password ব্যবহার করুন।':'Choose a stronger password.',
-'Gmail Address সঠিক নয়।':'Invalid Gmail address.',
+'Email Address সঠিক নয়।':'Invalid Email address.',
 'Firebase Console থেকে Email/Password Login চালু করুন।':'Enable Email/Password login in Firebase Console.',
 'Reset Link পাঠানো হচ্ছে...':'Sending reset link...',
-'Reset Link পাঠানো হয়েছে। Gmail Inbox দেখুন।':'Reset link sent. Check your Gmail inbox.',
-'এই Gmail দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।':'No account found with this Gmail.',
+'Reset Link পাঠানো হয়েছে। Email Inbox দেখুন।':'Reset link sent. Check your Email inbox.',
+'এই Email দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।':'No account found with this Email.',
 'Google-এর সাথে সংযোগ হচ্ছে...':'Connecting to Google...',
 'ডেটাবেস সংযোগে সমস্যা হয়েছে':'Database connection problem',
 'বোনাস যোগ হয়নি। Firestore Rules পরীক্ষা করুন':'Bonus not added. Check Firestore Rules.',
@@ -817,11 +878,11 @@ const translations={
 'Create New Account':'Create New Account',
 'Create Account':'Create Account',
 'Forgot Password?':'Forgot Password?',
-'Send Reset Link':'Send Reset Link',
+'Continue':'Continue',
 'Continue with Google':'Continue with Google',
 'Login':'Login',
 'Full Name':'Full Name',
-'Gmail Address':'Gmail Address',
+'Email Address':'Email Address',
 'Password':'Password',
 'Create Password':'Create Password',
 'Confirm Password':'Confirm Password',
@@ -863,13 +924,8 @@ return value;
 const originalTextNodes=new WeakMap();
 const originalAttributes=new WeakMap();
 
-function translateText(value){
-return getTranslation(value,'en');
-}
-
-function restoreBangla(value){
-return getTranslation(value,'bn');
-}
+function translateText(value){return getTranslation(value,'en')}
+function restoreBangla(value){return getTranslation(value,'bn')}
 
 function updateWelcomeLanguage(){
 const welcomeTitle=document.querySelector('.welcome-copy strong');
@@ -883,7 +939,6 @@ welcomeTitle.textContent=currentLanguage==='en'
 
 function applyLanguage(){
 document.documentElement.lang=currentLanguage;
-
 document.getElementById('langBn').classList.toggle('active',currentLanguage==='bn');
 document.getElementById('langEn').classList.toggle('active',currentLanguage==='en');
 
@@ -892,35 +947,20 @@ let node;
 
 while(node=walker.nextNode()){
 if(node.parentElement.closest('script,style,.language-selector,#languageConfirm'))continue;
-
-if(!originalTextNodes.has(node)){
-originalTextNodes.set(node,node.nodeValue);
-}
+if(!originalTextNodes.has(node))originalTextNodes.set(node,node.nodeValue);
 
 const original=originalTextNodes.get(node);
-node.nodeValue=currentLanguage==='en'
-?translateText(original)
-:restoreBangla(original);
+node.nodeValue=currentLanguage==='en'?translateText(original):restoreBangla(original);
 }
 
 document.querySelectorAll('input,button').forEach(el=>{
 ['placeholder','aria-label','title'].forEach(attr=>{
 if(!el.hasAttribute(attr))return;
-
 let store=originalAttributes.get(el);
-if(!store){
-store={};
-originalAttributes.set(el,store);
-}
-
-if(store[attr]===undefined){
-store[attr]=el.getAttribute(attr);
-}
-
+if(!store){store={};originalAttributes.set(el,store)}
+if(store[attr]===undefined)store[attr]=el.getAttribute(attr);
 const original=store[attr];
-el.setAttribute(attr,currentLanguage==='en'
-?translateText(original)
-:restoreBangla(original));
+el.setAttribute(attr,currentLanguage==='en'?translateText(original):restoreBangla(original));
 });
 });
 
@@ -941,12 +981,11 @@ const message=document.getElementById('confirmMessage');
 const buttons=document.querySelectorAll('.language-confirm-actions button');
 
 title.textContent=currentLanguage==='en'?'Change Language':'ভাষা পরিবর্তন';
-
 message.textContent=currentLanguage==='en'
 ?'Would you like to change the app language?'
 :'আপনি কি অ্যাপের ভাষা পরিবর্তন করতে চান?';
 
-buttons[0].textContent=currentLanguage==='en'?'Cancel':'না';
+buttons[0].textContent=currentLanguage==='en'?'No':'না';
 buttons[1].textContent=currentLanguage==='en'?'Yes':'হ্যাঁ';
 }
 
@@ -957,16 +996,14 @@ document.getElementById('languageConfirm').style.display='none';
 
 function confirmLanguage(){
 if(!pendingLanguage)return;
-
 currentLanguage=pendingLanguage;
 localStorage.setItem('embd_language',currentLanguage);
 pendingLanguage=null;
-
 document.getElementById('languageConfirm').style.display='none';
 applyLanguage();
 }
 
-/* FIREBASE */
+/* FIREBASE - CONFIG UNCHANGED */
 const firebaseConfig={
 apiKey:"AIzaSyDDDwkjIa7NecN7CnpyQxPja4KH0vLqCJ4",
 authDomain:"earning-bd-1e902.firebaseapp.com",
@@ -1004,75 +1041,99 @@ function togglePassword(inputId,buttonId){
 const input=document.getElementById(inputId);
 const button=document.getElementById(buttonId);
 if(!input||!button)return;
-
 const icon=button.querySelector('svg');
 if(!icon)return;
 
 if(input.type==='password'){
 input.type='text';
-icon.innerHTML=`
-<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path>
-<circle cx="12" cy="12" r="3"></circle>`;
+icon.innerHTML=`<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle>`;
 button.setAttribute('aria-label',currentLanguage==='en'?'Hide password':'পাসওয়ার্ড লুকান');
 }else{
 input.type='password';
-icon.innerHTML=`
-<path d="M3 3l18 18"></path>
-<path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
-<path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.5 15.5 0 0 1-3.1 3.8"></path>
-<path d="M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7c1.4 0 2.7-.3 3.8-.8"></path>`;
+icon.innerHTML=`<path d="M3 3l18 18"></path><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path><path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.5 15.5 0 0 1-3.1 3.8"></path><path d="M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7c1.4 0 2.7-.3 3.8-.8"></path>`;
 button.setAttribute('aria-label',currentLanguage==='en'?'Show password':'পাসওয়ার্ড দেখুন');
 }
 }
 
-/* LOGIN FORM NAVIGATION */
-function showLoginForm(){
-saveAuthPage('login');
+/* AUTH FORM DISPLAY */
+let currentAuthPage='login';
 
-document.getElementById('loginForm').style.display='block';
-document.getElementById('registerForm').style.display='none';
-document.getElementById('forgotForm').style.display='none';
+function displayAuthForm(page){
+currentAuthPage=page;
+saveAuthPage(page);
+
+document.getElementById('loginForm').style.display=page==='login'?'block':'none';
+document.getElementById('registerForm').style.display=page==='register'?'block':'none';
+document.getElementById('forgotForm').style.display=page==='forgot'?'block':'none';
+
+if(page==='login'){
 document.getElementById('authTitle').textContent='Welcome Earning Money BD!';
 document.getElementById('authSubtitle').textContent=currentLanguage==='en'
-?'Log in to your account'
-:'আপনার অ্যাকাউন্টে লগইন করুন';
-authStatus('');
-applyLanguage();
-}
-
-function showRegisterForm(){
-saveAuthPage('register');
-
-document.getElementById('loginForm').style.display='none';
-document.getElementById('registerForm').style.display='block';
-document.getElementById('forgotForm').style.display='none';
+?'Log in to your account':'আপনার অ্যাকাউন্টে লগইন করুন';
+}else if(page==='register'){
 document.getElementById('authTitle').textContent=currentLanguage==='en'
 ?'Create New Account':'নতুন অ্যাকাউন্ট তৈরি করুন';
 document.getElementById('authSubtitle').textContent=currentLanguage==='en'
 ?'Create a new account':'নতুন অ্যাকাউন্ট তৈরি করুন';
-authStatus('');
-applyLanguage();
-}
-
-function showForgotForm(){
-saveAuthPage('forgot');
-
-document.getElementById('loginForm').style.display='none';
-document.getElementById('registerForm').style.display='none';
-document.getElementById('forgotForm').style.display='block';
+}else{
 document.getElementById('authTitle').textContent=currentLanguage==='en'
 ?'Forgot Password':'পাসওয়ার্ড ভুলে গেছেন?';
 document.getElementById('authSubtitle').textContent=currentLanguage==='en'
-?'Send a password reset link':'পাসওয়ার্ড রিসেট করার লিংক পাঠান';
-document.getElementById('forgotEmail').value=document.getElementById('loginEmail').value.trim();
+?'Enter your Email Address':'আপনার Email Address লিখুন';
+}
+
 authStatus('');
 applyLanguage();
 }
+
+/* AUTH PAGE BACK HISTORY */
+function showLoginForm(){
+if(currentAuthPage!=='login'&&history.state&&history.state.embdAuthPage){
+history.back();
+return;
+}
+displayAuthForm('login');
+}
+
+function showRegisterForm(){
+if(currentAuthPage==='register')return;
+history.pushState({embdAuthPage:'register'},'',location.href);
+displayAuthForm('register');
+}
+
+function showForgotForm(){
+if(currentAuthPage==='forgot')return;
+const loginEmail=document.getElementById('loginEmail').value.trim();
+const forgotEmail=document.getElementById('forgotEmail');
+if(!forgotEmail.value&&loginEmail){
+forgotEmail.value=loginEmail;
+saveAuthInputs();
+}
+history.pushState({embdAuthPage:'forgot'},'',location.href);
+displayAuthForm('forgot');
+}
+
+/* Browser / WebView Back: one auth page at a time */
+window.addEventListener('popstate',function(event){
+if(currentUser)return;
+const loginVisible=document.getElementById('loginScreen').style.display!=='none';
+if(!loginVisible)return;
+
+let page='login';
+if(event.state&&['login','register','forgot'].includes(event.state.embdAuthPage)){
+page=event.state.embdAuthPage;
+}
+displayAuthForm(page);
+});
 
 function authStatus(message,error=false){
 const s=document.getElementById('status');
 s.textContent=currentLanguage==='en'?translateText(message):restoreBangla(message);
 s.classList.toggle('auth-error',error);
+}
+
+function validEmail(email){
+return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 /* EMAIL LOGIN */
@@ -1081,8 +1142,8 @@ const email=document.getElementById('loginEmail').value.trim().toLowerCase();
 const password=document.getElementById('loginPassword').value;
 const btn=document.querySelector('#loginForm .auth-main-btn');
 
-if(!/^[a-z0-9._%+-]+@gmail.com$/i.test(email)){
-authStatus('অনুগ্রহ করে সঠিক Gmail Address দিন।',true);
+if(!validEmail(email)){
+authStatus('অনুগ্রহ করে সঠিক Email Address দিন।',true);
 return;
 }
 if(!password){
@@ -1095,11 +1156,12 @@ authStatus('Login হচ্ছে...');
 
 try{
 await auth.signInWithEmailAndPassword(email,password);
+clearAuthInputs();
 authStatus('Login সফল হয়েছে!');
 }catch(e){
 console.error(e);
 let msg='Login করা যায়নি। আবার চেষ্টা করুন।';
-if(e.code==='auth/user-not-found'||e.code==='auth/invalid-credential')msg='Gmail অথবা Password ভুল।';
+if(e.code==='auth/user-not-found'||e.code==='auth/invalid-credential')msg='Email অথবা Password ভুল।';
 if(e.code==='auth/wrong-password')msg='Password ভুল হয়েছে।';
 if(e.code==='auth/too-many-requests')msg='অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে চেষ্টা করুন।';
 authStatus(msg,true);
@@ -1120,8 +1182,8 @@ if(name.length<2){
 authStatus('অনুগ্রহ করে আপনার পুরো নাম লিখুন।',true);
 return;
 }
-if(!/^[a-z0-9._%+-]+@gmail.com$/i.test(email)){
-authStatus('অনুগ্রহ করে শুধু Gmail Address ব্যবহার করুন।',true);
+if(!validEmail(email)){
+authStatus('অনুগ্রহ করে সঠিক Email Address দিন।',true);
 return;
 }
 if(password.length<6){
@@ -1143,13 +1205,14 @@ await db.collection('users').doc(credential.user.uid).set({
 name:name,email:email,photoURL:'',balance:0,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
 },{merge:true});
+clearAuthInputs();
 authStatus('অ্যাকাউন্ট তৈরি হয়েছে! Dashboard খুলছে...');
 }catch(e){
 console.error(e);
 let msg='অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।';
-if(e.code==='auth/email-already-in-use')msg='এই Gmail দিয়ে আগে অ্যাকাউন্ট খোলা হয়েছে। Login করুন।';
+if(e.code==='auth/email-already-in-use')msg='এই Email দিয়ে আগে অ্যাকাউন্ট খোলা হয়েছে। Login করুন।';
 if(e.code==='auth/weak-password')msg='আরও শক্তিশালী Password ব্যবহার করুন।';
-if(e.code==='auth/invalid-email')msg='Gmail Address সঠিক নয়।';
+if(e.code==='auth/invalid-email')msg='Email Address সঠিক নয়।';
 if(e.code==='auth/operation-not-allowed')msg='Firebase Console থেকে Email/Password Login চালু করুন।';
 authStatus(msg,true);
 }finally{
@@ -1162,8 +1225,8 @@ async function resetPassword(){
 const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
 const btn=document.querySelector('#forgotForm .auth-main-btn');
 
-if(!/^[a-z0-9._%+-]+@gmail.com$/i.test(email)){
-authStatus('অনুগ্রহ করে সঠিক Gmail Address দিন।',true);
+if(!validEmail(email)){
+authStatus('অনুগ্রহ করে সঠিক Email Address দিন।',true);
 return;
 }
 
@@ -1172,12 +1235,12 @@ authStatus('Reset Link পাঠানো হচ্ছে...');
 
 try{
 await auth.sendPasswordResetEmail(email);
-authStatus('Reset Link পাঠানো হয়েছে। Gmail Inbox দেখুন।');
+authStatus('Reset Link পাঠানো হয়েছে। Email Inbox দেখুন।');
 }catch(e){
 console.error(e);
 let msg='Reset Link পাঠানো যায়নি। আবার চেষ্টা করুন।';
-if(e.code==='auth/user-not-found')msg='এই Gmail দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।';
-if(e.code==='auth/invalid-email')msg='Gmail Address সঠিক নয়।';
+if(e.code==='auth/user-not-found')msg='এই Email দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।';
+if(e.code==='auth/invalid-email')msg='Email Address সঠিক নয়।';
 authStatus(msg,true);
 }finally{
 btn.disabled=false;
@@ -1192,6 +1255,7 @@ authStatus('Google-এর সাথে সংযোগ হচ্ছে...');
 
 try{
 await auth.signInWithPopup(provider);
+clearAuthInputs();
 }catch(e){
 console.error(e);
 authStatus('Google Login করা যায়নি: '+e.message,true);
@@ -1199,7 +1263,7 @@ btn.disabled=false;
 }
 }
 
-/* NAVIGATION */
+/* NAVIGATION - DASHBOARD UNCHANGED */
 function openPage(id,savePage=true){
 const page=document.getElementById(id);
 if(!page)return;
@@ -1247,19 +1311,17 @@ login.style.display='flex';
 app.style.display='none';
 nav.style.display='none';
 
-/* Keep refresh protection active on all auth forms */
 setAuthRefreshProtection(true);
-
-/* Restore login/register/forgot page after website refresh */
 restoreAuthPage();
 
 document.getElementById('googleBtn').disabled=false;
 return;
 }
 
-/* User is logged in: remove auth-only refresh protection */
+/* User is logged in */
 setAuthRefreshProtection(false);
 sessionStorage.removeItem(AUTH_PAGE_KEY);
+clearAuthInputs();
 
 loading.style.display='flex';
 login.style.display='none';
@@ -1288,9 +1350,7 @@ document.getElementById('userName').textContent=finalName;
 
 const welcomeName=finalName.split(' ')[0];
 const welcomeTitle=document.querySelector('.welcome-copy strong');
-if(welcomeTitle){
-welcomeTitle.dataset.welcomeName=welcomeName;
-}
+if(welcomeTitle)welcomeTitle.dataset.welcomeName=welcomeName;
 
 document.getElementById('userPhoto').src=user.photoURL||'https://via.placeholder.com/80';
 document.getElementById('profilePhoto').src=user.photoURL||'https://via.placeholder.com/100';
@@ -1342,7 +1402,6 @@ if(s.exists)appSettings={...appSettings,...s.data()};
 console.error('Settings read error',e);
 toast('Admin-এর Bonus Settings পড়া যায়নি');
 }
-
 document.getElementById('bonusAmount').textContent=Number(appSettings.dailyBonus??10).toFixed(2);
 document.getElementById('adReward').textContent=Number(appSettings.adReward??0).toFixed(2);
 }
@@ -1383,9 +1442,7 @@ const uid=currentUser.uid;
 const today=todayKey();
 const amount=Number(appSettings.dailyBonus);
 
-if(!Number.isFinite(amount)||amount<=0){
-throw new Error('Admin-এর Bonus amount সঠিক নয়');
-}
+if(!Number.isFinite(amount)||amount<=0)throw new Error('Admin-এর Bonus amount সঠিক নয়');
 
 const userRef=db.collection('users').doc(uid);
 const claimRef=db.collection('bonusClaims').doc(uid+''+today);
@@ -1403,9 +1460,7 @@ if(claimSnap.exists)throw new Error('আজকের বোনাস ইতি�
 if(!configSnap.exists)throw new Error('Admin Bonus Settings পাওয়া যায়নি');
 
 const liveAmount=Number(configSnap.data().dailyBonus);
-if(!Number.isFinite(liveAmount)||liveAmount<=0){
-throw new Error('Admin Bonus amount সঠিক নয়');
-}
+if(!Number.isFinite(liveAmount)||liveAmount<=0)throw new Error('Admin Bonus amount সঠিক নয়');
 
 const oldBalance=Number(userSnap.data().balance||0);
 
@@ -1429,7 +1484,6 @@ createdAt:firebase.firestore.FieldValue.serverTimestamp()
 
 const updated=await userRef.get();
 userData=updated.data()||userData;
-
 renderUserData();
 await loadTodayStats();
 
@@ -1439,7 +1493,6 @@ toast(currentLanguage==='en'
 
 }catch(e){
 console.error('Daily bonus claim:',e);
-
 if(e.message&&e.message.toLowerCase().includes('already')){
 toast('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');
 }else{
@@ -1462,17 +1515,14 @@ if(!/^01[0-9]{9}$/.test(number)){
 toast('অনুগ্রহ করে সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন।');
 return;
 }
-
 if(!Number.isFinite(amount)||amount<=0){
 toast('অনুগ্রহ করে সঠিক টাকার পরিমাণ দিন।');
 return;
 }
-
 if(amount<Number(appSettings.minWithdraw||0)){
 toast('ন্যূনতম উত্তোলন ৳'+appSettings.minWithdraw);
 return;
 }
-
 if(amount>Number(userData.balance||0)){
 toast('আপনার পর্যাপ্ত ব্যালেন্স নেই।');
 return;
@@ -1487,7 +1537,6 @@ status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()
 toast('উত্তোলনের আবেদন জমা হয়েছে');
 document.getElementById('payNumber').value='';
 document.getElementById('withdrawAmount').value='';
-
 }catch(e){
 console.error(e);
 toast('আবেদন জমা হয়নি: Firestore Rules পরীক্ষা করুন');
@@ -1497,7 +1546,6 @@ toast('আবেদন জমা হয়নি: Firestore Rules পরীক্�
 /* REFERRAL */
 async function copyReferral(){
 const code=document.getElementById('refCode').value;
-
 try{
 await navigator.clipboard.writeText(code);
 toast('Referral code কপি হয়েছে');
@@ -1554,7 +1602,6 @@ box.append(item);
 });
 
 applyLanguage();
-
 }catch(e){
 box.innerHTML='<div class="empty">Tasks লোড করা যায়নি। Firestore Rules / Admin setup বাকি।</div>';
 applyLanguage();
@@ -1569,9 +1616,7 @@ uid:currentUser.uid,email:currentUser.email,taskId,
 title:task.title||'Task',reward:Number(task.reward||0),
 status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()
 });
-
 toast('Task submission জমা হয়েছে');
-
 }catch(e){
 console.error(e);
 toast('জমা হয়নি: Firestore Rules পরীক্ষা করুন');
@@ -1603,10 +1648,7 @@ claims.forEach(d=>{
 const data=d.data();
 const date=data.date||'';
 const bonusId='bonus'+date;
-
-if(!transactionIds.has(bonusId)){
-rows.push({...data,kind:'Daily Bonus'});
-}
+if(!transactionIds.has(bonusId))rows.push({...data,kind:'Daily Bonus'});
 });
 
 withdrawals.forEach(d=>{
@@ -1649,7 +1691,6 @@ box.append(el);
 });
 
 applyLanguage();
-
 }catch(e){
 console.error(e);
 box.innerHTML='<div class="empty">History দেখতে Firestore Rules আপডেট করতে হবে।</div>';
@@ -1663,9 +1704,8 @@ if(currentUser){
 sessionStorage.removeItem('embd_page_'+currentUser.uid);
 }
 
-/* Next time after logout, start from Login page */
 sessionStorage.removeItem(AUTH_PAGE_KEY);
-
+clearAuthInputs();
 await auth.signOut();
 toast('লগআউট সম্পন্ন হয়েছে');
 }
