@@ -29,8 +29,7 @@ button,input,select{font:inherit}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 
 /* AUTH PAGE REFRESH PROTECTION */
-html.auth-refresh-locked,
-body.auth-refresh-locked{overscroll-behavior-y:none}
+html.auth-refresh-locked,body.auth-refresh-locked{overscroll-behavior-y:none}
 #loginScreen{overscroll-behavior-y:contain}
 
 /* LANGUAGE SELECTOR */
@@ -352,22 +351,10 @@ color:#d8eaff;
 padding:11px 16px;border-radius:15px;font-size:13px;display:none;z-index:80;
 max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 }
-.toast.toast-error{
-background:linear-gradient(135deg,#6b2028,#351018);
-border-color:#ff7777;color:#ffd0d0;
-}
-.toast.toast-success{
-background:linear-gradient(135deg,#14583d,#0b3025);
-border-color:#42d6a0;color:#c9ffe3;
-}
-.toast.toast-warning{
-background:linear-gradient(135deg,#654713,#382609);
-border-color:#ffd45a;color:#fff0b5;
-}
-.toast.toast-info{
-background:linear-gradient(135deg,#173d68,#102744);
-border-color:#4b9bff;color:#d8eaff;
-}
+.toast.toast-error{background:linear-gradient(135deg,#6b2028,#351018);border-color:#ff7777;color:#ffd0d0}
+.toast.toast-success{background:linear-gradient(135deg,#14583d,#0b3025);border-color:#42d6a0;color:#c9ffe3}
+.toast.toast-warning{background:linear-gradient(135deg,#654713,#382609);border-color:#ffd45a;color:#fff0b5}
+.toast.toast-info{background:linear-gradient(135deg,#173d68,#102744);border-color:#4b9bff;color:#d8eaff}
 
 @media(max-width:390px){
 .app-shell{padding-left:11px;padding-right:11px}
@@ -386,7 +373,6 @@ border-color:#4b9bff;color:#d8eaff;
 
 <body>
 
-<!-- LANGUAGE SELECTOR -->
 <div class="language-selector">
 <button id="langBn" onclick="requestLanguage('bn')">বাংলা</button>
 <button id="langEn" onclick="requestLanguage('en')">English</button>
@@ -403,7 +389,6 @@ border-color:#4b9bff;color:#d8eaff;
 </div>
 </div>
 
-<!-- AUTH LOADING -->
 <div id="authLoading">
 <div style="font-size:25px;font-weight:800">EARNING <span style="color:#b18aff">MONEY BD</span></div>
 <div class="auth-spinner"></div>
@@ -464,7 +449,7 @@ border-color:#4b9bff;color:#d8eaff;
 <button type="button" class="password-eye" id="confirmPasswordEye" onclick="togglePassword('confirmPassword','confirmPasswordEye')" aria-label="Show password">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <path d="M3 3l18 18"></path><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
-<path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.5 15.5 0 0 1-3.1 3.8"></path>
+<path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.5 0 0 1-3.1 3.8"></path>
 <path d="M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7c1.4 0 2.7-.3 3.8-.8"></path>
 </svg>
 </button>
@@ -516,7 +501,6 @@ EARNING <span>MONEY BD</span>
 </div>
 </section>
 
-<!-- HOME DASHBOARD -->
 <main id="homePage" class="page active">
 <section class="balance">
 <div class="wallet-icon">👛</div>
@@ -561,14 +545,12 @@ EARNING <span>MONEY BD</span>
 </section>
 </main>
 
-<!-- TASKS -->
 <main id="tasksPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>📋 Tasks</h2></div>
 <p class="page-desc">Admin-এর দেওয়া কাজগুলো এখানে দেখা যাবে।</p>
 <div id="taskList" class="card"><div class="empty">কাজ লোড হচ্ছে...</div></div>
 </main>
 
-<!-- WALLET -->
 <main id="walletPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>👛 My Wallet</h2></div>
 <div class="wallet-summary">
@@ -589,7 +571,6 @@ EARNING <span>MONEY BD</span>
 </div>
 </main>
 
-<!-- REFERRAL -->
 <main id="referralPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>👥 Referral</h2></div>
 <div class="card">
@@ -601,7 +582,6 @@ EARNING <span>MONEY BD</span>
 </div>
 </main>
 
-<!-- PROFILE -->
 <main id="profilePage" class="page">
 <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>⚙️ Settings</h2></div>
 <div class="card">
@@ -617,7 +597,6 @@ EARNING <span>MONEY BD</span>
 </div>
 </main>
 
-<!-- DAILY BONUS -->
 <main id="bonusPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>🎁 Daily Bonus</h2></div>
 <div class="card">
@@ -629,7 +608,6 @@ EARNING <span>MONEY BD</span>
 </div>
 </main>
 
-<!-- ADS -->
 <main id="adsPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>▶️ Watch Ads</h2></div>
 <div class="card">
@@ -640,7 +618,6 @@ EARNING <span>MONEY BD</span>
 </div>
 </main>
 
-<!-- WITHDRAW -->
 <main id="withdrawPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('walletPage')">←</button><h2>💸 Withdraw</h2></div>
 <div class="card">
@@ -658,14 +635,12 @@ EARNING <span>MONEY BD</span>
 </div>
 </main>
 
-<!-- HISTORY -->
 <main id="historyPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('walletPage')">←</button><h2>📜 History</h2></div>
 <div class="card" id="historyList"><div class="empty">হিসাব লোড হচ্ছে...</div></div>
 </main>
 </div>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav" id="bottomNav" style="display:none">
 <button class="nav-btn active" data-nav="home" onclick="openPage('homePage')">
 <b><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7"></path><path d="M5 9v12h14V9"></path><path d="M9 21v-7h6v7"></path></svg></b><span>Home</span>
@@ -708,11 +683,8 @@ forgot:['forgotEmail']
 };
 
 function getAuthDrafts(){
-try{
-return JSON.parse(sessionStorage.getItem(AUTH_DRAFT_KEY)||'{}');
-}catch(e){
-return {};
-}
+try{return JSON.parse(sessionStorage.getItem(AUTH_DRAFT_KEY)||'{}')}
+catch(e){return {}}
 }
 
 function saveAuthDraft(page){
@@ -723,11 +695,8 @@ AUTH_PAGE_INPUTS[page].forEach(id=>{
 const input=document.getElementById(id);
 if(input)drafts[page][id]=input.value;
 });
-try{
-sessionStorage.setItem(AUTH_DRAFT_KEY,JSON.stringify(drafts));
-}catch(e){
-console.error('Draft save error:',e);
-}
+try{sessionStorage.setItem(AUTH_DRAFT_KEY,JSON.stringify(drafts))}
+catch(e){console.error('Draft save error:',e)}
 }
 
 function restoreAuthDraft(page){
@@ -735,13 +704,13 @@ const drafts=getAuthDrafts();
 const saved=drafts[page]||{};
 (AUTH_PAGE_INPUTS[page]||[]).forEach(id=>{
 const input=document.getElementById(id);
-if(input&&typeof saved[id]==='string')input.value=saved[id];
+if(input&&typeof saved[id]==='string'){
+input.value=id==='registerName'?filterNameCharacters(saved[id]):saved[id];
+}
 });
 }
 
-function clearAuthDrafts(){
-sessionStorage.removeItem(AUTH_DRAFT_KEY);
-}
+function clearAuthDrafts(){sessionStorage.removeItem(AUTH_DRAFT_KEY)}
 
 function clearAuthFormInputs(page){
 const ids=AUTH_PAGE_INPUTS[page]||[];
@@ -759,7 +728,13 @@ Object.keys(AUTH_PAGE_INPUTS).forEach(page=>{
 AUTH_PAGE_INPUTS[page].forEach(id=>{
 const input=document.getElementById(id);
 if(input){
-input.addEventListener('input',()=>saveAuthDraft(page));
+input.addEventListener('input',()=>{
+if(id==='registerName'){
+const filtered=filterNameCharacters(input.value);
+if(input.value!==filtered)input.value=filtered;
+}
+saveAuthDraft(page);
+});
 input.addEventListener('change',()=>saveAuthDraft(page));
 }
 });
@@ -772,8 +747,7 @@ let pendingLanguage=null;
 const translations={
 'ভাষা পরিবর্তন':'Change Language',
 'আপনি কি অ্যাপের ভাষা পরিবর্তন করতে চান?':'Would you like to change the app language?',
-'না':'No',
-'হ্যাঁ':'Yes',
+'না':'No','হ্যাঁ':'Yes',
 'আপনার অ্যাকাউন্টে লগইন করুন':'Log in to your account',
 'নতুন অ্যাকাউন্ট তৈরি করুন':'Create a New Account',
 'পাসওয়ার্ড ভুলে গেছেন?':'Forgot Password?',
@@ -811,16 +785,17 @@ const translations={
 'বন্ধুদের আমন্ত্রণ জানান এবং আপনার আয় বাড়ান!':'Invite friends and increase your earnings!',
 'সাম্প্রতিক হিসাব দেখতে History খুলুন।':'Open History to see recent activity.',
 
-/* USER REQUESTED ALERT TRANSLATIONS - EXACT WORDING */
+/* NAME ALERTS - UPDATED */
+'অনুগ্রহ করে আপনার সম্পূর্ণ নাম লিখুন。':'Please enter your full name.',
+'আপনার নাম কমপক্ষে ৩ অক্ষরের হতে হবে।':'Your name must contain at least 3 characters.',
+'নামের ঘরে শুধুমাত্র বাংলা, ইংরেজি অক্ষর ও স্পেস ব্যবহার করুন।':'Only Bangla letters, English letters, and spaces are allowed in the name.',
+
 'অনুগ্রহ করে আপনার ইমেইল ঠিকানা লিখুন।':'Please enter your email address.',
 'অনুগ্রহ করে সঠিক ইমেইল ঠিকানা লিখুন।':'Please enter a valid email address.',
 'অনুগ্রহ করে আপনার পাসওয়ার্ড লিখুন।':'Please enter your password.',
 'আপনার পাসওয়ার্ড সঠিক নয়। অনুগ্রহ করে সঠিক পাসওয়ার্ড লিখুন।':'Incorrect password. Please enter the correct password.',
 'ইমেইল ঠিকানা অথবা পাসওয়ার্ড সঠিক নয়।':'Incorrect email address or password.',
 'আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।':'Please check your internet connection and try again.',
-'অনুগ্রহ করে আপনার সম্পূর্ণ নাম লিখুন।':'Please enter your full name.',
-'আপনার নাম কমপক্ষে ৩ শব্দের হতে হবে।':'Your name must contain at least 3 words.',
-'শুধুমাত্র @gmail.com যুক্ত ইমেইল ঠিকানা ব্যবহার করুন।':'Only @gmail.com email addresses are allowed.',
 'অনুগ্রহ করে একটি পাসওয়ার্ড তৈরি করুন।':'Please create a password.',
 'আপনার পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।':'Your password must be at least 6 characters long.',
 'অনুগ্রহ করে পাসওয়ার্ডটি আবার লিখুন।':'Please confirm your password.',
@@ -985,9 +960,8 @@ el.setAttribute(attr,currentLanguage==='en'?translateText(original):restoreBangl
 });
 
 const continueBtn=document.getElementById('forgotContinueBtn');
-if(continueBtn){
-continueBtn.textContent=currentLanguage==='en'?'Continue':'চালিয়ে যান';
-}
+if(continueBtn)continueBtn.textContent=currentLanguage==='en'?'Continue':'চালিয়ে যান';
+
 applyConfirmLanguage();
 updateWelcomeLanguage();
 }
@@ -1045,49 +1019,56 @@ let currentUser=null;
 let appSettings={dailyBonus:10,adReward:0,minWithdraw:0};
 let userData={balance:0};
 
+/* NAME VALIDATION - ONLY BANGLA, ENGLISH LETTERS AND SPACE */
+const NAME_ALLOWED_REGEX=/^[A-Za-z\u0981-\u0983\u0985-\u09B9\u09BC\u09BE-\u09CD\u09CE\u09D7\u09DC-\u09DF\u09E0-\u09E3\u09F0-\u09F1 ]+$/u;
+const NAME_FILTER_REGEX=/[^A-Za-z\u0981-\u0983\u0985-\u09B9\u09BC\u09BE-\u09CD\u09CE\u09D7\u09DC-\u09DF\u09E0-\u09E3\u09F0-\u09F1 ]/gu;
+
+function filterNameCharacters(value){
+return String(value||'').replace(NAME_FILTER_REGEX,'');
+}
+
+function countNameCharacters(value){
+const clean=String(value||'').trim().normalize('NFC');
+if(!clean)return 0;
+
+if(typeof Intl!=='undefined'&&Intl.Segmenter){
+const segmenter=new Intl.Segmenter('bn',{granularity:'grapheme'});
+return Array.from(segmenter.segment(clean)).length;
+}
+return Array.from(clean).length;
+}
+
+function isValidNameCharacters(value){
+return NAME_ALLOWED_REGEX.test(value);
+}
+
 /* ALERT TYPE DETECTION */
 function detectAlertType(message){
 const text=String(message||'');
 
 if(
-text.includes('অভিনন্দন')||
-text.includes('সফলভাবে')||
-text.includes('যোগ হয়েছে')||
-text.includes('জমা হয়েছে')||
-text.includes('কপি হয়েছে')||
-text.includes('সম্পন্ন হয়েছে')||
-text.includes('Congratulations')||
-text.includes('successfully')||
-text.includes('submitted')||
-text.includes('copied')
+text.includes('অভিনন্দন')||text.includes('সফলভাবে')||
+text.includes('যোগ হয়েছে')||text.includes('জমা হয়েছে')||
+text.includes('কপি হয়েছে')||text.includes('সম্পন্ন হয়েছে')||
+text.includes('Congratulations')||text.includes('successfully')||
+text.includes('submitted')||text.includes('copied')
 )return 'success';
 
 if(
-text.includes('ইতোমধ্যে নেওয়া হয়েছে')||
-text.includes('ন্যূনতম উত্তোলন')||
-text.includes('পর্যাপ্ত ব্যালেন্স নেই')||
-text.includes('সঠিক ১১ সংখ্যার')||
-text.includes('সঠিক টাকার পরিমাণ')||
-text.includes('already been claimed')||
-text.includes('Minimum withdrawal')||
-text.includes('Insufficient balance')||
-text.includes('valid 11-digit')||
-text.includes('valid amount')
+text.includes('ইতোমধ্যে নেওয়া হয়েছে')||text.includes('ন্যূনতম উত্তোলন')||
+text.includes('পর্যাপ্ত ব্যালেন্স নেই')||text.includes('সঠিক ১১ সংখ্যার')||
+text.includes('সঠিক টাকার পরিমাণ')||text.includes('already been claimed')||
+text.includes('Minimum withdrawal')||text.includes('Insufficient balance')||
+text.includes('valid 11-digit')||text.includes('valid amount')
 )return 'warning';
 
 if(
-text.includes('ভুল')||
-text.includes('সঠিক নয়')||
-text.includes('সমস্যা')||
-text.includes('হয়নি')||
-text.includes('যায়নি')||
-text.includes('পাওয়া যায়নি')||
-text.includes('ব্যর্থ')||
-text.includes('পরীক্ষা করুন')||
-text.includes('failed')||
-text.includes('Incorrect')||
-text.includes('Unable')||
-text.includes('Could not')||
+text.includes('ভুল')||text.includes('সঠিক নয়')||
+text.includes('সমস্যা')||text.includes('হয়নি')||
+text.includes('যায়নি')||text.includes('পাওয়া যায়নি')||
+text.includes('ব্যর্থ')||text.includes('পরীক্ষা করুন')||
+text.includes('failed')||text.includes('Incorrect')||
+text.includes('Unable')||text.includes('Could not')||
 text.includes('problem')
 )return 'error';
 
@@ -1152,9 +1133,7 @@ s.classList.remove('auth-error','auth-success','auth-warning','auth-info');
 s.classList.add('auth-'+type);
 s.style.display='block';
 
-authStatusTimer=setTimeout(()=>{
-s.style.display='none';
-},3500);
+authStatusTimer=setTimeout(()=>{s.style.display='none'},3500);
 }
 
 function validEmail(email){
@@ -1267,14 +1246,12 @@ msg='অনেকবার চেষ্টা হয়েছে। কিছুক
 msg='আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।';
 }
 authStatus(msg,'error');
-}finally{
-btn.disabled=false;
-}
+}finally{btn.disabled=false}
 }
 
-/* CREATE ACCOUNT */
+/* CREATE ACCOUNT - UPDATED NAME VALIDATION */
 async function registerAccount(){
-const name=document.getElementById('registerName').value.trim();
+const name=document.getElementById('registerName').value.trim().normalize('NFC');
 const email=document.getElementById('registerEmail').value.trim().toLowerCase();
 const password=document.getElementById('registerPassword').value;
 const confirm=document.getElementById('confirmPassword').value;
@@ -1285,9 +1262,15 @@ authStatus('অনুগ্রহ করে আপনার সম্পূর�
 return;
 }
 
-const nameWords=name.split(/\s+/).filter(Boolean);
-if(nameWords.length<3){
-authStatus('আপনার নাম কমপক্ষে ৩ শব্দের হতে হবে।','error');
+/* শুধু বাংলা, ইংরেজি অক্ষর এবং সাধারণ স্পেস */
+if(!isValidNameCharacters(name)){
+authStatus('নামের ঘরে শুধুমাত্র বাংলা, ইংরেজি অক্ষর ও স্পেস ব্যবহার করুন।','error');
+return;
+}
+
+/* ৩টি শব্দ নয়, কমপক্ষে ৩টি অক্ষর */
+if(countNameCharacters(name)<3){
+authStatus('আপনার নাম কমপক্ষে ৩ অক্ষরের হতে হবে।','error');
 return;
 }
 
@@ -1345,9 +1328,7 @@ msg='আপনার ইন্টারনেট সংযোগ পরীক্
 msg='আপনার অ্যাকাউন্ট তৈরি করা সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।';
 }
 authStatus(msg,'error');
-}finally{
-btn.disabled=false;
-}
+}finally{btn.disabled=false}
 }
 
 /* FORGOT PASSWORD */
@@ -1377,9 +1358,7 @@ if(e.code==='auth/user-not-found')msg='এই Email দিয়ে কোনো �
 if(e.code==='auth/invalid-email')msg='অনুগ্রহ করে সঠিক ইমেইল ঠিকানা লিখুন।';
 if(e.code==='auth/network-request-failed')msg='আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।';
 authStatus(msg,'error');
-}finally{
-btn.disabled=false;
-}
+}finally{btn.disabled=false}
 }
 
 /* GOOGLE LOGIN */
@@ -1421,9 +1400,7 @@ else if(id==='profilePage')navName='me';
 const nav=document.querySelector('.nav-btn[data-nav="'+navName+'"]');
 if(nav)nav.classList.add('active');
 
-if(savePage&&currentUser){
-sessionStorage.setItem('embd_page_'+currentUser.uid,id);
-}
+if(savePage&&currentUser)sessionStorage.setItem('embd_page_'+currentUser.uid,id);
 window.scrollTo(0,0);
 if(id==='historyPage')loadHistory();
 if(id==='tasksPage')loadTasks();
@@ -1571,7 +1548,7 @@ if(x.type==='task')count++;
 });
 document.getElementById('todayEarn').textContent=total.toFixed(2);
 document.getElementById('taskCount').textContent=count;
-}catch(e){console.log('Stats:',e.message);}
+}catch(e){console.log('Stats:',e.message)}
 }
 
 /* DAILY BONUS */
@@ -1640,9 +1617,7 @@ toast('আজকের বোনাস ইতিমধ্যে নেওয়া 
 }else{
 toast(e.message||'বোনাস যোগ হয়নি। Firestore Rules পরীক্ষা করুন','error');
 }
-}finally{
-btn.disabled=false;
-}
+}finally{btn.disabled=false}
 }
 
 /* WITHDRAW */
@@ -1788,9 +1763,7 @@ const bonusId='bonus'+date;
 if(!transactionIds.has(bonusId))rows.push({...data,kind:'Daily Bonus'});
 });
 
-withdrawals.forEach(d=>{
-rows.push({...d.data(),kind:'Withdraw'});
-});
+withdrawals.forEach(d=>rows.push({...d.data(),kind:'Withdraw'}));
 
 rows.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
 
@@ -1835,9 +1808,7 @@ applyLanguage();
 
 /* LOGOUT */
 async function logout(){
-if(currentUser){
-sessionStorage.removeItem('embd_page_'+currentUser.uid);
-}
+if(currentUser)sessionStorage.removeItem('embd_page_'+currentUser.uid);
 sessionStorage.removeItem(AUTH_PAGE_KEY);
 clearAllAuthInputs();
 clearAuthDrafts();
