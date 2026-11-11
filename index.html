@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -111,15 +110,27 @@ box-shadow:0 7px 20px #0003;
 #status{
 position:fixed;top:62px;left:50%;transform:translateX(-50%);
 width:max-content;max-width:calc(100% - 28px);min-width:180px;
-padding:12px 17px;border:1px solid #e2bb6a;border-radius:15px;
-background:linear-gradient(135deg,#3b234b,#21132f);
-color:#fff;font-size:13px;font-weight:600;text-align:center;
+padding:12px 17px;border:1px solid #4b9bff;border-radius:15px;
+background:linear-gradient(135deg,#173d68,#102744);
+color:#d8eaff;font-size:13px;font-weight:600;text-align:center;
 overflow-wrap:anywhere;box-shadow:0 8px 30px #0009;
 z-index:12000;display:none;animation:topToastIn .25s ease;
 }
 #status.auth-error{
-color:#ffb0b0!important;border-color:#ff7777;
-background:linear-gradient(135deg,#4a202d,#271321);
+color:#ffd0d0!important;border-color:#ff7777;
+background:linear-gradient(135deg,#6b2028,#351018);
+}
+#status.auth-success{
+color:#c9ffe3!important;border-color:#42d6a0;
+background:linear-gradient(135deg,#14583d,#0b3025);
+}
+#status.auth-warning{
+color:#fff0b5!important;border-color:#ffd45a;
+background:linear-gradient(135deg,#654713,#382609);
+}
+#status.auth-info{
+color:#d8eaff!important;border-color:#4b9bff;
+background:linear-gradient(135deg,#173d68,#102744);
 }
 @keyframes topToastIn{
 from{opacity:0;transform:translate(-50%,-12px)}
@@ -336,10 +347,28 @@ font-family:'Hind Siliguri',Poppins,sans-serif;transition:.2s ease;
 /* NORMAL APP TOAST */
 .toast{
 position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
-background:linear-gradient(135deg,#3b234b,#21132f);border:1px solid #e2bb6a;
+background:linear-gradient(135deg,#173d68,#102744);border:1px solid #4b9bff;
+color:#d8eaff;
 padding:11px 16px;border-radius:15px;font-size:13px;display:none;z-index:80;
 max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 }
+.toast.toast-error{
+background:linear-gradient(135deg,#6b2028,#351018);
+border-color:#ff7777;color:#ffd0d0;
+}
+.toast.toast-success{
+background:linear-gradient(135deg,#14583d,#0b3025);
+border-color:#42d6a0;color:#c9ffe3;
+}
+.toast.toast-warning{
+background:linear-gradient(135deg,#654713,#382609);
+border-color:#ffd45a;color:#fff0b5;
+}
+.toast.toast-info{
+background:linear-gradient(135deg,#173d68,#102744);
+border-color:#4b9bff;color:#d8eaff;
+}
+
 @media(max-width:390px){
 .app-shell{padding-left:11px;padding-right:11px}
 .balance{grid-template-columns:58px 1fr;padding:16px 11px;gap:7px}
@@ -688,15 +717,12 @@ return {};
 
 function saveAuthDraft(page){
 if(!AUTH_PAGE_INPUTS[page])return;
-
 const drafts=getAuthDrafts();
 drafts[page]={};
-
 AUTH_PAGE_INPUTS[page].forEach(id=>{
 const input=document.getElementById(id);
 if(input)drafts[page][id]=input.value;
 });
-
 try{
 sessionStorage.setItem(AUTH_DRAFT_KEY,JSON.stringify(drafts));
 }catch(e){
@@ -707,12 +733,9 @@ console.error('Draft save error:',e);
 function restoreAuthDraft(page){
 const drafts=getAuthDrafts();
 const saved=drafts[page]||{};
-
 (AUTH_PAGE_INPUTS[page]||[]).forEach(id=>{
 const input=document.getElementById(id);
-if(input&&typeof saved[id]==='string'){
-input.value=saved[id];
-}
+if(input&&typeof saved[id]==='string')input.value=saved[id];
 });
 }
 
@@ -732,7 +755,6 @@ function clearAllAuthInputs(){
 Object.keys(AUTH_PAGE_INPUTS).forEach(clearAuthFormInputs);
 }
 
-/* ইনপুটে লেখা পরিবর্তন হলেই Refresh-এর জন্য সেভ হবে */
 Object.keys(AUTH_PAGE_INPUTS).forEach(page=>{
 AUTH_PAGE_INPUTS[page].forEach(id=>{
 const input=document.getElementById(id);
@@ -788,6 +810,25 @@ const translations={
 'আপনার আয় এবং উত্তোলনের হিসাব এখানে দেখতে পারবেন।':'You can see your earnings and withdrawal records here.',
 'বন্ধুদের আমন্ত্রণ জানান এবং আপনার আয় বাড়ান!':'Invite friends and increase your earnings!',
 'সাম্প্রতিক হিসাব দেখতে History খুলুন।':'Open History to see recent activity.',
+
+/* USER REQUESTED ALERT TRANSLATIONS - EXACT WORDING */
+'অনুগ্রহ করে আপনার ইমেইল ঠিকানা লিখুন।':'Please enter your email address.',
+'অনুগ্রহ করে সঠিক ইমেইল ঠিকানা লিখুন।':'Please enter a valid email address.',
+'অনুগ্রহ করে আপনার পাসওয়ার্ড লিখুন।':'Please enter your password.',
+'আপনার পাসওয়ার্ড সঠিক নয়। অনুগ্রহ করে সঠিক পাসওয়ার্ড লিখুন।':'Incorrect password. Please enter the correct password.',
+'ইমেইল ঠিকানা অথবা পাসওয়ার্ড সঠিক নয়।':'Incorrect email address or password.',
+'আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।':'Please check your internet connection and try again.',
+'অনুগ্রহ করে আপনার সম্পূর্ণ নাম লিখুন।':'Please enter your full name.',
+'আপনার নাম কমপক্ষে ৩ শব্দের হতে হবে।':'Your name must contain at least 3 words.',
+'শুধুমাত্র @gmail.com যুক্ত ইমেইল ঠিকানা ব্যবহার করুন।':'Only @gmail.com email addresses are allowed.',
+'অনুগ্রহ করে একটি পাসওয়ার্ড তৈরি করুন।':'Please create a password.',
+'আপনার পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।':'Your password must be at least 6 characters long.',
+'অনুগ্রহ করে পাসওয়ার্ডটি আবার লিখুন।':'Please confirm your password.',
+'দুটি পাসওয়ার্ড মিলছে না। অনুগ্রহ করে আবার লিখুন।':'The passwords do not match. Please try again.',
+'এই ইমেইল ঠিকানা দিয়ে ইতোমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে। অনুগ্রহ করে লগইন করুন।':'An account already exists with this email address. Please log in.',
+'অভিনন্দন! আপনার অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে।':'Congratulations! Your account has been created successfully.',
+'আপনার অ্যাকাউন্ট তৈরি করা সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।':'Unable to create your account. Please try again.',
+
 'আপনার পুরো নাম লিখুন।':'Enter your full name.',
 'অনুগ্রহ করে সঠিক Email Address দিন।':'Enter a valid Email Address.',
 'অনুগ্রহ করে Email Address ব্যবহার করুন।':'Enter an Email Address.',
@@ -943,12 +984,10 @@ el.setAttribute(attr,currentLanguage==='en'?translateText(original):restoreBangl
 });
 });
 
-/* FORGOT PASSWORD BUTTON LANGUAGE */
 const continueBtn=document.getElementById('forgotContinueBtn');
 if(continueBtn){
 continueBtn.textContent=currentLanguage==='en'?'Continue':'চালিয়ে যান';
 }
-
 applyConfirmLanguage();
 updateWelcomeLanguage();
 }
@@ -1006,13 +1045,65 @@ let currentUser=null;
 let appSettings={dailyBonus:10,adReward:0,minWithdraw:0};
 let userData={balance:0};
 
+/* ALERT TYPE DETECTION */
+function detectAlertType(message){
+const text=String(message||'');
+
+if(
+text.includes('অভিনন্দন')||
+text.includes('সফলভাবে')||
+text.includes('যোগ হয়েছে')||
+text.includes('জমা হয়েছে')||
+text.includes('কপি হয়েছে')||
+text.includes('সম্পন্ন হয়েছে')||
+text.includes('Congratulations')||
+text.includes('successfully')||
+text.includes('submitted')||
+text.includes('copied')
+)return 'success';
+
+if(
+text.includes('ইতোমধ্যে নেওয়া হয়েছে')||
+text.includes('ন্যূনতম উত্তোলন')||
+text.includes('পর্যাপ্ত ব্যালেন্স নেই')||
+text.includes('সঠিক ১১ সংখ্যার')||
+text.includes('সঠিক টাকার পরিমাণ')||
+text.includes('already been claimed')||
+text.includes('Minimum withdrawal')||
+text.includes('Insufficient balance')||
+text.includes('valid 11-digit')||
+text.includes('valid amount')
+)return 'warning';
+
+if(
+text.includes('ভুল')||
+text.includes('সঠিক নয়')||
+text.includes('সমস্যা')||
+text.includes('হয়নি')||
+text.includes('যায়নি')||
+text.includes('পাওয়া যায়নি')||
+text.includes('ব্যর্থ')||
+text.includes('পরীক্ষা করুন')||
+text.includes('failed')||
+text.includes('Incorrect')||
+text.includes('Unable')||
+text.includes('Could not')||
+text.includes('problem')
+)return 'error';
+
+return 'info';
+}
+
 /* NORMAL APP TOAST */
-function toast(message){
+function toast(message,type){
 const t=document.getElementById('toast');
+const alertType=type||detectAlertType(message);
+t.classList.remove('toast-error','toast-success','toast-warning','toast-info');
+t.classList.add('toast-'+alertType);
 t.textContent=currentLanguage==='en'?translateText(message):restoreBangla(message);
 t.style.display='block';
 clearTimeout(window.toastTimer);
-window.toastTimer=setTimeout(()=>t.style.display='none',2600);
+window.toastTimer=setTimeout(()=>t.style.display='none',3000);
 }
 
 function todayKey(){
@@ -1042,24 +1133,28 @@ button.setAttribute('aria-label',currentLanguage==='en'?'Show password':'পা�
 /* AUTH STATUS */
 let authStatusTimer=null;
 
-function authStatus(message,error=false){
+function authStatus(message,type='info'){
 const s=document.getElementById('status');
 clearTimeout(authStatusTimer);
 
 if(!message){
 s.textContent='';
 s.style.display='none';
-s.classList.remove('auth-error');
+s.classList.remove('auth-error','auth-success','auth-warning','auth-info');
 return;
 }
 
+if(typeof type==='boolean')type=type?'error':'info';
+if(!['error','success','warning','info'].includes(type))type='info';
+
 s.textContent=currentLanguage==='en'?translateText(message):restoreBangla(message);
-s.classList.toggle('auth-error',error);
+s.classList.remove('auth-error','auth-success','auth-warning','auth-info');
+s.classList.add('auth-'+type);
 s.style.display='block';
 
 authStatusTimer=setTimeout(()=>{
 s.style.display='none';
-},3000);
+},3500);
 }
 
 function validEmail(email){
@@ -1070,13 +1165,10 @@ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 let currentAuthPage='login';
 
 function displayAuthForm(page){
-/* পেজ পরিবর্তনের সময় আগের ও নতুন পেজের ইনপুট পরিষ্কার */
 if(page!==currentAuthPage){
 clearAuthFormInputs(currentAuthPage);
 clearAuthFormInputs(page);
 }
-
-/* একই পেজে নতুন করে ফিরলেও ফাঁকা রাখা */
 currentAuthPage=page;
 saveAuthPage(page);
 
@@ -1120,8 +1212,6 @@ displayAuthForm('register');
 
 function showForgotForm(){
 if(currentAuthPage==='forgot')return;
-
-/* Login পেজের Gmail আর Forgot পেজে কপি হবে না */
 history.pushState({embdAuthPage:'forgot'},'',location.href);
 displayAuthForm('forgot');
 }
@@ -1130,7 +1220,6 @@ window.addEventListener('popstate',function(event){
 if(currentUser)return;
 const loginVisible=document.getElementById('loginScreen').style.display!=='none';
 if(!loginVisible)return;
-
 let page='login';
 if(event.state&&['login','register','forgot'].includes(event.state.embdAuthPage)){
 page=event.state.embdAuthPage;
@@ -1144,30 +1233,40 @@ const email=document.getElementById('loginEmail').value.trim().toLowerCase();
 const password=document.getElementById('loginPassword').value;
 const btn=document.querySelector('#loginForm .auth-main-btn');
 
+if(!email){
+authStatus('অনুগ্রহ করে আপনার ইমেইল ঠিকানা লিখুন।','error');
+return;
+}
 if(!validEmail(email)){
-authStatus('অনুগ্রহ করে সঠিক Email Address দিন।',true);
+authStatus('অনুগ্রহ করে সঠিক ইমেইল ঠিকানা লিখুন।','error');
 return;
 }
 if(!password){
-authStatus('অনুগ্রহ করে Password লিখুন।',true);
+authStatus('অনুগ্রহ করে আপনার পাসওয়ার্ড লিখুন।','error');
 return;
 }
 
 btn.disabled=true;
-authStatus('Login হচ্ছে...');
+authStatus('Login হচ্ছে...','info');
 
 try{
 await auth.signInWithEmailAndPassword(email,password);
 clearAllAuthInputs();
 clearAuthDrafts();
-authStatus('Login সফল হয়েছে!');
+authStatus('Login সফল হয়েছে!','success');
 }catch(e){
 console.error(e);
-let msg='Login করা যায়নি। আবার চেষ্টা করুন।';
-if(e.code==='auth/user-not-found'||e.code==='auth/invalid-credential')msg='Email অথবা Password ভুল।';
-if(e.code==='auth/wrong-password')msg='Password ভুল হয়েছে।';
-if(e.code==='auth/too-many-requests')msg='অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে চেষ্টা করুন।';
-authStatus(msg,true);
+let msg='ইমেইল ঠিকানা অথবা পাসওয়ার্ড সঠিক নয়।';
+if(e.code==='auth/wrong-password'){
+msg='আপনার পাসওয়ার্ড সঠিক নয়। অনুগ্রহ করে সঠিক পাসওয়ার্ড লিখুন।';
+}else if(e.code==='auth/user-not-found'||e.code==='auth/invalid-credential'){
+msg='ইমেইল ঠিকানা অথবা পাসওয়ার্ড সঠিক নয়।';
+}else if(e.code==='auth/too-many-requests'){
+msg='অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে চেষ্টা করুন।';
+}else if(e.code==='auth/network-request-failed'){
+msg='আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।';
+}
+authStatus(msg,'error');
 }finally{
 btn.disabled=false;
 }
@@ -1181,25 +1280,49 @@ const password=document.getElementById('registerPassword').value;
 const confirm=document.getElementById('confirmPassword').value;
 const btn=document.querySelector('#registerForm .auth-main-btn');
 
-if(name.length<2){
-authStatus('অনুগ্রহ করে আপনার পুরো নাম লিখুন।',true);
+if(!name){
+authStatus('অনুগ্রহ করে আপনার সম্পূর্ণ নাম লিখুন।','error');
+return;
+}
+
+const nameWords=name.split(/\s+/).filter(Boolean);
+if(nameWords.length<3){
+authStatus('আপনার নাম কমপক্ষে ৩ শব্দের হতে হবে।','error');
+return;
+}
+
+if(!email){
+authStatus('অনুগ্রহ করে আপনার ইমেইল ঠিকানা লিখুন।','error');
 return;
 }
 if(!validEmail(email)){
-authStatus('অনুগ্রহ করে সঠিক Email Address দিন।',true);
+authStatus('অনুগ্রহ করে সঠিক ইমেইল ঠিকানা লিখুন।','error');
+return;
+}
+if(!email.toLowerCase().endsWith('@gmail.com')){
+authStatus('শুধুমাত্র @gmail.com যুক্ত ইমেইল ঠিকানা ব্যবহার করুন।','error');
+return;
+}
+
+if(!password){
+authStatus('অনুগ্রহ করে একটি পাসওয়ার্ড তৈরি করুন।','error');
 return;
 }
 if(password.length<6){
-authStatus('Password কমপক্ষে ৬ অক্ষরের হতে হবে।',true);
+authStatus('আপনার পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।','error');
+return;
+}
+if(!confirm){
+authStatus('অনুগ্রহ করে পাসওয়ার্ডটি আবার লিখুন।','error');
 return;
 }
 if(password!==confirm){
-authStatus('দুটি Password মিলছে না।',true);
+authStatus('দুটি পাসওয়ার্ড মিলছে না। অনুগ্রহ করে আবার লিখুন।','error');
 return;
 }
 
 btn.disabled=true;
-authStatus('অ্যাকাউন্ট তৈরি হচ্ছে...');
+authStatus('অ্যাকাউন্ট তৈরি হচ্ছে...','info');
 
 try{
 const credential=await auth.createUserWithEmailAndPassword(email,password);
@@ -1210,15 +1333,18 @@ createdAt:firebase.firestore.FieldValue.serverTimestamp()
 },{merge:true});
 clearAllAuthInputs();
 clearAuthDrafts();
-authStatus('অ্যাকাউন্ট তৈরি হয়েছে! Dashboard খুলছে...');
+toast('অভিনন্দন! আপনার অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে।','success');
 }catch(e){
 console.error(e);
-let msg='অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।';
-if(e.code==='auth/email-already-in-use')msg='এই Email দিয়ে আগে অ্যাকাউন্ট খোলা হয়েছে। Login করুন।';
-if(e.code==='auth/weak-password')msg='আরও শক্তিশালী Password ব্যবহার করুন।';
-if(e.code==='auth/invalid-email')msg='Email Address সঠিক নয়।';
-if(e.code==='auth/operation-not-allowed')msg='Firebase Console থেকে Email/Password Login চালু করুন।';
-authStatus(msg,true);
+let msg='আপনার অ্যাকাউন্ট তৈরি করা সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।';
+if(e.code==='auth/email-already-in-use'){
+msg='এই ইমেইল ঠিকানা দিয়ে ইতোমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে। অনুগ্রহ করে লগইন করুন।';
+}else if(e.code==='auth/network-request-failed'){
+msg='আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।';
+}else if(e.code==='auth/operation-not-allowed'){
+msg='আপনার অ্যাকাউন্ট তৈরি করা সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।';
+}
+authStatus(msg,'error');
 }finally{
 btn.disabled=false;
 }
@@ -1229,23 +1355,28 @@ async function resetPassword(){
 const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
 const btn=document.querySelector('#forgotForm .auth-main-btn');
 
+if(!email){
+authStatus('অনুগ্রহ করে আপনার ইমেইল ঠিকানা লিখুন।','error');
+return;
+}
 if(!validEmail(email)){
-authStatus('অনুগ্রহ করে সঠিক Email Address দিন।',true);
+authStatus('অনুগ্রহ করে সঠিক ইমেইল ঠিকানা লিখুন।','error');
 return;
 }
 
 btn.disabled=true;
-authStatus('Reset Link পাঠানো হচ্ছে...');
+authStatus('Reset Link পাঠানো হচ্ছে...','info');
 
 try{
 await auth.sendPasswordResetEmail(email);
-authStatus('Reset Link পাঠানো হয়েছে। Email Inbox দেখুন।');
+authStatus('Reset Link পাঠানো হয়েছে। Email Inbox দেখুন।','success');
 }catch(e){
 console.error(e);
 let msg='Reset Link পাঠানো যায়নি। আবার চেষ্টা করুন।';
 if(e.code==='auth/user-not-found')msg='এই Email দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।';
-if(e.code==='auth/invalid-email')msg='Email Address সঠিক নয়।';
-authStatus(msg,true);
+if(e.code==='auth/invalid-email')msg='অনুগ্রহ করে সঠিক ইমেইল ঠিকানা লিখুন।';
+if(e.code==='auth/network-request-failed')msg='আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।';
+authStatus(msg,'error');
 }finally{
 btn.disabled=false;
 }
@@ -1255,7 +1386,7 @@ btn.disabled=false;
 async function googleLogin(){
 const btn=document.getElementById('googleBtn');
 btn.disabled=true;
-authStatus('Google-এর সাথে সংযোগ হচ্ছে...');
+authStatus('Google-এর সাথে সংযোগ হচ্ছে...','info');
 
 try{
 await auth.signInWithPopup(provider);
@@ -1263,7 +1394,11 @@ clearAllAuthInputs();
 clearAuthDrafts();
 }catch(e){
 console.error(e);
-authStatus('Google Login করা যায়নি: '+e.message,true);
+if(e.code==='auth/network-request-failed'){
+authStatus('আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।','error');
+}else{
+authStatus('Google Login করা যায়নি: '+e.message,'error');
+}
 btn.disabled=false;
 }
 }
@@ -1384,7 +1519,7 @@ app.style.display='block';
 nav.style.display='grid';
 openPage('homePage',false);
 loading.style.display='none';
-toast('ডেটাবেস সংযোগে সমস্যা হয়েছে');
+toast('ডেটাবেস সংযোগে সমস্যা হয়েছে','error');
 }
 });
 
@@ -1394,13 +1529,9 @@ const saved=sessionStorage.getItem(AUTH_PAGE_KEY);
 const page=['register','forgot'].includes(saved)?saved:'login';
 
 clearAllAuthInputs();
-
 history.replaceState({embdAuthPage:'login'},'',location.href);
 if(page!=='login')history.pushState({embdAuthPage:page},'',location.href);
-
 displayAuthForm(page);
-
-/* Refresh-এর আগে লেখা তথ্য ফিরিয়ে আনবে */
 restoreAuthDraft(page);
 }
 
@@ -1417,7 +1548,7 @@ const s=await db.collection('appConfig').doc('public').get();
 if(s.exists)appSettings={...appSettings,...s.data()};
 }catch(e){
 console.error('Settings read error',e);
-toast('Admin-এর Bonus Settings পড়া যায়নি');
+toast('Admin-এর Bonus Settings পড়া যায়নি','error');
 }
 document.getElementById('bonusAmount').textContent=Number(appSettings.dailyBonus??10).toFixed(2);
 document.getElementById('adReward').textContent=Number(appSettings.adReward??0).toFixed(2);
@@ -1500,14 +1631,14 @@ await loadTodayStats();
 
 toast(currentLanguage==='en'
 ?'Congratulations! ৳'+amount.toFixed(2)+' added to your wallet.'
-:'অভিনন্দন! ৳'+amount.toFixed(2)+' আপনার Wallet-এ যোগ হয়েছে।');
+:'অভিনন্দন! ৳'+amount.toFixed(2)+' আপনার Wallet-এ যোগ হয়েছে।','success');
 
 }catch(e){
 console.error('Daily bonus claim:',e);
 if(e.message&&e.message.toLowerCase().includes('already')){
-toast('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে');
+toast('আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে','warning');
 }else{
-toast(e.message||'বোনাস যোগ হয়নি। Firestore Rules পরীক্ষা করুন');
+toast(e.message||'বোনাস যোগ হয়নি। Firestore Rules পরীক্ষা করুন','error');
 }
 }finally{
 btn.disabled=false;
@@ -1522,19 +1653,19 @@ const number=document.getElementById('payNumber').value.trim();
 const amount=Number(document.getElementById('withdrawAmount').value);
 
 if(!/^01[0-9]{9}$/.test(number)){
-toast('অনুগ্রহ করে সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন।');
+toast('অনুগ্রহ করে সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন।','warning');
 return;
 }
 if(!Number.isFinite(amount)||amount<=0){
-toast('অনুগ্রহ করে সঠিক টাকার পরিমাণ দিন।');
+toast('অনুগ্রহ করে সঠিক টাকার পরিমাণ দিন।','warning');
 return;
 }
 if(amount<Number(appSettings.minWithdraw||0)){
-toast('ন্যূনতম উত্তোলন ৳'+appSettings.minWithdraw);
+toast('ন্যূনতম উত্তোলন ৳'+appSettings.minWithdraw,'warning');
 return;
 }
 if(amount>Number(userData.balance||0)){
-toast('আপনার পর্যাপ্ত ব্যালেন্স নেই।');
+toast('আপনার পর্যাপ্ত ব্যালেন্স নেই।','warning');
 return;
 }
 
@@ -1543,12 +1674,12 @@ await db.collection('withdrawRequests').add({
 uid:currentUser.uid,email:currentUser.email,method,number,amount,
 status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()
 });
-toast('উত্তোলনের আবেদন জমা হয়েছে');
+toast('উত্তোলনের আবেদন জমা হয়েছে','success');
 document.getElementById('payNumber').value='';
 document.getElementById('withdrawAmount').value='';
 }catch(e){
 console.error(e);
-toast('আবেদন জমা হয়নি: Firestore Rules পরীক্ষা করুন');
+toast('আবেদন জমা হয়নি: Firestore Rules পরীক্ষা করুন','error');
 }
 }
 
@@ -1557,11 +1688,11 @@ async function copyReferral(){
 const code=document.getElementById('refCode').value;
 try{
 await navigator.clipboard.writeText(code);
-toast('Referral code কপি হয়েছে');
+toast('Referral code কপি হয়েছে','success');
 }catch(e){
 document.getElementById('refCode').select();
 document.execCommand('copy');
-toast('Referral code কপি হয়েছে');
+toast('Referral code কপি হয়েছে','success');
 }
 }
 
@@ -1622,10 +1753,10 @@ uid:currentUser.uid,email:currentUser.email,taskId,
 title:task.title||'Task',reward:Number(task.reward||0),
 status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()
 });
-toast('Task submission জমা হয়েছে');
+toast('Task submission জমা হয়েছে','success');
 }catch(e){
 console.error(e);
-toast('জমা হয়নি: Firestore Rules পরীক্ষা করুন');
+toast('জমা হয়নি: Firestore Rules পরীক্ষা করুন','error');
 }
 }
 
@@ -1711,7 +1842,7 @@ sessionStorage.removeItem(AUTH_PAGE_KEY);
 clearAllAuthInputs();
 clearAuthDrafts();
 await auth.signOut();
-toast('লগআউট সম্পন্ন হয়েছে');
+toast('লগআউট সম্পন্ন হয়েছে','success');
 }
 
 /* AUTH REFRESH PROTECTION */
