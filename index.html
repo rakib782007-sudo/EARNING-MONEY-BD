@@ -107,32 +107,18 @@ box-shadow:0 7px 20px #0003;
 .google-btn:disabled{opacity:.5}
 .google-logo{width:21px;height:21px;flex-shrink:0}
 
-/* AUTH ALERT - TOP TOAST */
+/* AUTH ALERT */
 #status{
-position:fixed;
-top:62px;
-left:50%;
-transform:translateX(-50%);
-width:max-content;
-max-width:calc(100% - 28px);
-min-width:180px;
-padding:12px 17px;
-border:1px solid #e2bb6a;
-border-radius:15px;
+position:fixed;top:62px;left:50%;transform:translateX(-50%);
+width:max-content;max-width:calc(100% - 28px);min-width:180px;
+padding:12px 17px;border:1px solid #e2bb6a;border-radius:15px;
 background:linear-gradient(135deg,#3b234b,#21132f);
-color:#fff;
-font-size:13px;
-font-weight:600;
-text-align:center;
-overflow-wrap:anywhere;
-box-shadow:0 8px 30px #0009;
-z-index:12000;
-display:none;
-animation:topToastIn .25s ease;
+color:#fff;font-size:13px;font-weight:600;text-align:center;
+overflow-wrap:anywhere;box-shadow:0 8px 30px #0009;
+z-index:12000;display:none;animation:topToastIn .25s ease;
 }
 #status.auth-error{
-color:#ffb0b0!important;
-border-color:#ff7777;
+color:#ffb0b0!important;border-color:#ff7777;
 background:linear-gradient(135deg,#4a202d,#271321);
 }
 @keyframes topToastIn{
@@ -140,32 +126,16 @@ from{opacity:0;transform:translate(-50%,-12px)}
 to{opacity:1;transform:translate(-50%,0)}
 }
 
-/* INPUTS - LOGIN AND REGISTER SAME DESIGN */
+/* INPUTS */
 .auth-input{
-display:block;
-width:100%;
-height:50px;
-background:#100b1b;
-border:1px solid #a77acb77;
-border-radius:14px;
-color:white;
-padding:14px;
-margin-top:10px;
-outline:none;
-font-size:14px;
+display:block;width:100%;height:50px;background:#100b1b;
+border:1px solid #a77acb77;border-radius:14px;color:white;
+padding:14px;margin-top:10px;outline:none;font-size:14px;
 }
 .auth-input::placeholder{color:#a99ab9;opacity:1}
 .auth-input:focus{border-color:#ffd56c;box-shadow:0 0 0 3px #ffce5a20}
-
-.password-wrap{
-position:relative;
-width:100%;
-margin-top:10px;
-}
-.password-wrap .auth-input{
-margin-top:0;
-padding-right:52px;
-}
+.password-wrap{position:relative;width:100%;margin-top:10px}
+.password-wrap .auth-input{margin-top:0;padding-right:52px}
 .password-eye{
 position:absolute;right:8px;top:50%;transform:translateY(-50%);
 width:38px;height:38px;border:0;border-radius:10px;
@@ -174,10 +144,8 @@ align-items:center;justify-content:center;
 }
 .password-eye svg{width:22px;height:22px}
 .password-eye:active{background:#ffffff12}
-
 .forgot-under-password{width:100%;display:flex;justify-content:flex-end;margin-top:7px}
 .forgot-under-password .auth-link{padding:3px 2px;color:#d7aaff;font-size:12px}
-
 .auth-main-btn{
 width:100%;padding:14px;margin-top:13px;border:1px solid #fff0a6;
 border-radius:15px;background:linear-gradient(120deg,#ffe17a,#ffb82e 60%,#d47b15);
@@ -479,7 +447,7 @@ max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 
 <div id="forgotForm" style="display:none">
 <input class="auth-input" id="forgotEmail" type="email" placeholder="Email Address" autocomplete="email">
-<button class="auth-main-btn" onclick="resetPassword()">Continue</button>
+<button class="auth-main-btn" id="forgotContinueBtn" onclick="resetPassword()">Continue</button>
 <button class="auth-link" onclick="showLoginForm()">Back to Login</button>
 </div>
 
@@ -702,86 +670,27 @@ function saveAuthPage(page){
 sessionStorage.setItem(AUTH_PAGE_KEY,page);
 }
 
-/* AUTH FORM INPUT SAVE SYSTEM */
-const AUTH_INPUT_KEY='embd_auth_inputs_v1';
-const AUTH_INPUT_IDS=[
-'loginEmail','loginPassword',
-'registerName','registerEmail','registerPassword','confirmPassword',
-'forgotEmail'
-];
+/* AUTH INPUT CLEAR SYSTEM
+   ইনপুট আর sessionStorage-এ সেভ করা হবে না।
+   প্রতিটি পেজের ইনপুট আলাদা থাকবে।
+*/
+const AUTH_PAGE_INPUTS={
+login:['loginEmail','loginPassword'],
+register:['registerName','registerEmail','registerPassword','confirmPassword'],
+forgot:['forgotEmail']
+};
 
-let restoringAuthInputs=false;
-
-function saveAuthInputs(){
-if(restoringAuthInputs)return;
-const data={};
-AUTH_INPUT_IDS.forEach(id=>{
-const input=document.getElementById(id);
-if(input)data[id]=input.value;
-});
-try{sessionStorage.setItem(AUTH_INPUT_KEY,JSON.stringify(data));}
-catch(e){console.log('Auth input save error:',e);}
-}
-
-function restoreAuthInputs(){
-restoringAuthInputs=true;
-try{
-const saved=sessionStorage.getItem(AUTH_INPUT_KEY);
-if(saved){
-const data=JSON.parse(saved);
-AUTH_INPUT_IDS.forEach(id=>{
-const input=document.getElementById(id);
-if(input&&typeof data[id]==='string')input.value=data[id];
-});
-}
-}catch(e){console.log('Auth input restore error:',e);}
-restoringAuthInputs=false;
-}
-
-function clearAuthInputs(){
-try{sessionStorage.removeItem(AUTH_INPUT_KEY);}catch(e){}
-AUTH_INPUT_IDS.forEach(id=>{
+function clearAuthFormInputs(page){
+const ids=AUTH_PAGE_INPUTS[page]||[];
+ids.forEach(id=>{
 const input=document.getElementById(id);
 if(input)input.value='';
 });
 }
 
-AUTH_INPUT_IDS.forEach(id=>{
-const input=document.getElementById(id);
-if(input){
-input.addEventListener('input',saveAuthInputs);
-input.addEventListener('change',saveAuthInputs);
+function clearAllAuthInputs(){
+Object.keys(AUTH_PAGE_INPUTS).forEach(clearAuthFormInputs);
 }
-});
-
-function restoreAuthPage(){
-const saved=sessionStorage.getItem(AUTH_PAGE_KEY);
-const page=['register','forgot'].includes(saved)?saved:'login';
-history.replaceState({embdAuthPage:'login'},'',location.href);
-if(page!=='login')history.pushState({embdAuthPage:page},'',location.href);
-displayAuthForm(page);
-restoreAuthInputs();
-}
-
-let authTouchStartY=0;
-let authTouchStartX=0;
-
-document.addEventListener('touchstart',function(event){
-if(!document.body.classList.contains('auth-refresh-locked'))return;
-if(event.touches.length!==1)return;
-authTouchStartY=event.touches[0].clientY;
-authTouchStartX=event.touches[0].clientX;
-},{passive:true});
-
-document.addEventListener('touchmove',function(event){
-if(!document.body.classList.contains('auth-refresh-locked'))return;
-if(event.touches.length!==1)return;
-const currentY=event.touches[0].clientY;
-const currentX=event.touches[0].clientX;
-const moveY=currentY-authTouchStartY;
-const moveX=currentX-authTouchStartX;
-if(window.scrollY<=0&&moveY>8&&Math.abs(moveY)>Math.abs(moveX))event.preventDefault();
-},{passive:false});
 
 /* LANGUAGE SYSTEM */
 let currentLanguage=localStorage.getItem('embd_language')||'bn';
@@ -903,7 +812,6 @@ const translations={
 'Create New Account':'Create New Account',
 'Create Account':'Create Account',
 'Forgot Password?':'Forgot Password?',
-'Continue':'চালিয়ে যান',
 'Continue with Google':'Continue with Google',
 'Login':'Login',
 'Full Name':'Full Name',
@@ -983,6 +891,13 @@ const original=store[attr];
 el.setAttribute(attr,currentLanguage==='en'?translateText(original):restoreBangla(original));
 });
 });
+
+/* FORGOT PASSWORD BUTTON LANGUAGE */
+const continueBtn=document.getElementById('forgotContinueBtn');
+if(continueBtn){
+continueBtn.textContent=currentLanguage==='en'?'Continue':'চালিয়ে যান';
+}
+
 applyConfirmLanguage();
 updateWelcomeLanguage();
 }
@@ -1073,7 +988,7 @@ button.setAttribute('aria-label',currentLanguage==='en'?'Show password':'পা�
 }
 }
 
-/* AUTH STATUS - TOP TEMPORARY MESSAGE */
+/* AUTH STATUS */
 let authStatusTimer=null;
 
 function authStatus(message,error=false){
@@ -1091,7 +1006,6 @@ s.textContent=currentLanguage==='en'?translateText(message):restoreBangla(messag
 s.classList.toggle('auth-error',error);
 s.style.display='block';
 
-/* Message disappears automatically after 3 seconds */
 authStatusTimer=setTimeout(()=>{
 s.style.display='none';
 },3000);
@@ -1105,6 +1019,13 @@ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 let currentAuthPage='login';
 
 function displayAuthForm(page){
+/* পেজ পরিবর্তনের সময় আগের ও নতুন পেজের ইনপুট পরিষ্কার */
+if(page!==currentAuthPage){
+clearAuthFormInputs(currentAuthPage);
+clearAuthFormInputs(page);
+}
+
+/* একই পেজে নতুন করে ফিরলেও ফাঁকা রাখা */
 currentAuthPage=page;
 saveAuthPage(page);
 
@@ -1127,6 +1048,7 @@ document.getElementById('authTitle').textContent=currentLanguage==='en'
 document.getElementById('authSubtitle').textContent=currentLanguage==='en'
 ?'Enter your Email Address':'আপনার Email Address লিখুন';
 }
+
 authStatus('');
 applyLanguage();
 }
@@ -1147,12 +1069,8 @@ displayAuthForm('register');
 
 function showForgotForm(){
 if(currentAuthPage==='forgot')return;
-const loginEmail=document.getElementById('loginEmail').value.trim();
-const forgotEmail=document.getElementById('forgotEmail');
-if(!forgotEmail.value&&loginEmail){
-forgotEmail.value=loginEmail;
-saveAuthInputs();
-}
+
+/* Login পেজের Gmail আর Forgot পেজে কপি হবে না */
 history.pushState({embdAuthPage:'forgot'},'',location.href);
 displayAuthForm('forgot');
 }
@@ -1161,6 +1079,7 @@ window.addEventListener('popstate',function(event){
 if(currentUser)return;
 const loginVisible=document.getElementById('loginScreen').style.display!=='none';
 if(!loginVisible)return;
+
 let page='login';
 if(event.state&&['login','register','forgot'].includes(event.state.embdAuthPage)){
 page=event.state.embdAuthPage;
@@ -1188,7 +1107,7 @@ authStatus('Login হচ্ছে...');
 
 try{
 await auth.signInWithEmailAndPassword(email,password);
-clearAuthInputs();
+clearAllAuthInputs();
 authStatus('Login সফল হয়েছে!');
 }catch(e){
 console.error(e);
@@ -1237,7 +1156,7 @@ await db.collection('users').doc(credential.user.uid).set({
 name:name,email:email,photoURL:'',balance:0,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
 },{merge:true});
-clearAuthInputs();
+clearAllAuthInputs();
 authStatus('অ্যাকাউন্ট তৈরি হয়েছে! Dashboard খুলছে...');
 }catch(e){
 console.error(e);
@@ -1287,7 +1206,7 @@ authStatus('Google-এর সাথে সংযোগ হচ্ছে...');
 
 try{
 await auth.signInWithPopup(provider);
-clearAuthInputs();
+clearAllAuthInputs();
 }catch(e){
 console.error(e);
 authStatus('Google Login করা যায়নি: '+e.message,true);
@@ -1348,7 +1267,7 @@ return;
 
 setAuthRefreshProtection(false);
 sessionStorage.removeItem(AUTH_PAGE_KEY);
-clearAuthInputs();
+clearAllAuthInputs();
 
 loading.style.display='flex';
 login.style.display='none';
@@ -1413,6 +1332,19 @@ loading.style.display='none';
 toast('ডেটাবেস সংযোগে সমস্যা হয়েছে');
 }
 });
+
+/* INITIAL AUTH PAGE RESTORE */
+function restoreAuthPage(){
+const saved=sessionStorage.getItem(AUTH_PAGE_KEY);
+const page=['register','forgot'].includes(saved)?saved:'login';
+
+/* আগের ইনপুট কখনো ফিরিয়ে আনা হবে না */
+clearAllAuthInputs();
+
+history.replaceState({embdAuthPage:'login'},'',location.href);
+if(page!=='login')history.pushState({embdAuthPage:page},'',location.href);
+displayAuthForm(page);
+}
 
 function renderUserData(){
 const amount=Number(userData.balance||0).toFixed(2);
@@ -1718,10 +1650,31 @@ if(currentUser){
 sessionStorage.removeItem('embd_page_'+currentUser.uid);
 }
 sessionStorage.removeItem(AUTH_PAGE_KEY);
-clearAuthInputs();
+clearAllAuthInputs();
 await auth.signOut();
 toast('লগআউট সম্পন্ন হয়েছে');
 }
+
+/* AUTH REFRESH PROTECTION */
+let authTouchStartY=0;
+let authTouchStartX=0;
+
+document.addEventListener('touchstart',function(event){
+if(!document.body.classList.contains('auth-refresh-locked'))return;
+if(event.touches.length!==1)return;
+authTouchStartY=event.touches[0].clientY;
+authTouchStartX=event.touches[0].clientX;
+},{passive:true});
+
+document.addEventListener('touchmove',function(event){
+if(!document.body.classList.contains('auth-refresh-locked'))return;
+if(event.touches.length!==1)return;
+const currentY=event.touches[0].clientY;
+const currentX=event.touches[0].clientX;
+const moveY=currentY-authTouchStartY;
+const moveX=currentX-authTouchStartX;
+if(window.scrollY<=0&&moveY>8&&Math.abs(moveY)>Math.abs(moveX))event.preventDefault();
+},{passive:false});
 
 /* INITIAL LANGUAGE */
 applyLanguage();
