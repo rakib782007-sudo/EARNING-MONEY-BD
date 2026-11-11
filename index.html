@@ -660,6 +660,7 @@ EARNING <span>MONEY BD</span>
 <script>
 /* AUTH PAGE REFRESH PROTECTION */
 const AUTH_PAGE_KEY='embd_auth_page';
+const AUTH_DRAFT_KEY='embd_auth_drafts';
 
 function setAuthRefreshProtection(enabled){
 document.documentElement.classList.toggle('auth-refresh-locked',enabled);
@@ -670,15 +671,54 @@ function saveAuthPage(page){
 sessionStorage.setItem(AUTH_PAGE_KEY,page);
 }
 
-/* AUTH INPUT CLEAR SYSTEM
-   ইনপুট আর sessionStorage-এ সেভ করা হবে না।
-   প্রতিটি পেজের ইনপুট আলাদা থাকবে।
-*/
+/* AUTH INPUT REFRESH SAVE SYSTEM */
 const AUTH_PAGE_INPUTS={
 login:['loginEmail','loginPassword'],
 register:['registerName','registerEmail','registerPassword','confirmPassword'],
 forgot:['forgotEmail']
 };
+
+function getAuthDrafts(){
+try{
+return JSON.parse(sessionStorage.getItem(AUTH_DRAFT_KEY)||'{}');
+}catch(e){
+return {};
+}
+}
+
+function saveAuthDraft(page){
+if(!AUTH_PAGE_INPUTS[page])return;
+
+const drafts=getAuthDrafts();
+drafts[page]={};
+
+AUTH_PAGE_INPUTS[page].forEach(id=>{
+const input=document.getElementById(id);
+if(input)drafts[page][id]=input.value;
+});
+
+try{
+sessionStorage.setItem(AUTH_DRAFT_KEY,JSON.stringify(drafts));
+}catch(e){
+console.error('Draft save error:',e);
+}
+}
+
+function restoreAuthDraft(page){
+const drafts=getAuthDrafts();
+const saved=drafts[page]||{};
+
+(AUTH_PAGE_INPUTS[page]||[]).forEach(id=>{
+const input=document.getElementById(id);
+if(input&&typeof saved[id]==='string'){
+input.value=saved[id];
+}
+});
+}
+
+function clearAuthDrafts(){
+sessionStorage.removeItem(AUTH_DRAFT_KEY);
+}
 
 function clearAuthFormInputs(page){
 const ids=AUTH_PAGE_INPUTS[page]||[];
@@ -691,6 +731,17 @@ if(input)input.value='';
 function clearAllAuthInputs(){
 Object.keys(AUTH_PAGE_INPUTS).forEach(clearAuthFormInputs);
 }
+
+/* ইনপুটে লেখা পরিবর্তন হলেই Refresh-এর জন্য সেভ হবে */
+Object.keys(AUTH_PAGE_INPUTS).forEach(page=>{
+AUTH_PAGE_INPUTS[page].forEach(id=>{
+const input=document.getElementById(id);
+if(input){
+input.addEventListener('input',()=>saveAuthDraft(page));
+input.addEventListener('change',()=>saveAuthDraft(page));
+}
+});
+});
 
 /* LANGUAGE SYSTEM */
 let currentLanguage=localStorage.getItem('embd_language')||'bn';
@@ -1108,6 +1159,7 @@ authStatus('Login হচ্ছে...');
 try{
 await auth.signInWithEmailAndPassword(email,password);
 clearAllAuthInputs();
+clearAuthDrafts();
 authStatus('Login সফল হয়েছে!');
 }catch(e){
 console.error(e);
@@ -1157,6 +1209,7 @@ name:name,email:email,photoURL:'',balance:0,
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
 },{merge:true});
 clearAllAuthInputs();
+clearAuthDrafts();
 authStatus('অ্যাকাউন্ট তৈরি হয়েছে! Dashboard খুলছে...');
 }catch(e){
 console.error(e);
@@ -1207,6 +1260,7 @@ authStatus('Google-এর সাথে সংযোগ হচ্ছে...');
 try{
 await auth.signInWithPopup(provider);
 clearAllAuthInputs();
+clearAuthDrafts();
 }catch(e){
 console.error(e);
 authStatus('Google Login করা যায়নি: '+e.message,true);
@@ -1268,6 +1322,7 @@ return;
 setAuthRefreshProtection(false);
 sessionStorage.removeItem(AUTH_PAGE_KEY);
 clearAllAuthInputs();
+clearAuthDrafts();
 
 loading.style.display='flex';
 login.style.display='none';
@@ -1338,12 +1393,15 @@ function restoreAuthPage(){
 const saved=sessionStorage.getItem(AUTH_PAGE_KEY);
 const page=['register','forgot'].includes(saved)?saved:'login';
 
-/* আগের ইনপুট কখনো ফিরিয়ে আনা হবে না */
 clearAllAuthInputs();
 
 history.replaceState({embdAuthPage:'login'},'',location.href);
 if(page!=='login')history.pushState({embdAuthPage:page},'',location.href);
+
 displayAuthForm(page);
+
+/* Refresh-এর আগে লেখা তথ্য ফিরিয়ে আনবে */
+restoreAuthDraft(page);
 }
 
 function renderUserData(){
@@ -1651,6 +1709,7 @@ sessionStorage.removeItem('embd_page_'+currentUser.uid);
 }
 sessionStorage.removeItem(AUTH_PAGE_KEY);
 clearAllAuthInputs();
+clearAuthDrafts();
 await auth.signOut();
 toast('লগআউট সম্পন্ন হয়েছে');
 }
