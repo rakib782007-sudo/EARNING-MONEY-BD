@@ -271,7 +271,7 @@ box-shadow:0 10px 24px #0009,0 0 18px #ffcb4b1c;
 .invite p strong{display:block;font-size:16px;color:#ffdb70}
 .invite button{
 border:1px solid #fff0a6;border-radius:30px;padding:9px 12px;
-background:linear-gradient(135deg,#ffe17b,#ffb82e 65%,#d98517);
+background:linear-gradient(135deg,#ffe17b,#ffb72e 65%,#d98517);
 color:#241306;font-size:11px;font-weight:800;white-space:nowrap;
 }
 
@@ -461,7 +461,7 @@ max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 
 <div id="forgotForm" style="display:none">
 <input class="auth-input" id="forgotEmail" type="email" placeholder="Email Address" autocomplete="email">
-<button class="auth-main-btn" id="forgotContinueBtn" onclick="resetPassword()">Continue</button>
+<button class="auth-main-btn" id="forgotContinueBtn" onclick="resetPassword()">রিসেট লিংক পাঠান</button>
 <button class="auth-link" onclick="showLoginForm()">Back to Login</button>
 </div>
 
@@ -751,6 +751,7 @@ const translations={
 'আপনার অ্যাকাউন্টে লগইন করুন':'Log in to your account',
 'নতুন অ্যাকাউন্ট তৈরি করুন':'Create a New Account',
 'পাসওয়ার্ড ভুলে গেছেন?':'Forgot Password?',
+'রিসেট লিংক পাঠান':'Send Reset Link',
 'চালিয়ে যান':'Continue',
 'আপনার Email Address':'Your Email Address',
 'আপনার Wallet Balance':'Your Wallet Balance',
@@ -879,6 +880,7 @@ const translations={
 'Create New Account':'Create New Account',
 'Create Account':'Create Account',
 'Forgot Password?':'Forgot Password?',
+'Send Reset Link':'Send Reset Link',
 'Continue with Google':'Continue with Google',
 'Login':'Login',
 'Full Name':'Full Name',
@@ -960,7 +962,7 @@ el.setAttribute(attr,currentLanguage==='en'?translateText(original):restoreBangl
 });
 
 const continueBtn=document.getElementById('forgotContinueBtn');
-if(continueBtn)continueBtn.textContent=currentLanguage==='en'?'Continue':'চালিয়ে যান';
+if(continueBtn)continueBtn.textContent=currentLanguage==='en'?'Send Reset Link':'রিসেট লিংক পাঠান';
 
 applyConfirmLanguage();
 updateWelcomeLanguage();
