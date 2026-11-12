@@ -752,11 +752,14 @@ const translations={
 'ভাষা পরিবর্তন':'Change Language',
 'আপনি কি অ্যাপের ভাষা পরিবর্তন করতে চান?':'Would you like to change the app language?',
 'না':'No','হ্যাঁ':'Yes',
+'আর্নিং মানি বিডি-তে স্বাগতম!':'Welcome Earning Money BD!',
 'আপনার একাউন্ট লগইন করুন':'Log in to your account',
-'নতুন অ্যাকাউন্ট তৈরি করুন':'Create a New Account',
-'পাসওয়ার্ড ভুলে গেছেন?':'Forgot Password?',
+'নতুন অ্যাকাউন্ট তৈরি করুন':'Create New Account',
+'পাসওয়ার্ড ভুলে গেছেন?':'Forgot Password?',
+'পাসওয়ার্ড ভুলে গেছেন':'Forgot Password',
 'রিসেট লিংক পাঠান':'Send Reset Link',
 'চালিয়ে যান':'Continue',
+'আপনার ইমেইল ঠিকানা লিখুন':'Enter your Email Address',
 'আপনার Email Address':'Your Email Address',
 'আপনার Wallet Balance':'Your Wallet Balance',
 'আপনার মোট Wallet Balance':'Your Total Wallet Balance',
@@ -883,27 +886,23 @@ const translations={
 'Log Out':'Log Out',
 'Google Login':'Google Login',
 'Email & Password':'Email & Password',
-'Back to Login':'Back to Login',
-'Already have an account? Login':'Already have an account? Login',
-'Create New Account':'Create New Account',
-'Create Account':'Create Account',
-'Forgot Password?':'Forgot Password?',
-'Send Reset Link':'Send Reset Link',
-'Continue with Google':'Continue with Google',
-'Login':'Login',
-'Full Name':'Full Name',
-'Email Address':'Email Address',
-'Password':'Password',
-'Create Password':'Create Password',
-'Confirm Password':'Confirm Password',
-'OR':'OR',
+'লগইন-এ ফিরে যান':'Back to Login',
+'ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন করুন':'Already have an account? Login',
+'অ্যাকাউন্ট তৈরি করুন':'Create Account',
+'Google দিয়ে চালিয়ে যান':'Continue with Google',
+'লগইন করুন':'Login',
+'সম্পূর্ণ নাম':'Full Name',
+'ইমেইল ঠিকানা':'Email Address',
+'পাসওয়ার্ড':'Password',
+'পাসওয়ার্ড তৈরি করুন':'Create Password',
+'পাসওয়ার্ড নিশ্চিত করুন':'Confirm Password',
+'অথবা':'OR',
 'Home':'Home',
 'Wallet':'Wallet',
 'Refer':'Refer',
 'Me':'Me',
 'Play • Earn • Withdraw':'Play • Earn • Withdraw',
-'Loading your account...':'Loading your account...',
-'Welcome Earning Money BD!':'Welcome Earning Money BD!',
+'আপনার অ্যাকাউন্ট লোড হচ্ছে...':'Loading your account...',
 'পাসওয়ার্ড লুকান':'Hide password',
 'পাসওয়ার্ড দেখুন':'Show password',
 'আবেদন':'Apply',
@@ -1006,6 +1005,7 @@ currentLanguage=pendingLanguage;
 localStorage.setItem('embd_language',currentLanguage);
 pendingLanguage=null;
 document.getElementById('languageConfirm').style.display='none';
+displayAuthForm(currentAuthPage);
 applyLanguage();
 }
 
@@ -1165,21 +1165,24 @@ document.getElementById('loginForm').style.display=page==='login'?'block':'none'
 document.getElementById('registerForm').style.display=page==='register'?'block':'none';
 document.getElementById('forgotForm').style.display=page==='forgot'?'block':'none';
 
+const titleEl=document.getElementById('authTitle');
+const subEl=document.getElementById('authSubtitle');
+
 if(page==='login'){
-document.getElementById('authTitle').textContent='Welcome Earning Money BD!';
-document.getElementById('authSubtitle').textContent=currentLanguage==='en'
-?'Log in to your account':'আপনার একাউন্ট লগইন করুন';
+titleEl.textContent=currentLanguage==='en'?'Welcome Earning Money BD!':'আর্নিং মানি বিডি-তে স্বাগতম!';
+subEl.textContent=currentLanguage==='en'?'Log in to your account':'আপনার একাউন্ট লগইন করুন';
 }else if(page==='register'){
-document.getElementById('authTitle').textContent=currentLanguage==='en'
-?'Create New Account':'নতুন অ্যাকাউন্ট তৈরি করুন';
-document.getElementById('authSubtitle').textContent=currentLanguage==='en'
-?'Create a new account':'নতুন অ্যাকাউন্ট তৈরি করুন';
+titleEl.textContent=currentLanguage==='en'?'Create New Account':'নতুন অ্যাকাউন্ট তৈরি করুন';
+subEl.textContent=currentLanguage==='en'?'Create New Account':'নতুন অ্যাকাউন্ট তৈরি করুন';
 }else{
-document.getElementById('authTitle').textContent=currentLanguage==='en'
-?'Forgot Password':'পাসওয়ার্ড ভুলে গেছেন?';
-document.getElementById('authSubtitle').textContent=currentLanguage==='en'
-?'Enter your Email Address':'আপনার Email Address লিখুন';
+titleEl.textContent=currentLanguage==='en'?'Forgot Password':'পাসওয়ার্ড ভুলে গেছেন';
+subEl.textContent=currentLanguage==='en'?'Enter your Email Address':'আপনার ইমেইল ঠিকানা লিখুন';
 }
+
+originalTextNodes.set(titleEl.firstChild, 'আর্নিং মানি বিডি-তে স্বাগতম!');
+if(page==='register') originalTextNodes.set(titleEl.firstChild, 'নতুন অ্যাকাউন্ট তৈরি করুন');
+if(page==='forgot') originalTextNodes.set(titleEl.firstChild, 'পাসওয়ার্ড ভুলে গেছেন');
+originalTextNodes.set(subEl.firstChild, subEl.textContent);
 
 authStatus('');
 applyLanguage();
