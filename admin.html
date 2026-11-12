@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -12,21 +12,19 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 :root{--bg:#090713;--panel:#151126;--panel2:#1d1732;--line:#ffffff16;--text:#f8f5ff;--muted:#aaa2bd;--purple:#a66bff;--purple2:#7138d5;--gold:#ffd36b;--green:#36d6a0;--red:#ff6e83;--blue:#65b7ff}
 
 *{box-sizing:border-box}
 
-html,body{
-overscroll-behavior-y:none;
-}
+html,body{overscroll-behavior-y:none}
 
 body{
 margin:0;
 background:radial-gradient(ellipse at 10% 0%,#28164a 0,transparent 35%),var(--bg);
 color:var(--text);
-font-family:'Hind Siliguri',Inter,sans-serif;
+font-family:Inter,sans-serif;
 min-height:100vh;
 }
 
@@ -113,13 +111,93 @@ body:has(#loginBox:not(.hidden)) .top-actions{display:none}
 .login-brand span{color:#c69aff}
 .login-kicker{display:flex;align-items:center;justify-content:center;gap:9px;margin:12px 0 24px;color:#bda4dc;font:700 9px Inter,sans-serif;letter-spacing:2px}
 .login-kicker i{height:1px;width:24px;background:#9a6bd0}
-.login-card h2{text-align:center;font:800 27px Inter,'Hind Siliguri',sans-serif;margin:0 0 7px;letter-spacing:-.7px}
-.login-form label{display:block;color:#c9b9df;font:700 10px Inter,'Hind Siliguri',sans-serif;letter-spacing:1.3px;margin:0 0 7px}
+.login-card h2{text-align:center;font:800 27px Inter,sans-serif;margin:0 0 7px;letter-spacing:-.7px}
+.login-form label{display:block;color:#c9b9df;font:700 10px Inter,sans-serif;letter-spacing:1.3px;margin:0 0 7px}
 .input-wrap{position:relative;margin-bottom:18px}
-.input-wrap .field{height:51px;margin:0;padding:0 15px 0 44px;border-radius:13px;background:#0b0914;border:1px solid #ffffff19;color:#fff;box-shadow:inset 0 2px 8px #0004;transition:.2s}
+.input-wrap .field{height:51px;margin:0;padding:0 48px 0 44px;border-radius:13px;background:#0b0914;border:1px solid #ffffff19;color:#fff;box-shadow:inset 0 2px 8px #0004;transition:.2s}
 .input-wrap .field::placeholder{color:#706780}
 .input-wrap .field:focus{border-color:#a66bff;box-shadow:0 0 0 3px #a66bff20,inset 0 2px 8px #0004}
 .input-icon{position:absolute;z-index:1;left:15px;top:13px;color:#b98af2;font-size:18px}
+
+/* Password eye icon */
+.password-toggle{
+position:absolute;
+right:10px;
+top:8px;
+width:36px;
+height:35px;
+border-radius:9px;
+background:transparent;
+color:#c69aff;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:0;
+}
+.password-toggle svg{
+width:21px;
+height:21px;
+fill:none;
+stroke:currentColor;
+stroke-width:2;
+stroke-linecap:round;
+stroke-linejoin:round;
+}
+.password-toggle:hover{background:#ffffff10}
+
+/* Premium Remember Me */
+.remember-row{
+display:flex;
+align-items:center;
+gap:11px;
+margin:0 0 17px;
+color:#c9b9df;
+font-size:12px;
+cursor:pointer;
+user-select:none;
+}
+
+.remember-row input{
+appearance:none;
+-webkit-appearance:none;
+width:23px;
+height:23px;
+margin:0;
+flex:0 0 23px;
+border:1.5px solid #a66bff;
+border-radius:7px;
+background:linear-gradient(145deg,#100b1c,#191129);
+box-shadow:inset 0 1px 4px #0008;
+cursor:pointer;
+transition:all .2s ease;
+position:relative;
+}
+
+.remember-row input:checked{
+background:linear-gradient(135deg,#bd79ff,#792cff 70%,#5920bd);
+border-color:#c99aff;
+box-shadow:0 0 12px #9b4dff80,inset 0 1px #ffffff55;
+}
+
+.remember-row input:checked::after{
+content:"";
+position:absolute;
+left:7px;
+top:3px;
+width:6px;
+height:11px;
+border:solid white;
+border-width:0 2.5px 2.5px 0;
+transform:rotate(45deg);
+}
+
+.remember-row input:focus-visible{
+outline:2px solid #d6b5ff;
+outline-offset:3px;
+}
+
+.remember-row span{cursor:pointer}
+
 .login-submit{width:100%;height:52px;margin:5px 0 0;padding:0 18px;display:flex;align-items:center;justify-content:space-between;border:1px solid #d9baff55;border-radius:14px;background:linear-gradient(110deg,#a66bff,#7138d5 75%,#5c2bb4);box-shadow:0 10px 26px #8a4de344,inset 0 1px #ffffff55;color:#fff;font:800 11px Inter,sans-serif;letter-spacing:1.1px;transition:transform .2s,filter .2s}
 .login-submit:hover{filter:brightness(1.12);transform:translateY(-1px)}
 .login-submit b{font-size:22px;font-weight:500}
@@ -174,7 +252,20 @@ body:has(#loginBox:not(.hidden)) .top-actions{display:none}
 <div class="input-wrap">
 <span class="input-icon">⌑</span>
 <input id="password" class="field" type="password" placeholder="Enter password" autocomplete="current-password">
+<button type="button" id="passwordToggle" class="password-toggle" onclick="togglePassword()" aria-label="Show password" title="Show password">
+<svg id="eyeIcon" viewBox="0 0 24 24">
+<path d="M3 3l18 18"/>
+<path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+<path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c5 0 8.5 5 9 7-.2.8-1.2 2.4-2.8 3.8"/>
+<path d="M6.2 6.2C3.8 7.8 2.2 10.1 2 12c.5 2 4 7 10 7 1.2 0 2.3-.2 3.3-.6"/>
+</svg>
+</button>
 </div>
+
+<label class="remember-row" for="rememberMe">
+<input id="rememberMe" type="checkbox">
+<span>Remember Me</span>
+</label>
 
 <button class="btn primary login-submit" onclick="emailLogin()">
 <span>LOGIN TO DASHBOARD</span><b>→</b>
@@ -191,16 +282,16 @@ body:has(#loginBox:not(.hidden)) .top-actions{display:none}
 <div class="section-head">
 <div>
 <h2 style="margin:0">Dashboard</h2>
-<div class="muted" style="font-size:12px">অ্যাপের সার্বিক অবস্থা</div>
+<div class="muted" style="font-size:12px">Overview of your application</div>
 </div>
 <button class="btn" onclick="refreshAll()">↻ Refresh</button>
 </div>
 
 <div class="stats">
-<div class="stat"><span>মোট ইউজার</span><strong id="totalUsers">—</strong></div>
-<div class="stat"><span>মোট User Balance</span><strong id="totalBalance">—</strong></div>
+<div class="stat"><span>Total Users</span><strong id="totalUsers">—</strong></div>
+<div class="stat"><span>Total User Balance</span><strong id="totalBalance">—</strong></div>
 <div class="stat"><span>Withdraw Requests</span><strong id="totalWithdraw">—</strong></div>
-<div class="stat"><span>Pending কাজ</span><strong id="totalPending">—</strong></div>
+<div class="stat"><span>Pending Tasks</span><strong id="totalPending">—</strong></div>
 </div>
 
 <nav class="tabs">
@@ -214,10 +305,10 @@ body:has(#loginBox:not(.hidden)) .top-actions{display:none}
 
 <section id="sec-dashboard" class="section active">
 <div class="card">
-<h2>স্বাগতম, Admin 👋</h2>
-<p class="muted">এখান থেকে Earning Money BD-এর সেটিংস, টাস্ক, ইউজার এবং পেমেন্ট রিকোয়েস্ট পরিচালনা করতে পারবি।</p>
+<h2>Welcome, Admin 👋</h2>
+<p class="muted">Manage Earning Money BD settings, tasks, users, and payment requests from here.</p>
 <div class="notice">
-গুরুত্বপূর্ণ: এই অ্যাপের Login screen একা নিরাপত্তা নিশ্চিত করে না। Firebase Firestore Rules-এ Admin-only অনুমতি সেট না করা পর্যন্ত বাস্তব ব্যবহারকারীর টাকা/রিওয়ার্ড পরিচালনা করিস না।
+Important: The login screen alone does not guarantee security. Do not manage real user money or rewards until Admin-only permissions are properly configured in Firebase Firestore Rules.
 </div>
 </div>
 </section>
@@ -240,17 +331,17 @@ body:has(#loginBox:not(.hidden)) .top-actions{display:none}
 </div>
 </div>
 <button class="btn primary" onclick="saveSettings()">Save Settings</button>
-<p class="muted" style="font-size:12px;margin-top:10px">এই সেটিংস মূল অ্যাপের appConfig/public ডকুমেন্টে সেভ হবে।</p>
+<p class="muted" style="font-size:12px;margin-top:10px">These settings will be saved in the main app's appConfig/public document.</p>
 </div>
 </section>
 
 <section id="sec-tasks" class="section">
 <div class="card">
-<h2>➕ নতুন Task যোগ কর</h2>
+<h2>➕ Add New Task</h2>
 <label>Task Title</label>
-<input id="taskTitle" class="field" placeholder="যেমন: Facebook Page Follow">
+<input id="taskTitle" class="field" placeholder="Example: Follow Facebook Page">
 <label>Description</label>
-<textarea id="taskDescription" class="field" rows="3" placeholder="Task-এর বিস্তারিত"></textarea>
+<textarea id="taskDescription" class="field" rows="3" placeholder="Enter task details"></textarea>
 <label>Reward (৳)</label>
 <input id="taskReward" class="field" type="number" min="0.01" step="0.01" placeholder="10">
 <button class="btn primary" onclick="addTask()">Add Task</button>
@@ -258,10 +349,10 @@ body:has(#loginBox:not(.hidden)) .top-actions{display:none}
 
 <div class="card">
 <div class="section-head">
-<h2>সব Task</h2>
+<h2>All Tasks</h2>
 <button class="btn" onclick="loadTasks()">Refresh</button>
 </div>
-<div id="taskList" class="empty">লোড হয়নি</div>
+<div id="taskList" class="empty">Not loaded yet</div>
 </div>
 </section>
 
@@ -271,7 +362,7 @@ body:has(#loginBox:not(.hidden)) .top-actions{display:none}
 <h2>📋 Task Submission Review</h2>
 <button class="btn" onclick="loadSubmissions()">Refresh</button>
 </div>
-<div id="submissionList" class="empty">লোড হয়নি</div>
+<div id="submissionList" class="empty">Not loaded yet</div>
 </div>
 </section>
 
@@ -281,7 +372,7 @@ body:has(#loginBox:not(.hidden)) .top-actions{display:none}
 <h2>💸 Withdraw Requests</h2>
 <button class="btn" onclick="loadWithdrawals()">Refresh</button>
 </div>
-<div id="withdrawList" class="empty">লোড হয়নি</div>
+<div id="withdrawList" class="empty">Not loaded yet</div>
 </div>
 </section>
 
@@ -289,10 +380,10 @@ body:has(#loginBox:not(.hidden)) .top-actions{display:none}
 <div class="card">
 <div class="section-head">
 <h2>👥 User Management</h2>
-<input id="userSearch" class="field search" placeholder="নাম / Gmail দিয়ে খুঁজ" oninput="renderUsers()">
+<input id="userSearch" class="field search" placeholder="Search by name or Gmail" oninput="renderUsers()">
 <button class="btn" onclick="loadUsers()">Refresh</button>
 </div>
-<div id="userList" class="empty">লোড হয়নি</div>
+<div id="userList" class="empty">Not loaded yet</div>
 </div>
 </section>
 
@@ -325,6 +416,7 @@ let currentUser=null,usersCache=[];
 /* Login form draft: survives refresh in the same tab */
 const emailInput=document.getElementById('email');
 const passwordInput=document.getElementById('password');
+const rememberInput=document.getElementById('rememberMe');
 
 function saveLoginDraft(){
 try{
@@ -353,6 +445,34 @@ emailInput.addEventListener('input',saveLoginDraft);
 passwordInput.addEventListener('input',saveLoginDraft);
 restoreLoginDraft();
 
+/* Password visibility */
+function togglePassword(){
+const button=document.getElementById('passwordToggle');
+const icon=document.getElementById('eyeIcon');
+const isHidden=passwordInput.type==='password';
+
+passwordInput.type=isHidden?'text':'password';
+
+if(isHidden){
+icon.innerHTML=`
+<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/>
+<circle cx="12" cy="12" r="3"/>
+`;
+button.setAttribute('aria-label','Hide password');
+button.title='Hide password';
+}else{
+icon.innerHTML=`
+<path d="M3 3l18 18"/>
+<path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+<path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c5 0 8.5 5 9 7-.2.8-1.2 2.4-2.8 3.8"/>
+<path d="M6.2 6.2C3.8 7.8 2.2 10.1 2 12c.5 2 4 7 10 7 1.2 0 2.3-.2 3.3-.6"/>
+`;
+button.setAttribute('aria-label','Show password');
+button.title='Show password';
+}
+}
+
+/* Toast message */
 function toast(msg){
 const el=document.getElementById('toast');
 el.textContent=msg;
@@ -370,9 +490,9 @@ return String(v??'');
 
 function dateText(v){
 try{
-return v&&v.toDate?v.toDate().toLocaleString('bn-BD'):'সময় পাওয়া যায়নি';
+return v&&v.toDate?v.toDate().toLocaleString('en-US'):'Time unavailable';
 }catch(e){
-return 'সময় পাওয়া যায়নি';
+return 'Time unavailable';
 }
 }
 
@@ -387,7 +507,7 @@ document.getElementById('app').classList.add('hidden');
 document.getElementById('logoutBtn').classList.add('hidden');
 document.getElementById('userLine').textContent='';
 if(user){
-toast('এই Gmail-এর Admin Access নেই');
+toast('This Gmail account does not have Admin Access');
 auth.signOut();
 }
 return false;
@@ -413,39 +533,56 @@ document.getElementById('logoutBtn').classList.add('hidden');
 }
 });
 
+/* Login with Remember Me */
 async function emailLogin(){
-const email=document.getElementById('email').value.trim().toLowerCase();
-const pass=document.getElementById('password').value;
+const email=emailInput.value.trim().toLowerCase();
+const pass=passwordInput.value;
+const remember=rememberInput.checked;
 
 saveLoginDraft();
 
 if(email!==ADMIN_EMAIL){
-toast('Admin Gmail সঠিক নয়');
+toast('Incorrect Admin Gmail address');
 return;
 }
 
 if(!pass){
-toast('Password লিখ');
+toast('Please enter your password');
 return;
 }
 
 try{
+const persistence=remember
+?firebase.auth.Auth.Persistence.LOCAL
+:firebase.auth.Auth.Persistence.SESSION;
+
+await auth.setPersistence(persistence);
 await auth.signInWithEmailAndPassword(email,pass);
+
 clearLoginDraft();
+toast('Login successful');
+
 }catch(e){
-toast('Login হয়নি: '+(e.message||'তথ্য পরীক্ষা কর'));
+console.error(e);
+toast('Login failed: '+(e.message||'Please check your details'));
 }
 }
 
 async function logout(){
 clearLoginDraft();
+rememberInput.checked=false;
+
+try{
 await auth.signOut();
-toast('Logout হয়েছে');
+toast('Logged out successfully');
+}catch(e){
+toast('Logout failed: '+(e.message||'Please try again'));
+}
 }
 
 function needAdmin(){
 if(!isAdmin(currentUser)){
-toast('Admin অনুমতি নেই');
+toast('Admin permission required');
 return false;
 }
 return true;
@@ -490,7 +627,7 @@ document.getElementById('totalPending').textContent=pendingW+pendingS;
 
 }catch(e){
 console.error(e);
-toast('Dashboard ডেটা আসেনি — Firestore Rules পরীক্ষা কর');
+toast('Dashboard data unavailable — check Firestore Rules');
 }
 }
 
@@ -506,7 +643,7 @@ document.getElementById('adReward').value=Number(v.adReward??0);
 document.getElementById('minWithdraw').value=Number(v.minWithdraw??0);
 
 }catch(e){
-toast('Settings পড়া যায়নি — Rules পরীক্ষা কর');
+toast('Could not load settings — check Firestore Rules');
 }
 }
 
@@ -518,7 +655,7 @@ const adReward=Number(document.getElementById('adReward').value);
 const minWithdraw=Number(document.getElementById('minWithdraw').value);
 
 if(![dailyBonus,adReward,minWithdraw].every(x=>Number.isFinite(x)&&x>=0)){
-toast('সঠিক টাকার পরিমাণ দে');
+toast('Please enter valid amounts');
 return;
 }
 
@@ -531,11 +668,11 @@ updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
 updatedBy:currentUser.uid
 },{merge:true});
 
-toast('Settings সেভ হয়েছে');
+toast('Settings saved successfully');
 
 }catch(e){
 console.error(e);
-toast('সেভ হয়নি — Firestore Rules অনুমতি দিচ্ছে না');
+toast('Could not save settings — Firestore Rules denied permission');
 }
 }
 
@@ -547,7 +684,7 @@ const description=document.getElementById('taskDescription').value.trim();
 const reward=Number(document.getElementById('taskReward').value);
 
 if(!title||!Number.isFinite(reward)||reward<=0){
-toast('Task title ও সঠিক reward দে');
+toast('Enter a task title and a valid reward');
 return;
 }
 
@@ -565,12 +702,12 @@ document.getElementById('taskTitle').value='';
 document.getElementById('taskDescription').value='';
 document.getElementById('taskReward').value='';
 
-toast('নতুন Task যোগ হয়েছে');
+toast('New task added successfully');
 loadTasks();
 
 }catch(e){
 console.error(e);
-toast('Task যোগ হয়নি — Rules পরীক্ষা কর');
+toast('Could not add task — check Firestore Rules');
 }
 }
 
@@ -578,13 +715,13 @@ async function loadTasks(){
 if(!needAdmin())return;
 
 const box=document.getElementById('taskList');
-box.textContent='লোড হচ্ছে...';
+box.textContent='Loading...';
 
 try{
 const snap=await db.collection('tasks').get();
 
 if(snap.empty){
-box.innerHTML='<div class="empty">কোনো Task নেই</div>';
+box.innerHTML='<div class="empty">No tasks found</div>';
 return;
 }
 
@@ -621,7 +758,7 @@ box.append(el);
 
 }catch(e){
 console.error(e);
-box.textContent='Task পড়া যায়নি — Rules পরীক্ষা কর';
+box.textContent='Could not load tasks — check Firestore Rules';
 }
 }
 
@@ -630,22 +767,22 @@ if(!needAdmin())return;
 
 try{
 await db.collection('tasks').doc(id).update({active});
-toast('Task আপডেট হয়েছে');
+toast('Task updated successfully');
 loadTasks();
 }catch(e){
-toast('Task আপডেট হয়নি');
+toast('Could not update task');
 }
 }
 
 async function deleteTask(id){
-if(!needAdmin()||!confirm('এই Task ডিলিট করবি?'))return;
+if(!needAdmin()||!confirm('Are you sure you want to delete this task?'))return;
 
 try{
 await db.collection('tasks').doc(id).delete();
-toast('Task ডিলিট হয়েছে');
+toast('Task deleted successfully');
 loadTasks();
 }catch(e){
-toast('Task ডিলিট হয়নি');
+toast('Could not delete task');
 }
 }
 
@@ -653,13 +790,13 @@ async function loadSubmissions(){
 if(!needAdmin())return;
 
 const box=document.getElementById('submissionList');
-box.textContent='লোড হচ্ছে...';
+box.textContent='Loading...';
 
 try{
 const snap=await db.collection('taskSubmissions').limit(150).get();
 
 if(snap.empty){
-box.innerHTML='<div class="empty">কোনো Submission নেই</div>';
+box.innerHTML='<div class="empty">No submissions found</div>';
 return;
 }
 
@@ -709,14 +846,14 @@ box.append(el);
 
 }catch(e){
 console.error(e);
-box.textContent='Submission পড়া যায়নি — Rules পরীক্ষা কর';
+box.textContent='Could not load submissions — check Firestore Rules';
 }
 }
 
 async function reviewSubmission(id,status){
 if(!needAdmin())return;
 
-if(status==='approved'&&!confirm('এই Task approve করে reward যোগ করবি?'))return;
+if(status==='approved'&&!confirm('Approve this task and add the reward to the user balance?'))return;
 
 const ref=db.collection('taskSubmissions').doc(id);
 
@@ -724,21 +861,21 @@ try{
 await db.runTransaction(async t=>{
 const snap=await t.get(ref);
 
-if(!snap.exists)throw Error('Submission পাওয়া যায়নি');
+if(!snap.exists)throw Error('Submission not found');
 
 const d=snap.data();
 
-if((d.status||'pending')!=='pending')throw Error('এটি আগে review হয়েছে');
+if((d.status||'pending')!=='pending')throw Error('This submission has already been reviewed');
 
 if(status==='approved'){
 const amount=Number(d.reward||0);
 
-if(!d.uid||!Number.isFinite(amount)||amount<=0)throw Error('User বা reward তথ্য ভুল');
+if(!d.uid||!Number.isFinite(amount)||amount<=0)throw Error('Invalid user or reward information');
 
 const userRef=db.collection('users').doc(d.uid);
 const userSnap=await t.get(userRef);
 
-if(!userSnap.exists)throw Error('User পাওয়া যায়নি');
+if(!userSnap.exists)throw Error('User not found');
 
 const txRef=userRef.collection('transactions').doc();
 
@@ -763,13 +900,13 @@ reviewedBy:currentUser.uid
 });
 });
 
-toast(status==='approved'?'Approve হয়েছে, reward যোগ হয়েছে':'Task Reject হয়েছে');
+toast(status==='approved'?'Approved. Reward added successfully':'Task rejected');
 loadSubmissions();
 refreshAll();
 
 }catch(e){
 console.error(e);
-toast(e.message||'Review করা যায়নি');
+toast(e.message||'Could not review submission');
 }
 }
 
@@ -777,13 +914,13 @@ async function loadWithdrawals(){
 if(!needAdmin())return;
 
 const box=document.getElementById('withdrawList');
-box.textContent='লোড হচ্ছে...';
+box.textContent='Loading...';
 
 try{
 const snap=await db.collection('withdrawRequests').limit(150).get();
 
 if(snap.empty){
-box.innerHTML='<div class="empty">কোনো Withdraw আবেদন নেই</div>';
+box.innerHTML='<div class="empty">No withdrawal requests found</div>';
 return;
 }
 
@@ -802,7 +939,7 @@ const h=document.createElement('strong');
 h.textContent=money(d.amount)+' · '+(d.method||'Payment');
 
 const p=document.createElement('p');
-p.textContent=(d.email||d.uid||'User')+' · নম্বর: '+(d.number||'N/A')+' · '+dateText(d.createdAt);
+p.textContent=(d.email||d.uid||'User')+' · Number: '+(d.number||'N/A')+' · '+dateText(d.createdAt);
 
 const pill=document.createElement('span');
 pill.className='pill '+status;
@@ -833,14 +970,14 @@ box.append(el);
 
 }catch(e){
 console.error(e);
-box.textContent='Withdraw পড়া যায়নি — Rules পরীক্ষা কর';
+box.textContent='Could not load withdrawals — check Firestore Rules';
 }
 }
 
 async function reviewWithdraw(id,status){
 if(!needAdmin())return;
 
-if(status==='approved'&&!confirm('পেমেন্ট সম্পন্ন হয়েছে? Approve করলে User balance থেকে টাকা কাটা হবে।'))return;
+if(status==='approved'&&!confirm('Has the payment been completed? Approving will deduct money from the user balance.'))return;
 
 const ref=db.collection('withdrawRequests').doc(id);
 
@@ -848,22 +985,22 @@ try{
 await db.runTransaction(async t=>{
 const snap=await t.get(ref);
 
-if(!snap.exists)throw Error('আবেদন পাওয়া যায়নি');
+if(!snap.exists)throw Error('Withdrawal request not found');
 
 const d=snap.data();
 
-if((d.status||'pending')!=='pending')throw Error('আবেদন আগে প্রসেস হয়েছে');
+if((d.status||'pending')!=='pending')throw Error('This request has already been processed');
 
 if(status==='approved'){
 const userRef=db.collection('users').doc(d.uid);
 const userSnap=await t.get(userRef);
 
-if(!userSnap.exists)throw Error('User পাওয়া যায়নি');
+if(!userSnap.exists)throw Error('User not found');
 
 const amount=Number(d.amount||0);
 const balance=Number(userSnap.data().balance||0);
 
-if(!Number.isFinite(amount)||amount<=0||balance<amount)throw Error('User-এর পর্যাপ্ত ব্যালেন্স নেই');
+if(!Number.isFinite(amount)||amount<=0||balance<amount)throw Error('Insufficient user balance');
 
 const txRef=userRef.collection('transactions').doc();
 
@@ -885,13 +1022,13 @@ reviewedBy:currentUser.uid
 });
 });
 
-toast(status==='approved'?'Withdraw Approve হয়েছে':'Withdraw Reject হয়েছে');
+toast(status==='approved'?'Withdrawal approved successfully':'Withdrawal rejected');
 loadWithdrawals();
 refreshAll();
 
 }catch(e){
 console.error(e);
-toast(e.message||'Withdraw প্রসেস করা যায়নি');
+toast(e.message||'Could not process withdrawal');
 }
 }
 
@@ -899,7 +1036,7 @@ async function loadUsers(){
 if(!needAdmin())return;
 
 const box=document.getElementById('userList');
-box.textContent='লোড হচ্ছে...';
+box.textContent='Loading...';
 
 try{
 const snap=await db.collection('users').limit(500).get();
@@ -908,7 +1045,7 @@ renderUsers();
 
 }catch(e){
 console.error(e);
-box.textContent='User list পড়া যায়নি — Rules পরীক্ষা কর';
+box.textContent='Could not load users — check Firestore Rules';
 }
 }
 
@@ -916,7 +1053,7 @@ function renderUsers(){
 const box=document.getElementById('userList');
 
 if(!usersCache.length){
-box.innerHTML='<div class="empty">কোনো User পাওয়া যায়নি</div>';
+box.innerHTML='<div class="empty">No users found</div>';
 return;
 }
 
@@ -930,7 +1067,7 @@ const rows=usersCache.filter(u=>
 box.innerHTML='';
 
 if(!rows.length){
-box.innerHTML='<div class="empty">মিল পাওয়া যায়নি</div>';
+box.innerHTML='<div class="empty">No matching users found</div>';
 return;
 }
 
