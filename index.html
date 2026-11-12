@@ -752,7 +752,7 @@ const translations={
 'ভাষা পরিবর্তন':'Change Language',
 'আপনি কি অ্যাপের ভাষা পরিবর্তন করতে চান?':'Would you like to change the app language?',
 'না':'No','হ্যাঁ':'Yes',
-'আপনার অ্যাকাউন্টে লগইন করুন':'Log in to your account',
+'আপনার একাউন্ট লগইন করুন':'Log in to your account',
 'নতুন অ্যাকাউন্ট তৈরি করুন':'Create a New Account',
 'পাসওয়ার্ড ভুলে গেছেন?':'Forgot Password?',
 'রিসেট লিংক পাঠান':'Send Reset Link',
@@ -1168,7 +1168,7 @@ document.getElementById('forgotForm').style.display=page==='forgot'?'block':'non
 if(page==='login'){
 document.getElementById('authTitle').textContent='Welcome Earning Money BD!';
 document.getElementById('authSubtitle').textContent=currentLanguage==='en'
-?'Log in to your account':'আপনার অ্যাকাউন্টে লগইন করুন';
+?'Log in to your account':'আপনার একাউন্ট লগইন করুন';
 }else if(page==='register'){
 document.getElementById('authTitle').textContent=currentLanguage==='en'
 ?'Create New Account':'নতুন অ্যাকাউন্ট তৈরি করুন';
@@ -1398,7 +1398,7 @@ console.error(e);
 if(e.code==='auth/popup-closed-by-user'){
 authStatus('গুগল একাউন্ট লগইন করা করা যায়নি','error');
 }else if(e.code==='auth/network-request-failed'){
-authStatus('আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন።','error');
+authStatus('আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।','error');
 }else{
 authStatus('গুগল একাউন্ট লগইন করা করা যায়নি','error');
 }
