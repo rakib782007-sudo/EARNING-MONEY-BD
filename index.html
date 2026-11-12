@@ -797,6 +797,8 @@ const translations={
 
 'অনুগ্রহ করে আপনার ইমেইল ঠিকানা লিখুন।':'Please enter your email address.',
 'অনুগ্রহ করে সঠিক ইমেইল ঠিকানা লিখুন।':'Please enter a valid email address.',
+'সঠিক ইমেইল ঠিকানা লিখুন। ইমেইল অবশ্যই @gmail.com দিয়ে শেষ হতে হবে。':'Please enter a valid Email address. Email must end with @gmail.com.',
+'শুধুমাত্র @gmail.com যুক্ত ইমেইল ঠিকানা ব্যবহার করুন。':'Please enter a valid Email address. Email must end with @gmail.com.',
 'অনুগ্রহ করে আপনার পাসওয়ার্ড লিখুন।':'Please enter your password.',
 'আপনার পাসওয়ার্ড সঠিক নয়। অনুগ্রহ করে সঠিক পাসওয়ার্ড লিখুন।':'Incorrect password. Please enter the correct password.',
 'ইমেইল ঠিকানা অথবা পাসওয়ার্ড সঠিক নয়।':'Incorrect email address or password.',
@@ -826,9 +828,10 @@ const translations={
 'আরও শক্তিশালী Password ব্যবহার করুন।':'Choose a stronger password.',
 'Email Address সঠিক নয়।':'Invalid Email address.',
 'Firebase Console থেকে Email/Password Login চালু করুন।':'Enable Email/Password login in Firebase Console.',
-'Reset Link পাঠানো হচ্ছে...':'Sending reset link...',
-'Reset Link পাঠানো হয়েছে। Email Inbox দেখুন।':'Reset link sent. Check your Email inbox.',
-'এই Email দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।':'No account found with this Email.',
+'যাচাই করা হচ্ছে...':'Verifying...',
+'রিসেট লিংক পাঠানো হচ্ছে...':'Sending reset link...',
+'রিসেট লিংক পাঠানো হয়েছে। ইমেইল ইনবক্স দেখুন।':'Reset link sent. Check your Email inbox.',
+'এই ইমেইল দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি। প্রথমে অ্যাকাউন্ট তৈরি করুন।':'No account was found with this email. Please create an account first.',
 'Google-এর সাথে সংযোগ হচ্ছে...':'Connecting to Google...',
 'ডেটাবেস সংযোগে সমস্যা হয়েছে':'Database connection problem',
 'বোনাস যোগ হয়নি। Firestore Rules পরীক্ষা করুন':'Bonus not added. Check Firestore Rules.',
@@ -845,7 +848,7 @@ const translations={
 'ন্যূনতম উত্তোলন ৳':'Minimum withdrawal ৳',
 'অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।':'Could not create account. Try again.',
 'Login করা যায়নি। আবার চেষ্টা করুন।':'Login failed. Please try again.',
-'Reset Link পাঠানো যায়নি। আবার চেষ্টা করুন।':'Could not send reset link. Try again.',
+'রিসেট লিংক পাঠানো যায়নি। আবার চেষ্টা করুন।':'Could not send reset link. Try again.',
 'আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে':'Today’s bonus has already been claimed',
 'Admin-এর Bonus Settings পড়া যায়নি':'Could not load admin bonus settings',
 'Welcome Back! 👋':'Welcome Back! 👋',
@@ -1283,11 +1286,11 @@ authStatus('অনুগ্রহ করে আপনার ইমেইল ঠ�
 return;
 }
 if(!validEmail(email)){
-authStatus('অনুগ্রহ করে সঠিক ইমেইল ঠিকানা লিখুন।','error');
+authStatus('সঠিক ইমেইল ঠিকানা লিখুন। ইমেইল অবশ্যই @gmail.com দিয়ে শেষ হতে হবে।','error');
 return;
 }
 if(!email.toLowerCase().endsWith('@gmail.com')){
-authStatus('শুধুমাত্র @gmail.com যুক্ত ইমেইল ঠিকানা ব্যবহার করুন।','error');
+authStatus('সঠিক ইমেইল ঠিকানা লিখুন। ইমেইল অবশ্যই @gmail.com দিয়ে শেষ হতে হবে।','error');
 return;
 }
 
@@ -1356,19 +1359,19 @@ try{
 const methods=await auth.fetchSignInMethodsForEmail(email);
 
 if(!methods||methods.length===0){
-authStatus('এই Email দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি। প্রথমে অ্যাকাউন্ট তৈরি করুন।','error');
+authStatus('এই ইমেইল দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি। প্রথমে অ্যাকাউন্ট তৈরি করুন।','error');
 btn.disabled=false;
 return;
 }
 
-authStatus('Reset Link পাঠানো হচ্ছে...','info');
+authStatus('রিসেট লিংক পাঠানো হচ্ছে...','info');
 await auth.sendPasswordResetEmail(email);
-authStatus('Reset Link পাঠানো হয়েছে। Email Inbox দেখুন।','success');
+authStatus('রিসেট লিংক পাঠানো হয়েছে। ইমেইল ইনবক্স দেখুন।','success');
 }catch(e){
 console.error(e);
-let msg='Reset Link পাঠানো যায়নি। আবার চেষ্টা করুন।';
+let msg='রিসেট লিংক পাঠানো যায়নি। আবার চেষ্টা করুন।';
 if(e.code==='auth/user-not-found'||e.code==='auth/invalid-credential'){
-msg='এই Email দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।';
+msg='এই ইমেইল দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি। প্রথমে অ্যাকাউন্ট তৈরি করুন।';
 }else if(e.code==='auth/invalid-email'){
 msg='অনুগ্রহ করে সঠিক ইমেইল ঠিকানা লিখুন।';
 }else if(e.code==='auth/network-request-failed'){
