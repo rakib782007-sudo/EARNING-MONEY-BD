@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -380,11 +380,11 @@ max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 
 <div id="languageConfirm">
 <div class="language-confirm-box">
-<h3 id="confirmTitle">ভাষা পরিবর্তন</h3>
-<p id="confirmMessage">আপনি কি অ্যাপের ভাষা পরিবর্তন করতে চান?</p>
+<h3 id="confirmTitle">Language Change</h3>
+<p id="confirmMessage">Would you like to change the app language?</p>
 <div class="language-confirm-actions">
-<button onclick="cancelLanguage()">না</button>
-<button class="confirm-yes" onclick="confirmLanguage()">হ্যাঁ</button>
+<button onclick="cancelLanguage()">No</button>
+<button class="confirm-yes" onclick="confirmLanguage()">Yes</button>
 </div>
 </div>
 </div>
@@ -404,7 +404,7 @@ max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 
 <div class="login-card">
 <h2 id="authTitle">Welcome Earning Money BD!</h2>
-<p id="authSubtitle">আপনার অ্যাকাউন্ট লগইন করুন</p>
+<p id="authSubtitle">Log in to your account</p>
 
 <div id="loginForm">
 <input class="auth-input" id="loginEmail" type="email" placeholder="Email Address" autocomplete="email">
@@ -461,7 +461,7 @@ max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 
 <div id="forgotForm" style="display:none">
 <input class="auth-input" id="forgotEmail" type="email" placeholder="Email Address" autocomplete="email">
-<button class="auth-main-btn" id="forgotContinueBtn" onclick="resetPassword()">রিসেট লিংক পাঠান</button>
+<button class="auth-main-btn" id="forgotContinueBtn" onclick="resetPassword()">Send Reset Link</button>
 <button class="auth-link" onclick="showLoginForm()">Back to Login</button>
 </div>
 
@@ -505,7 +505,7 @@ EARNING <span>MONEY BD</span>
 <section class="balance">
 <div class="wallet-icon">👛</div>
 <div class="balance-content">
-<small>আপনার Wallet Balance</small>
+<small>Your Wallet Balance</small>
 <h2>৳ <span id="balance">0.00</span></h2>
 <div class="balance-actions">
 <span class="muted">Earning Money BD Wallet</span>
@@ -515,8 +515,8 @@ EARNING <span>MONEY BD</span>
 </section>
 
 <section class="stats">
-<div class="stat"><span class="emoji">📈</span><div><small>আজকের আয়</small><strong>৳ <span id="todayEarn">0.00</span></strong></div></div>
-<div class="stat"><span class="emoji">📋</span><div><small>সম্পন্ন কাজ</small><strong id="taskCount">0</strong></div></div>
+<div class="stat"><span class="emoji">📈</span><div><small>Today's Earnings</small><strong>৳ <span id="todayEarn">0.00</span></strong></div></div>
+<div class="stat"><span class="emoji">📋</span><div><small>Completed Tasks</small><strong id="taskCount">0</strong></div></div>
 </section>
 
 <h3 class="section-title">⚡ Quick Access</h3>
@@ -532,7 +532,7 @@ EARNING <span>MONEY BD</span>
 
 <div class="invite">
 <span class="meg">🎁</span>
-<p><strong>Refer Your Friends</strong>বন্ধুদের আমন্ত্রণ জানান এবং আপনার আয় বাড়ান!</p>
+<p><strong>Refer Your Friends</strong>Invite friends and increase your earnings!</p>
 <button onclick="openPage('referralPage')">👥 Invite ➜</button>
 </div>
 
@@ -541,20 +541,20 @@ EARNING <span>MONEY BD</span>
 <h3>⚡ Recent Activity</h3>
 <button onclick="openPage('historyPage')">View All ➜</button>
 </div>
-<div id="recentActivity" class="empty">সাম্প্রতিক হিসাব দেখতে History খুলুন।</div>
+<div id="recentActivity" class="empty">Open History to see recent activity.</div>
 </section>
 </main>
 
 <main id="tasksPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>📋 Tasks</h2></div>
-<p class="page-desc">Admin-এর দেওয়া কাজগুলো এখানে দেখা যাবে।</p>
-<div id="taskList" class="card"><div class="empty">কাজ লোড হচ্ছে...</div></div>
+<p class="page-desc">Tasks provided by the admin will appear here.</p>
+<div id="taskList" class="card"><div class="empty">Loading tasks...</div></div>
 </main>
 
 <main id="walletPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>👛 My Wallet</h2></div>
 <div class="wallet-summary">
-<small>আপনার মোট Wallet Balance</small>
+<small>Your Total Wallet Balance</small>
 <h2>৳ <span id="walletBalance">0.00</span></h2>
 <span class="pill">Earning Money BD Wallet</span>
 </div>
@@ -564,7 +564,7 @@ EARNING <span>MONEY BD</span>
 </div>
 <div class="card" style="margin-top:14px">
 <h3>Wallet Information</h3>
-<p class="page-desc">আপনার আয় এবং উত্তোলনের হিসাব এখানে দেখতে পারবেন।</p>
+<p class="page-desc">You can see your earnings and withdrawal records here.</p>
 <div class="row"><span class="muted">Available Balance</span><strong>৳ <span id="walletBalance2">0.00</span></strong></div>
 <button class="action" onclick="openPage('withdrawPage')">Withdraw Money ➜</button>
 <button class="action" style="background:linear-gradient(120deg,#b77aff,#7534c7);color:white;border-color:#e0baff" onclick="openPage('historyPage')">View Transaction History</button>
@@ -574,11 +574,11 @@ EARNING <span>MONEY BD</span>
 <main id="referralPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>👥 Referral</h2></div>
 <div class="card">
-<p class="page-desc">বন্ধুদের আমন্ত্রণ জানান।</p>
-<label>আপনার Referral Code</label>
+<p class="page-desc">Invite your friends.</p>
+<label>Your Referral Code</label>
 <input class="field" id="refCode" readonly>
-<button class="action" onclick="copyReferral()">কোড কপি করুন</button>
-<div class="notice">Referral tracking পরবর্তী ধাপে নিরাপদভাবে যুক্ত হবে।</div>
+<button class="action" onclick="copyReferral()">Copy Code</button>
+<div class="notice">Referral tracking will be added securely in a future update.</div>
 </div>
 </main>
 
@@ -600,44 +600,44 @@ EARNING <span>MONEY BD</span>
 <main id="bonusPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>🎁 Daily Bonus</h2></div>
 <div class="card">
-<p class="page-desc">আপনি প্রতিদিন একবার বোনাস ক্লেইম করতে পারবেন।</p>
+<p class="page-desc">You can claim the bonus once every day.</p>
 <h2 style="font:700 34px Poppins;margin:12px 0;color:#ffd45a">৳ <span id="bonusAmount">10.00</span></h2>
-<span class="pill">প্রতিদিন ১ বার</span>
-<button class="action" id="claimBonusBtn" onclick="claimBonus()">আজকের বোনাস ক্লেইম</button>
-<p class="notice">Claim করলেই বোনাস সরাসরি Wallet Balance-এ যোগ হবে।</p>
+<span class="pill">Once per day</span>
+<button class="action" id="claimBonusBtn" onclick="claimBonus()">Claim Today’s Bonus</button>
+<p class="notice">The bonus will be added directly to your wallet after claiming.</p>
 </div>
 </main>
 
 <main id="adsPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('homePage')">←</button><h2>▶️ Watch Ads</h2></div>
 <div class="card">
-<h3>বিজ্ঞাপন দেখে আয়</h3>
-<p class="page-desc">অ্যাড নেটওয়ার্ক যুক্ত হলে এখানে বিজ্ঞাপন দেখা ও রিওয়ার্ড পাওয়া যাবে।</p>
-<div class="row"><span class="muted">প্রতি বিজ্ঞাপনের রিওয়ার্ড</span><strong>৳ <span id="adReward">0.00</span></strong></div>
-<button class="action" disabled>বিজ্ঞাপন এখনো চালু হয়নি</button>
+<h3>Earn by watching ads</h3>
+<p class="page-desc">Ads and rewards will be available here after an ad network is connected.</p>
+<div class="row"><span class="muted">Reward per advertisement</span><strong>৳ <span id="adReward">0.00</span></strong></div>
+<button class="action" disabled>Advertisements are not active yet</button>
 </div>
 </main>
 
 <main id="withdrawPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('walletPage')">←</button><h2>💸 Withdraw</h2></div>
 <div class="card">
-<p class="page-desc">উত্তোলনের আবেদন জমা দিন। Admin যাচাই করে প্রসেস করবেন।</p>
-<label>পেমেন্ট মাধ্যম</label>
+<p class="page-desc">Submit a withdrawal request. The admin will verify and process it.</p>
+<label>Payment Method</label>
 <select class="field" id="payMethod">
 <option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option>
 </select>
-<label>অ্যাকাউন্ট নম্বর</label>
+<label>Account Number</label>
 <input class="field" id="payNumber" inputmode="numeric" placeholder="01XXXXXXXXX" maxlength="11">
-<label>টাকার পরিমাণ</label>
-<input class="field" id="withdrawAmount" type="number" min="1" step="1" placeholder="টাকার পরিমাণ">
-<button class="action" onclick="submitWithdraw()">উত্তোলনের আবেদন জমা দিন</button>
-<p class="notice">Admin যাচাই না করা পর্যন্ত উত্তোলনের আবেদন Pending থাকবে।</p>
+<label>Amount</label>
+<input class="field" id="withdrawAmount" type="number" min="1" step="1" placeholder="Amount">
+<button class="action" onclick="submitWithdraw()">Submit Withdrawal Request</button>
+<p class="notice">Your withdrawal request will remain pending until verified by the admin.</p>
 </div>
 </main>
 
 <main id="historyPage" class="page">
 <div class="topline"><button class="back" onclick="openPage('walletPage')">←</button><h2>📜 History</h2></div>
-<div class="card" id="historyList"><div class="empty">হিসাব লোড হচ্ছে...</div></div>
+<div class="card" id="historyList"><div class="empty">Loading history...</div></div>
 </main>
 </div>
 
@@ -740,8 +740,12 @@ input.addEventListener('change',()=>saveAuthDraft(page));
 });
 });
 
-/* LANGUAGE SYSTEM */
-let currentLanguage=localStorage.getItem('embd_language')||'bn';
+/* LANGUAGE SYSTEM - DEFAULT TO ENGLISH ON FIRST VISIT */
+let currentLanguage = localStorage.getItem('embd_language');
+if (!currentLanguage) {
+    currentLanguage = 'en';
+    localStorage.setItem('embd_language', 'en');
+}
 let pendingLanguage=null;
 
 const translations={
@@ -786,7 +790,7 @@ const translations={
 'বন্ধুদের আমন্ত্রণ জানান এবং আপনার আয় বাড়ান!':'Invite friends and increase your earnings!',
 'সাম্প্রতিক হিসাব দেখতে History খুলুন।':'Open History to see recent activity.',
 
-/* NAME ALERTS - UPDATED */
+/* NAME ALERTS */
 'অনুগ্রহ করে আপনার সম্পূর্ণ নাম লিখুন।':'Please enter your full name.',
 'আপনার নাম কমপক্ষে ৩ অক্ষরের হতে হবে।':'Your name must contain at least 3 characters.',
 'নামের ঘরে শুধুমাত্র বাংলা, ইংরেজি অক্ষর ও স্পেস ব্যবহার করুন।':'Only Bangla letters, English letters, and spaces are allowed in the name.',
@@ -1001,7 +1005,7 @@ document.getElementById('languageConfirm').style.display='none';
 applyLanguage();
 }
 
-/* FIREBASE CONFIG - UNCHANGED */
+/* FIREBASE CONFIG */
 const firebaseConfig={
 apiKey:"AIzaSyDDDwkjIa7NecN7CnpyQxPja4KH0vLqCJ4",
 authDomain:"earning-bd-1e902.firebaseapp.com",
@@ -1021,7 +1025,7 @@ let currentUser=null;
 let appSettings={dailyBonus:10,adReward:0,minWithdraw:0};
 let userData={balance:0};
 
-/* NAME VALIDATION - ONLY BANGLA, ENGLISH LETTERS AND SPACE */
+/* NAME VALIDATION */
 const NAME_ALLOWED_REGEX=/^[A-Za-z\u0981-\u0983\u0985-\u09B9\u09BC\u09BE-\u09CD\u09CE\u09D7\u09DC-\u09DF\u09E0-\u09E3\u09F0-\u09F1 ]+$/u;
 const NAME_FILTER_REGEX=/[^A-Za-z\u0981-\u0983\u0985-\u09B9\u09BC\u09BE-\u09CD\u09CE\u09D7\u09DC-\u09DF\u09E0-\u09E3\u09F0-\u09F1 ]/gu;
 
@@ -1251,7 +1255,7 @@ authStatus(msg,'error');
 }finally{btn.disabled=false}
 }
 
-/* CREATE ACCOUNT - UPDATED NAME VALIDATION */
+/* CREATE ACCOUNT */
 async function registerAccount(){
 const name=document.getElementById('registerName').value.trim().normalize('NFC');
 const email=document.getElementById('registerEmail').value.trim().toLowerCase();
@@ -1264,13 +1268,11 @@ authStatus('অনুগ্রহ করে আপনার সম্পূর�
 return;
 }
 
-/* শুধু বাংলা, ইংরেজি অক্ষর এবং সাধারণ স্পেস */
 if(!isValidNameCharacters(name)){
 authStatus('নামের ঘরে শুধুমাত্র বাংলা, ইংরেজি অক্ষর ও স্পেস ব্যবহার করুন।','error');
 return;
 }
 
-/* ৩টি শব্দ নয়, কমপক্ষে ৩টি অক্ষর */
 if(countNameCharacters(name)<3){
 authStatus('আপনার নাম কমপক্ষে ৩ অক্ষরের হতে হবে।','error');
 return;
@@ -1676,12 +1678,12 @@ toast('Referral code কপি হয়েছে','success');
 /* TASKS */
 async function loadTasks(){
 const box=document.getElementById('taskList');
-box.innerHTML='<div class="empty">কাজ লোড হচ্ছে...</div>';
+box.innerHTML='<div class="empty">Loading tasks...</div>';
 
 try{
 const s=await db.collection('tasks').where('active','==',true).get();
 if(s.empty){
-box.innerHTML='<div class="empty">এখনো কোনো কাজ যোগ করা হয়নি।</div>';
+box.innerHTML='<div class="empty">No tasks have been added yet.</div>';
 applyLanguage();
 return;
 }
@@ -1704,11 +1706,11 @@ meta.className='row';
 meta.style.marginTop='8px';
 
 const reward=document.createElement('span');
-reward.textContent='রিওয়ার্ড: ৳'+Number(d.reward||0).toFixed(2);
+reward.textContent='Reward: ৳'+Number(d.reward||0).toFixed(2);
 
 const btn=document.createElement('button');
 btn.className='back';
-btn.textContent='আবেদন';
+btn.textContent='Apply';
 btn.onclick=()=>submitTask(doc.id,d);
 
 meta.append(reward,btn);
@@ -1717,7 +1719,7 @@ box.append(item);
 });
 applyLanguage();
 }catch(e){
-box.innerHTML='<div class="empty">Tasks লোড করা যায়নি। Firestore Rules / Admin setup বাকি।</div>';
+box.innerHTML='<div class="empty">Could not load tasks. Check Firestore Rules / Admin setup.</div>';
 applyLanguage();
 }
 }
@@ -1730,17 +1732,17 @@ uid:currentUser.uid,email:currentUser.email,taskId,
 title:task.title||'Task',reward:Number(task.reward||0),
 status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()
 });
-toast('Task submission জমা হয়েছে','success');
+toast('Task submission submitted.','success');
 }catch(e){
 console.error(e);
-toast('জমা হয়নি: Firestore Rules পরীক্ষা করুন','error');
+toast('Submission failed. Check Firestore Rules','error');
 }
 }
 
 /* HISTORY */
 async function loadHistory(){
 const box=document.getElementById('historyList');
-box.innerHTML='<div class="empty">হিসাব লোড হচ্ছে...</div>';
+box.innerHTML='<div class="empty">Loading history...</div>';
 
 try{
 const [tx,claims,withdrawals]=await Promise.all([
@@ -1770,7 +1772,7 @@ withdrawals.forEach(d=>rows.push({...d.data(),kind:'Withdraw'}));
 rows.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
 
 if(!rows.length){
-box.innerHTML='<div class="empty">এখনো কোনো হিসাব নেই।</div>';
+box.innerHTML='<div class="empty">No transactions yet.</div>';
 applyLanguage();
 return;
 }
@@ -1803,7 +1805,7 @@ box.append(el);
 applyLanguage();
 }catch(e){
 console.error(e);
-box.innerHTML='<div class="empty">History দেখতে Firestore Rules আপডেট করতে হবে।</div>';
+box.innerHTML='<div class="empty">Update Firestore Rules to view history.</div>';
 applyLanguage();
 }
 }
@@ -1815,7 +1817,7 @@ sessionStorage.removeItem(AUTH_PAGE_KEY);
 clearAllAuthInputs();
 clearAuthDrafts();
 await auth.signOut();
-toast('লগআউট সম্পন্ন হয়েছে','success');
+toast('Logged out successfully','success');
 }
 
 /* AUTH REFRESH PROTECTION */
