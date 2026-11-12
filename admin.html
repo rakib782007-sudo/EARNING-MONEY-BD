@@ -15,8 +15,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root{--bg:#090713;--panel:#151126;--panel2:#1d1732;--line:#ffffff16;--text:#f8f5ff;--muted:#aaa2bd;--purple:#a66bff;--purple2:#7138d5;--gold:#ffd36b;--green:#36d6a0;--red:#ff6e83;--blue:#65b7ff}
+
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at 10% 0%,#28164a 0,transparent 35%),var(--bg);color:var(--text);font-family:'Hind Siliguri',Inter,sans-serif;min-height:100vh}
+
+html,body{
+overscroll-behavior-y:none;
+}
+
+body{
+margin:0;
+background:radial-gradient(ellipse at 10% 0%,#28164a 0,transparent 35%),var(--bg);
+color:var(--text);
+font-family:'Hind Siliguri',Inter,sans-serif;
+min-height:100vh;
+}
+
 button,input,textarea{font:inherit}
 button{cursor:pointer;border:0}
 .wrap{max-width:1120px;margin:auto;padding:18px}
@@ -309,6 +322,37 @@ const db=firebase.firestore();
 
 let currentUser=null,usersCache=[];
 
+/* Login form draft: survives refresh in the same tab */
+const emailInput=document.getElementById('email');
+const passwordInput=document.getElementById('password');
+
+function saveLoginDraft(){
+try{
+sessionStorage.setItem('embd_admin_email',emailInput.value);
+sessionStorage.setItem('embd_admin_password',passwordInput.value);
+}catch(e){}
+}
+
+function restoreLoginDraft(){
+try{
+emailInput.value=sessionStorage.getItem('embd_admin_email')||'';
+passwordInput.value=sessionStorage.getItem('embd_admin_password')||'';
+}catch(e){}
+}
+
+function clearLoginDraft(){
+try{
+sessionStorage.removeItem('embd_admin_email');
+sessionStorage.removeItem('embd_admin_password');
+}catch(e){}
+emailInput.value='';
+passwordInput.value='';
+}
+
+emailInput.addEventListener('input',saveLoginDraft);
+passwordInput.addEventListener('input',saveLoginDraft);
+restoreLoginDraft();
+
 function toast(msg){
 const el=document.getElementById('toast');
 el.textContent=msg;
@@ -349,6 +393,7 @@ auth.signOut();
 return false;
 }
 
+clearLoginDraft();
 document.getElementById('loginBox').classList.add('hidden');
 document.getElementById('app').classList.remove('hidden');
 document.getElementById('logoutBtn').classList.remove('hidden');
@@ -372,6 +417,8 @@ async function emailLogin(){
 const email=document.getElementById('email').value.trim().toLowerCase();
 const pass=document.getElementById('password').value;
 
+saveLoginDraft();
+
 if(email!==ADMIN_EMAIL){
 toast('Admin Gmail সঠিক নয়');
 return;
@@ -384,12 +431,14 @@ return;
 
 try{
 await auth.signInWithEmailAndPassword(email,pass);
+clearLoginDraft();
 }catch(e){
 toast('Login হয়নি: '+(e.message||'তথ্য পরীক্ষা কর'));
 }
 }
 
 async function logout(){
+clearLoginDraft();
 await auth.signOut();
 toast('Logout হয়েছে');
 }
