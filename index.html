@@ -1335,7 +1335,7 @@ authStatus(msg,'error');
 }finally{btn.disabled=false}
 }
 
-/* FORGOT PASSWORD */
+/* FORGOT PASSWORD - WITH ACCOUNT EXISTENCE CHECK */
 async function resetPassword(){
 const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
 const btn=document.querySelector('#forgotForm .auth-main-btn');
@@ -1350,17 +1350,30 @@ return;
 }
 
 btn.disabled=true;
-authStatus('Reset Link পাঠানো হচ্ছে...','info');
+authStatus('যাচাই করা হচ্ছে...','info');
 
 try{
+const methods=await auth.fetchSignInMethodsForEmail(email);
+
+if(!methods||methods.length===0){
+authStatus('এই Email দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি। প্রথমে অ্যাকাউন্ট তৈরি করুন।','error');
+btn.disabled=false;
+return;
+}
+
+authStatus('Reset Link পাঠানো হচ্ছে...','info');
 await auth.sendPasswordResetEmail(email);
 authStatus('Reset Link পাঠানো হয়েছে। Email Inbox দেখুন।','success');
 }catch(e){
 console.error(e);
 let msg='Reset Link পাঠানো যায়নি। আবার চেষ্টা করুন।';
-if(e.code==='auth/user-not-found')msg='এই Email দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।';
-if(e.code==='auth/invalid-email')msg='অনুগ্রহ করে সঠিক ইমেইল ঠিকানা লিখুন।';
-if(e.code==='auth/network-request-failed')msg='আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।';
+if(e.code==='auth/user-not-found'||e.code==='auth/invalid-credential'){
+msg='এই Email দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।';
+}else if(e.code==='auth/invalid-email'){
+msg='অনুগ্রহ করে সঠিক ইমেইল ঠিকানা লিখুন।';
+}else if(e.code==='auth/network-request-failed'){
+msg='আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।';
+}
 authStatus(msg,'error');
 }finally{btn.disabled=false}
 }
