@@ -797,8 +797,8 @@ const translations={
 
 'অনুগ্রহ করে আপনার ইমেইল ঠিকানা লিখুন।':'Please enter your email address.',
 'অনুগ্রহ করে সঠিক ইমেইল ঠিকানা লিখুন।':'Please enter a valid email address.',
-'সঠিক ইমেইল ঠিকানা লিখুন। ইমেইল অবশ্যই @gmail.com দিয়ে শেষ হতে হবে。':'Please enter a valid Email address. Email must end with @gmail.com.',
-'শুধুমাত্র @gmail.com যুক্ত ইমেইল ঠিকানা ব্যবহার করুন。':'Please enter a valid Email address. Email must end with @gmail.com.',
+'সঠিক ইমেইল ঠিকানা লিখুন। ইমেইল অবশ্যই @gmail.com দিয়ে শেষ হতে হবে।':'Please enter a valid Email address. Email must end with @gmail.com.',
+'শুধুমাত্র @gmail.com যুক্ত ইমেইল ঠিকানা ব্যবহার করুন।':'Please enter a valid Email address. Email must end with @gmail.com.',
 'অনুগ্রহ করে আপনার পাসওয়ার্ড লিখুন।':'Please enter your password.',
 'আপনার পাসওয়ার্ড সঠিক নয়। অনুগ্রহ করে সঠিক পাসওয়ার্ড লিখুন।':'Incorrect password. Please enter the correct password.',
 'ইমেইল ঠিকানা অথবা পাসওয়ার্ড সঠিক নয়।':'Incorrect email address or password.',
@@ -817,7 +817,7 @@ const translations={
 'অনুগ্রহ করে Password লিখুন।':'Enter your password.',
 'Password কমপক্ষে ৬ অক্ষরের হতে হবে.':'Password must be at least 6 characters.',
 'দুটি Password মিলছে না।':'The two passwords do not match.',
-'Login হচ্ছে...':'Logging in...',
+'লগইন হচ্ছে...':'Logging in...',
 'Login সফল হয়েছে!':'Login successful!',
 'Email অথবা Password ভুল।':'Incorrect Email or password.',
 'Password ভুল হয়েছে।':'Incorrect password.',
@@ -830,7 +830,7 @@ const translations={
 'Firebase Console থেকে Email/Password Login চালু করুন।':'Enable Email/Password login in Firebase Console.',
 'যাচাই করা হচ্ছে...':'Verifying...',
 'রিসেট লিংক পাঠানো হচ্ছে...':'Sending reset link...',
-'রিসেট লিংক পাঠানো হয়েছে। ইমেইল ইনবক্স দেখুন।':'Reset link sent. Check your Email inbox.',
+'রিসেট লিংক পাঠানো হয়েছে। ইমেইল ইনবক্স দেখুন।':'Reset link sent. Check your Email inbox.',
 'এই ইমেইল দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি। প্রথমে অ্যাকাউন্ট তৈরি করুন।':'No account was found with this email. Please create an account first.',
 'Google-এর সাথে সংযোগ হচ্ছে...':'Connecting to Google...',
 'ডেটাবেস সংযোগে সমস্যা হয়েছে':'Database connection problem',
@@ -1235,7 +1235,8 @@ return;
 }
 
 btn.disabled=true;
-authStatus('Login হচ্ছে...','info');
+const loginLoadingText = currentLanguage === 'en' ? 'Logging in...' : 'লগইন হচ্ছে...';
+authStatus(loginLoadingText, 'info');
 
 try{
 await auth.signInWithEmailAndPassword(email,password);
