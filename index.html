@@ -833,6 +833,7 @@ const translations={
 'রিসেট লিংক পাঠানো হয়েছে। ইমেইল ইনবক্স দেখুন।':'Reset link sent. Check your Email inbox.',
 'এই ইমেইল দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি। প্রথমে অ্যাকাউন্ট তৈরি করুন।':'No account was found with this email. Please create an account first.',
 'Google-এর সাথে সংযোগ হচ্ছে...':'Connecting to Google...',
+'গুগল একাউন্ট লগইন করা করা যায়নি':'Could not log in to the Google account.',
 'ডেটাবেস সংযোগে সমস্যা হয়েছে':'Database connection problem',
 'বোনাস যোগ হয়নি। Firestore Rules পরীক্ষা করুন':'Bonus not added. Check Firestore Rules.',
 'অনুগ্রহ করে সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন।':'Enter a valid 11-digit mobile number.',
@@ -1394,10 +1395,12 @@ clearAllAuthInputs();
 clearAuthDrafts();
 }catch(e){
 console.error(e);
-if(e.code==='auth/network-request-failed'){
-authStatus('আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।','error');
+if(e.code==='auth/popup-closed-by-user'){
+authStatus('গুগল একাউন্ট লগইন করা করা যায়নি','error');
+}else if(e.code==='auth/network-request-failed'){
+authStatus('আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন።','error');
 }else{
-authStatus('Google Login করা যায়নি: '+e.message,'error');
+authStatus('গুগল একাউন্ট লগইন করা করা যায়নি','error');
 }
 btn.disabled=false;
 }
