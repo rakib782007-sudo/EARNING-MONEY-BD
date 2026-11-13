@@ -53,8 +53,7 @@ label{font-size:13px;color:#d4cce3}
 .stat{background:linear-gradient(145deg,#251b40,#171225);border:1px solid #b68aff30;border-radius:17px;padding:16px}
 .stat span{font-size:12px;color:var(--muted)}
 .stat strong{display:block;font:800 25px Inter;color:var(--gold);margin-top:7px;overflow-wrap:anywhere}
-.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 1px 13px;scrollbar-width:thin}
-.tab{white-space:nowrap;background:#1b1630;color:#d9d1e8;border:1px solid var(--line);padding:10px 15px;border-radius:12px;font-weight:700}
+.tab{white-space:nowrap;background:#1b1630;color:#d9d1e8;border:1px solid var(--line);padding:10px 15px;border-radius:12px;font-weight:700;text-align:left;display:flex;align-items:center;gap:8px;text-decoration:none}
 .tab.active{background:linear-gradient(120deg,#b77aff,#713bd0);color:white}
 .section{display:none}
 .section.active{display:block}
@@ -113,9 +112,7 @@ stroke-dashoffset:18 !important;
 .toast.info{border-color:#3B82F688;color:#3B82F6;box-shadow:0 12px 35px #3B82F622}
 .toast.security{border-color:#A855F788;color:#A855F7;box-shadow:0 12px 35px #A855F722}
 .toast.suspended{border-color:#E11D4888;color:#E11D48;box-shadow:0 12px 35px #E11D4822}
-.toast.notice-type{border-color:#06B6D488;color:#06B6D4;box-shadow:0 12px 35px #06B6D422}
 
-.userline{font-size:12px;color:var(--muted);text-align:right;overflow-wrap:anywhere}
 .foot{text-align:center;color:#756e86;font-size:11px;padding:15px}
 
 /* Hamburger and sidebar */
@@ -200,7 +197,6 @@ display:none;
 .top{align-items:center}
 .brand h1{font-size:17px}
 .brand small{font-size:11px}
-.top-actions .btn{padding:9px 10px;font-size:12px}
 .grid2{grid-template-columns:1fr}
 .section-head{align-items:flex-start;flex-direction:column}
 .search{max-width:none}
@@ -336,11 +332,6 @@ transform:rotate(45deg);
 </div>
 </div>
 </div>
-
-<div class="top-actions">
-<div id="userLine" class="userline"></div>
-<button id="logoutBtn" class="btn danger hidden" onclick="logout()">Logout</button>
-</div>
 </header>
 
 <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar(true)"></div>
@@ -351,6 +342,16 @@ transform:rotate(45deg);
 <h2>EMBD <span>ADMIN</span></h2>
 <small>Earning Money BD · Control Center</small>
 </div>
+</div>
+<div style="padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+<button class="tab active" data-tab="dashboard" onclick="tab('dashboard',this); toggleSidebar(true);">📊 Dashboard</button>
+<button class="tab" data-tab="settings" onclick="tab('settings',this); toggleSidebar(true);">⚙️ Settings</button>
+<button class="tab" data-tab="tasks" onclick="tab('tasks',this); toggleSidebar(true);">📋 Tasks</button>
+<button class="tab" data-tab="submissions" onclick="tab('submissions',this); toggleSidebar(true);">✅ Task Review</button>
+<button class="tab" data-tab="withdrawals" onclick="tab('withdrawals',this); toggleSidebar(true);">💸 Withdraw</button>
+<button class="tab" data-tab="users" onclick="tab('users',this); toggleSidebar(true);">👥 Users</button>
+<hr style="border:0; border-top:1px solid var(--line); margin:8px 0;">
+<button class="tab" style="background:#512132; color:#ffc4ce; border-color:#512132;" onclick="logout()">🚪 Logout</button>
 </div>
 </aside>
 
@@ -403,17 +404,19 @@ transform:rotate(45deg);
 
 <main id="app" class="hidden">
 
-<nav class="tabs">
-<button class="tab active" data-tab="settings" onclick="tab('settings',this)">⚙️ Settings</button>
-<button class="tab" data-tab="tasks" onclick="tab('tasks',this)">📋 Tasks</button>
-<button class="tab" data-tab="submissions" onclick="tab('submissions',this)">✅ Task Review</button>
-<button class="tab" data-tab="withdrawals" onclick="tab('withdrawals',this)">💸 Withdraw</button>
-<button class="tab" data-tab="users" onclick="tab('users',this)">👥 Users</button>
-</nav>
+<section id="sec-dashboard" class="section active">
+<div class="card">
+<h2>📊 Dashboard Overview</h2>
+<div class="stats">
+<div class="stat"><span>Total Users</span><strong id="statUsers">-</strong></div>
+<div class="stat"><span>Pending Withdrawals</span><strong id="statWithdrawals">-</strong></div>
+<div class="stat"><span>Pending Submissions</span><strong id="statSubmissions">-</strong></div>
+<div class="stat"><span>Active Tasks</span><strong id="statTasks">-</strong></div>
+</div>
+</div>
+</section>
 
-<section id="sec-dashboard" class="section"></section>
-
-<section id="sec-settings" class="section active">
+<section id="sec-settings" class="section">
 <div class="card">
 <h2>⚙️ App Settings</h2>
 <div class="grid2">
@@ -513,7 +516,7 @@ const db=firebase.firestore();
 
 let currentUser=null,usersCache=[];
 let sidebarHistoryActive=false;
-let currentActiveTab='settings';
+let currentActiveTab='dashboard';
 
 const emailInput=document.getElementById('email');
 const passwordInput=document.getElementById('password');
@@ -691,8 +694,6 @@ async function gate(user){
 if(!user){
 document.getElementById('loginBox').classList.remove('hidden');
 document.getElementById('app').classList.add('hidden');
-document.getElementById('logoutBtn').classList.add('hidden');
-document.getElementById('userLine').textContent='';
 return false;
 }
 
@@ -701,8 +702,6 @@ const permission=await checkAdminOrModPermissions(user);
 if(!permission.allowed){
 document.getElementById('loginBox').classList.remove('hidden');
 document.getElementById('app').classList.add('hidden');
-document.getElementById('logoutBtn').classList.add('hidden');
-document.getElementById('userLine').textContent='';
 
 auth.signOut();
 if(permission.suspended){
@@ -716,8 +715,6 @@ return false;
 clearLoginDraft();
 document.getElementById('loginBox').classList.add('hidden');
 document.getElementById('app').classList.remove('hidden');
-document.getElementById('logoutBtn').classList.remove('hidden');
-document.getElementById('userLine').textContent=user.email;
 refreshAll();
 return true;
 }
@@ -811,12 +808,13 @@ document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
 document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
 
 document.getElementById('sec-'+name).classList.add('active');
-button.classList.add('active');
+document.querySelectorAll(`.tab[data-tab="${name}"]`).forEach(el=>el.classList.add('active'));
 
 loadCurrentTabData();
 }
 
 async function loadCurrentTabData(){
+if(currentActiveTab==='dashboard')loadDashboard();
 if(currentActiveTab==='settings')loadSettings();
 if(currentActiveTab==='tasks')loadTasks();
 if(currentActiveTab==='submissions')loadSubmissions();
@@ -827,6 +825,25 @@ if(currentActiveTab==='users')loadUsers();
 async function refreshAll(){
 if(!needAdmin())return;
 await loadCurrentTabData();
+}
+
+async function loadDashboard(){
+if(!needAdmin())return;
+try{
+const [usersSnap, withdrawSnap, subSnap, taskSnap]=await Promise.all([
+db.collection('users').get(),
+db.collection('withdrawRequests').where('status','==','pending').get(),
+db.collection('taskSubmissions').where('status','==','pending').get(),
+db.collection('tasks').where('active','==',true).get()
+]);
+
+document.getElementById('statUsers').textContent=usersSnap.size;
+document.getElementById('statWithdrawals').textContent=withdrawSnap.size;
+document.getElementById('statSubmissions').textContent=subSnap.size;
+document.getElementById('statTasks').textContent=taskSnap.size;
+}catch(e){
+console.error(e);
+}
 }
 
 /* PULL TO REFRESH GESTURE SYSTEM */
