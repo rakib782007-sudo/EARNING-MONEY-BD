@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -426,6 +427,24 @@ const emailInput=document.getElementById('email');
 const passwordInput=document.getElementById('password');
 const rememberInput=document.getElementById('rememberMe');
 
+/* Remember Me checkbox: save and restore its checked state */
+function saveRememberPreference(){
+try{
+localStorage.setItem('embd_admin_remember_me',rememberInput.checked?'true':'false');
+}catch(e){}
+}
+
+function restoreRememberPreference(){
+try{
+rememberInput.checked=localStorage.getItem('embd_admin_remember_me')==='true';
+}catch(e){
+rememberInput.checked=false;
+}
+}
+
+restoreRememberPreference();
+rememberInput.addEventListener('change',saveRememberPreference);
+
 function saveLoginDraft(){
 try{
 sessionStorage.setItem('embd_admin_email',emailInput.value);
@@ -547,6 +566,9 @@ const email=emailInput.value.trim().toLowerCase();
 const pass=passwordInput.value;
 const remember=rememberInput.checked;
 
+/* Save the checkbox preference */
+saveRememberPreference();
+
 saveLoginDraft();
 
 if(email!==ADMIN_EMAIL){
@@ -579,6 +601,7 @@ toast('Login failed: '+(e.message||'Please check your details'));
 async function logout(){
 clearLoginDraft();
 rememberInput.checked=false;
+saveRememberPreference();
 
 try{
 await auth.signOut();
