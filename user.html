@@ -19,6 +19,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+html,body{overscroll-behavior-y:contain}
 body{
 min-height:100vh;
 background:radial-gradient(ellipse at 10% 0%,#6817a555,transparent 36%),radial-gradient(ellipse at 95% 35%,#47107855,transparent 40%),#080411;
@@ -31,6 +32,36 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 /* AUTH PAGE REFRESH PROTECTION */
 html.auth-refresh-locked,body.auth-refresh-locked{overscroll-behavior-y:none}
 #loginScreen{overscroll-behavior-y:contain}
+
+/* CUSTOM PULL TO REFRESH (MATCHING UPLOADED DESIGN) */
+.ptr-indicator{
+position:fixed;top:-65px;left:50%;transform:translateX(-50%);
+width:48px;height:48px;border-radius:50%;
+background:#0d0918;border:1px solid #bd75ff44;
+box-shadow:0 8px 24px #000c,0 0 15px #9b6bff25;
+display:flex;align-items:center;justify-content:center;
+z-index:10500;pointer-events:none;opacity:0;
+transition:opacity .15s ease;
+}
+.ptr-svg{
+width:30px;height:30px;transform:rotate(-90deg);
+}
+.ptr-circle{
+fill:none;stroke:#9b6bff;stroke-width:3.6;
+stroke-linecap:round;
+stroke-dasharray:66;stroke-dashoffset:66;
+transition:stroke-dashoffset .05s linear;
+}
+.ptr-indicator.ptr-refreshing .ptr-svg{
+animation:ptrSpin .8s linear infinite;
+}
+.ptr-indicator.ptr-refreshing .ptr-circle{
+stroke-dashoffset:18 !important;
+}
+@keyframes ptrSpin{
+0%{transform:rotate(0deg)}
+100%{transform:rotate(360deg)}
+}
 
 /* LANGUAGE SELECTOR */
 .language-selector{
@@ -171,7 +202,7 @@ background:#241532;color:#fff;font-weight:700;margin-top:10px;
 }
 
 /* MAIN APP */
-.app-shell{max-width:560px;margin:auto;padding:12px 14px 110px}
+.app-shell{max-width:560px;margin:auto;padding:12px 14px 110px;will-change:transform}
 header{
 display:flex;align-items:center;justify-content:space-between;
 margin:2px 0 15px;padding:10px 2px 14px;border-bottom:1px solid #d4a34d55;
@@ -372,6 +403,13 @@ max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 </head>
 
 <body>
+
+<!-- PULL TO REFRESH INDICATOR -->
+<div id="ptrIndicator" class="ptr-indicator">
+<svg class="ptr-svg" viewBox="0 0 36 36">
+<circle id="ptrCircle" class="ptr-circle" cx="18" cy="18" r="10.5"></circle>
+</svg>
+</div>
 
 <div class="language-selector">
 <button id="langBn" onclick="requestLanguage('bn')">বাংলা</button>
@@ -911,7 +949,8 @@ const translations={
 'approved':'Approved',
 'pending':'Pending',
 'Task':'Task',
-'transaction':'Transaction'
+'transaction':'Transaction',
+'রিফ্রেশ সম্পন্ন হয়েছে':'Refreshed'
 };
 
 function getTranslation(value,target){
@@ -1026,6 +1065,7 @@ const db=firebase.firestore();
 const provider=new firebase.auth.GoogleAuthProvider();
 
 let currentUser=null;
+let currentAppPage='homePage';
 let appSettings={dailyBonus:10,adReward:0,minWithdraw:0};
 let userData={balance:0};
 
@@ -1061,7 +1101,8 @@ text.includes('অভিনন্দন')||text.includes('সফলভাবে'
 text.includes('যোগ হয়েছে')||text.includes('জমা হয়েছে')||
 text.includes('কপি হয়েছে')||text.includes('সম্পন্ন হয়েছে')||
 text.includes('Congratulations')||text.includes('successfully')||
-text.includes('submitted')||text.includes('copied')
+text.includes('submitted')||text.includes('copied')||
+text.includes('Refreshed')
 )return 'success';
 
 if(
@@ -1277,7 +1318,7 @@ return;
 }
 
 if(!isValidNameCharacters(name)){
-authStatus('নামের ঘরে শুধুমাত্র বাংলা, ইংরেজি অক্ষর ও স্পেস ব্যবহার করুন।','error');
+authStatus('নামের ঘরে শুধাত্র বাংলা, ইংরেজি অক্ষর ও স্পেস ব্যবহার করুন।','error');
 return;
 }
 
@@ -1343,7 +1384,7 @@ authStatus(msg,'error');
 }finally{btn.disabled=false}
 }
 
-/* FORGOT PASSWORD - WITH ACCOUNT EXISTENCE CHECK */
+/* FORGOT PASSWORD */
 async function resetPassword(){
 const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
 const btn=document.querySelector('#forgotForm .auth-main-btn');
@@ -1414,6 +1455,7 @@ function openPage(id,savePage=true){
 const page=document.getElementById(id);
 if(!page)return;
 
+currentAppPage=id;
 document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
 page.classList.add('active');
 document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -1577,6 +1619,128 @@ document.getElementById('todayEarn').textContent=total.toFixed(2);
 document.getElementById('taskCount').textContent=count;
 }catch(e){console.log('Stats:',e.message)}
 }
+
+/* REFRESH CURRENT APP DATA */
+async function refreshCurrentPageData(){
+if(!currentUser)return;
+try{
+const fresh=await db.collection('users').doc(currentUser.uid).get();
+if(fresh.exists){
+userData=fresh.data()||userData;
+renderUserData();
+}
+await Promise.all([
+loadSettings(),
+loadTodayStats(),
+currentAppPage==='tasksPage'?loadTasks():Promise.resolve(),
+currentAppPage==='historyPage'?loadHistory():Promise.resolve()
+]);
+toast('রিফ্রেশ সম্পন্ন হয়েছে','success');
+}catch(e){
+console.error('Refresh error:',e);
+toast('ডেটাবেস সংযোগে সমস্যা হয়েছে','error');
+}
+}
+
+/* PULL TO REFRESH GESTURE (ENABLED ONLY OUTSIDE LOGIN PAGE) */
+(function initPullToRefresh(){
+const ptr=document.getElementById('ptrIndicator');
+const circle=document.getElementById('ptrCircle');
+const appShell=document.getElementById('appScreen');
+const maxCircumference=66;
+const threshold=82;
+
+let startY=0;
+let startX=0;
+let pulling=false;
+let refreshing=false;
+let pullDistance=0;
+
+function canPull(){
+if(refreshing)return false;
+if(!currentUser)return false;
+if(document.body.classList.contains('auth-refresh-locked'))return false;
+if(appShell.style.display==='none')return false;
+if(document.getElementById('languageConfirm').style.display==='flex')return false;
+return window.scrollY<=0;
+}
+
+document.addEventListener('touchstart',e=>{
+if(!canPull()||e.touches.length!==1)return;
+startY=e.touches[0].clientY;
+startX=e.touches[0].clientX;
+pulling=true;
+pullDistance=0;
+appShell.style.transition='none';
+ptr.style.transition='opacity .1s ease';
+},{passive:true});
+
+document.addEventListener('touchmove',e=>{
+if(!pulling||e.touches.length!==1)return;
+if(window.scrollY>0){
+pulling=false;
+return;
+}
+const currentY=e.touches[0].clientY;
+const currentX=e.touches[0].clientX;
+const dy=currentY-startY;
+const dx=currentX-startX;
+
+if(dy<=0){
+pullDistance=0;
+ptr.style.opacity='0';
+ptr.style.top='-65px';
+appShell.style.transform='translateY(0px)';
+return;
+}
+
+if(Math.abs(dy)>Math.abs(dx)){
+if(e.cancelable)e.preventDefault();
+pullDistance=Math.min(dy*0.48,135);
+const progress=Math.min(pullDistance/threshold,1);
+const topPos=Math.min(-55+pullDistance*0.88,24);
+
+ptr.style.opacity=String(Math.min(progress*1.3,1));
+ptr.style.top=topPos+'px';
+circle.style.strokeDashoffset=String(maxCircumference-(maxCircumference*0.78*progress));
+circle.parentElement.style.transform=`rotate(${-90+progress*270}deg)`;
+appShell.style.transform=`translateY(${pullDistance*0.42}px)`;
+}
+},{passive:false});
+
+document.addEventListener('touchend',async()=>{
+if(!pulling)return;
+pulling=false;
+
+appShell.style.transition='transform .25s ease';
+ptr.style.transition='top .25s ease, opacity .25s ease';
+
+if(pullDistance>=threshold&&!refreshing){
+refreshing=true;
+ptr.classList.add('ptr-refreshing');
+ptr.style.top='20px';
+ptr.style.opacity='1';
+appShell.style.transform='translateY(36px)';
+
+await refreshCurrentPageData();
+
+setTimeout(()=>{
+ptr.classList.remove('ptr-refreshing');
+ptr.style.top='-65px';
+ptr.style.opacity='0';
+appShell.style.transform='translateY(0px)';
+circle.style.strokeDashoffset=String(maxCircumference);
+refreshing=false;
+},350);
+}else{
+ptr.style.top='-65px';
+ptr.style.opacity='0';
+appShell.style.transform='translateY(0px)';
+circle.style.strokeDashoffset=String(maxCircumference);
+}
+pullDistance=0;
+});
+})();
 
 /* DAILY BONUS */
 async function claimBonus(){
