@@ -28,12 +28,11 @@ min-height:100vh;
 
 button,input,textarea{font:inherit}
 button{cursor:pointer;border:0}
-.wrap{max-width:1120px;margin:auto;padding:12px 18px 18px}
+.wrap{max-width:1120px;margin:auto;padding:18px}
 .brand{display:flex;align-items:center;gap:12px}
-.logo{width:58px;height:58px;object-fit:contain;display:block;flex:0 0 auto;filter:drop-shadow(0 5px 12px #b62cff55)}
 .brand h1{font:800 21px Inter;margin:0}
 .brand small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 22px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0 22px}
 .top-left{display:flex;align-items:center;gap:12px}
 .top-actions{display:flex;gap:8px}
 .btn{padding:10px 14px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);color:var(--text);font-weight:700}
@@ -103,7 +102,7 @@ display:flex;
 align-items:center;
 justify-content:center;
 flex-shrink:0;
-margin-top:-28px;
+margin-top:-7px;
 transition:.2s;
 }
 
@@ -135,11 +134,11 @@ display:none;
 .sidebar-overlay.show{display:block}
 
 @media(max-width:720px){
-.wrap{padding:8px 13px 13px}
+.wrap{padding:13px}
 .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
 .stat{padding:13px}
 .stat strong{font-size:21px}
-.top{align-items:center;margin-top:0}
+.top{align-items:center}
 .brand h1{font-size:18px}
 .top-actions .btn{padding:9px 10px;font-size:12px}
 .grid2{grid-template-columns:1fr}
@@ -263,7 +262,6 @@ transform:rotate(45deg);
 <button id="menuBtn" class="menu-btn" type="button" onclick="toggleSidebar()" aria-label="Open sidebar">☰</button>
 
 <div class="brand">
-<img class="logo" src="logo.png" alt="EMBD Admin Logo">
 <div>
 <h1>EMBD Admin</h1>
 <small>Earning Money BD · Control Center</small>
