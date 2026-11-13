@@ -53,8 +53,11 @@ label{font-size:13px;color:#d4cce3}
 .stat{background:linear-gradient(145deg,#251b40,#171225);border:1px solid #b68aff30;border-radius:17px;padding:16px}
 .stat span{font-size:12px;color:var(--muted)}
 .stat strong{display:block;font:800 25px Inter;color:var(--gold);margin-top:7px;overflow-wrap:anywhere}
-.tab{white-space:nowrap;background:#1b1630;color:#d9d1e8;border:1px solid var(--line);padding:10px 15px;border-radius:12px;font-weight:700;text-align:left;display:flex;align-items:center;gap:8px;text-decoration:none}
+.tab{white-space:nowrap;background:#1b1630;color:#d9d1e8;border:1px solid var(--line);padding:10px 15px;border-radius:12px;font-weight:700;text-align:left;display:flex;align-items:center;justify-content:space-between;text-decoration:none;width:100%}
+.tab-content-left{display:flex;align-items:center;gap:10px}
+.tab-arrow{font-size:14px;color:var(--muted);font-weight:600}
 .tab.active{background:linear-gradient(120deg,#b77aff,#713bd0);color:white}
+.tab.active .tab-arrow{color:rgba(255,255,255,0.8)}
 .section{display:none}
 .section.active{display:block}
 .section h2{font-size:19px;margin:0 0 13px}
@@ -344,7 +347,13 @@ transform:rotate(45deg);
 </div>
 </div>
 <div style="padding: 16px; display: flex; flex-direction: column; gap: 8px;">
-<button class="tab active" data-tab="dashboard" onclick="tab('dashboard',this); toggleSidebar(true);">📊 Dashboard</button>
+<button class="tab active" data-tab="dashboard" onclick="tab('dashboard',this); toggleSidebar(true);">
+  <div class="tab-content-left">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3V3m10 0h8v8h-8V3M3 13h8v8H3v-8m10 0h8v8h-8v-8z"/></svg>
+    Dashboard
+  </div>
+  <span class="tab-arrow">›</span>
+</button>
 <button class="tab" data-tab="settings" onclick="tab('settings',this); toggleSidebar(true);">⚙️ Settings</button>
 <button class="tab" data-tab="tasks" onclick="tab('tasks',this); toggleSidebar(true);">📋 Tasks</button>
 <button class="tab" data-tab="submissions" onclick="tab('submissions',this); toggleSidebar(true);">✅ Task Review</button>
