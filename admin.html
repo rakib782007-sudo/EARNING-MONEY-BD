@@ -590,9 +590,9 @@ document.getElementById('userLine').textContent='';
 
 auth.signOut();
 if(permission.suspended){
-toast('Your Moderator account has been suspended by the Admin. You are no longer allowed to access the panel. Please contact the Admin for further assistance.', 'suspended');
+toast('🚫 Your Moderator account has been suspended by the Admin. You are no longer allowed to access the panel. Please contact the Admin for further assistance.', 'suspended');
 }else{
-toast('This email address is not authorized to access the Admin Panel.', 'access-denied');
+toast('🚫 This email address is not authorized to access the Admin Panel.', 'access-denied');
 }
 return false;
 }
@@ -621,17 +621,17 @@ saveRememberPreference();
 saveLoginDraft();
 
 if(!email){
-toast('Please enter your email address.', 'warning');
+toast('⚠️ Please enter your email address.', 'warning');
 return;
 }
 
 if(!email.includes('@')||!email.includes('.')){
-toast('Please enter your full email address.', 'warning');
+toast('⚠️ Please enter your full email address.', 'warning');
 return;
 }
 
 if(!pass){
-toast('Please enter your password.', 'warning');
+toast('⚠️ Please enter your password.', 'warning');
 return;
 }
 
@@ -647,9 +647,9 @@ const permission=await checkAdminOrModPermissions(cred.user);
 if(!permission.allowed){
 auth.signOut();
 if(permission.suspended){
-toast('Your Moderator account has been suspended by the Admin. You are no longer allowed to access the panel. Please contact the Admin for further assistance.', 'suspended');
+toast('🚫 Your Moderator account has been suspended by the Admin. You are no longer allowed to access the panel. Please contact the Admin for further assistance.', 'suspended');
 }else{
-toast('This email address is not authorized to access the Admin Panel.', 'access-denied');
+toast('🚫 This email address is not authorized to access the Admin Panel.', 'access-denied');
 }
 return;
 }
