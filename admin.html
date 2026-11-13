@@ -510,12 +510,19 @@ button.title='Show password';
 }
 
 /* Toast message with types */
-function toast(msg, type='error'){
+function toast(msg, type='error', duration=3500){
 const el=document.getElementById('toast');
 el.className='toast '+type;
 el.textContent=msg;
 el.classList.add('show');
-setTimeout(()=>el.classList.remove('show'),3500);
+if(duration > 0){
+setTimeout(()=>el.classList.remove('show'),duration);
+}
+}
+
+function hideToast(){
+const el=document.getElementById('toast');
+el.classList.remove('show');
 }
 
 function money(n){
@@ -636,6 +643,9 @@ return;
 }
 
 try{
+// Show Logging in... message at the top
+toast('Logging in...', 'info', 0);
+
 const persistence=remember
 ?firebase.auth.Auth.Persistence.LOCAL
 :firebase.auth.Auth.Persistence.SESSION;
@@ -646,6 +656,7 @@ const permission=await checkAdminOrModPermissions(cred.user);
 
 if(!permission.allowed){
 auth.signOut();
+hideToast();
 if(permission.suspended){
 toast('🚫 Your Moderator account has been suspended by the Admin. You are no longer allowed to access the panel. Please contact the Admin for further assistance.', 'suspended');
 }else{
@@ -659,7 +670,7 @@ toast('Login successful', 'success');
 
 }catch(e){
 console.error(e);
-// ফায়ারবেসের যেকোনো এরর (User Not Found বা Invalid Credentials বা Account Missing) আসলেও আপনার নির্দিষ্ট করা অ্যালার্টটিই দেখাবে
+hideToast();
 toast('🚫 This email address is not authorized to access the Admin Panel.', 'access-denied');
 }
 }
