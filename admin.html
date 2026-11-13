@@ -16,7 +16,7 @@
 :root{--bg:#090713;--panel:#151126;--panel2:#1d1732;--line:#ffffff16;--text:#f8f5ff;--muted:#aaa2bd;--purple:#a66bff;--purple2:#7138d5;--gold:#ffd36b;--green:#36d6a0;--red:#ff6e83;--blue:#65b7ff}
 
 *{box-sizing:border-box}
-html,body{overscroll-behavior-y:none}
+html,body{overscroll-behavior-y:contain}
 
 body{
 margin:0;
@@ -74,6 +74,34 @@ label{font-size:13px;color:#d4cce3}
 .empty{padding:22px 5px;text-align:center;color:var(--muted)}
 .section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 .search{max-width:280px;margin:0}
+
+/* CUSTOM PULL TO REFRESH */
+.ptr-indicator{
+position:fixed;top:-65px;left:50%;transform:translateX(-50%);
+width:48px;height:48px;border-radius:50%;
+background:#151126;border:1px solid #a66bff44;
+box-shadow:0 8px 24px #000c,0 0 15px #a66bff25;
+display:flex;align-items:center;justify-content:center;
+z-index:10500;pointer-events:none;opacity:0;
+transition:opacity .15s ease;
+}
+.ptr-svg{width:30px;height:30px;transform:rotate(-90deg)}
+.ptr-circle{
+fill:none;stroke:#a66bff;stroke-width:3.6;
+stroke-linecap:round;
+stroke-dasharray:66;stroke-dashoffset:66;
+transition:stroke-dashoffset .05s linear;
+}
+.ptr-indicator.ptr-refreshing .ptr-svg{
+animation:ptrSpin .8s linear infinite;
+}
+.ptr-indicator.ptr-refreshing .ptr-circle{
+stroke-dashoffset:18 !important;
+}
+@keyframes ptrSpin{
+0%{transform:rotate(0deg)}
+100%{transform:rotate(360deg)}
+}
 
 .toast{position:fixed;left:50%;top:22px;transform:translate(-50%,-20px);background:#18132ad9;color:#fff;border:1px solid #ffffff25;padding:13px 20px;border-radius:14px;opacity:0;pointer-events:none;transition:.25s;z-index:120;max-width:95%;white-space:normal;overflow:hidden;text-overflow:ellipsis;text-align:center;font-weight:600;font-size:13px;line-height:1.4;box-shadow:0 12px 35px #0008;backdrop-filter:blur(12px)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
@@ -255,6 +283,14 @@ transform:rotate(45deg);
 </head>
 
 <body>
+
+<!-- PULL TO REFRESH INDICATOR -->
+<div id="ptrIndicator" class="ptr-indicator">
+<svg class="ptr-svg" viewBox="0 0 36 36">
+<circle id="ptrCircle" class="ptr-circle" cx="18" cy="18" r="10.5"></circle>
+</svg>
+</div>
+
 <div class="wrap">
 
 <header class="top">
@@ -328,16 +364,16 @@ transform:rotate(45deg);
 <main id="app" class="hidden">
 
 <nav class="tabs">
-<button class="tab" data-tab="settings" onclick="tab('settings',this)">⚙️ Settings</button>
+<button class="tab active" data-tab="settings" onclick="tab('settings',this)">⚙️ Settings</button>
 <button class="tab" data-tab="tasks" onclick="tab('tasks',this)">📋 Tasks</button>
 <button class="tab" data-tab="submissions" onclick="tab('submissions',this)">✅ Task Review</button>
 <button class="tab" data-tab="withdrawals" onclick="tab('withdrawals',this)">💸 Withdraw</button>
 <button class="tab" data-tab="users" onclick="tab('users',this)">👥 Users</button>
 </nav>
 
-<section id="sec-dashboard" class="section active"></section>
+<section id="sec-dashboard" class="section"></section>
 
-<section id="sec-settings" class="section">
+<section id="sec-settings" class="section active">
 <div class="card">
 <h2>⚙️ App Settings</h2>
 <div class="grid2">
@@ -437,6 +473,7 @@ const db=firebase.firestore();
 
 let currentUser=null,usersCache=[];
 let sidebarHistoryActive=false;
+let currentActiveTab='settings';
 
 const emailInput=document.getElementById('email');
 const passwordInput=document.getElementById('password');
@@ -737,22 +774,127 @@ return true;
 function tab(name,button){
 if(!needAdmin())return;
 
+currentActiveTab=name;
 document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
 document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
 
 document.getElementById('sec-'+name).classList.add('active');
 button.classList.add('active');
 
-if(name==='settings')loadSettings();
-if(name==='tasks')loadTasks();
-if(name==='submissions')loadSubmissions();
-if(name==='withdrawals')loadWithdrawals();
-if(name==='users')loadUsers();
+loadCurrentTabData();
+}
+
+async function loadCurrentTabData(){
+if(currentActiveTab==='settings')loadSettings();
+if(currentActiveTab==='tasks')loadTasks();
+if(currentActiveTab==='submissions')loadSubmissions();
+if(currentActiveTab==='withdrawals')loadWithdrawals();
+if(currentActiveTab==='users')loadUsers();
 }
 
 async function refreshAll(){
 if(!needAdmin())return;
+await loadCurrentTabData();
 }
+
+/* PULL TO REFRESH GESTURE SYSTEM */
+(function initPullToRefresh(){
+const ptr=document.getElementById('ptrIndicator');
+const circle=document.getElementById('ptrCircle');
+const appContainer=document.getElementById('app');
+const maxCircumference=66;
+const threshold=82;
+
+let startY=0;
+let startX=0;
+let pulling=false;
+let refreshing=false;
+let pullDistance=0;
+
+function canPull(){
+if(refreshing)return false;
+if(!currentUser)return false;
+if(appContainer.classList.contains('hidden'))return false;
+return window.scrollY<=0;
+}
+
+document.addEventListener('touchstart',e=>{
+if(!canPull()||e.touches.length!==1)return;
+startY=e.touches[0].clientY;
+startX=e.touches[0].clientX;
+pulling=true;
+pullDistance=0;
+appContainer.style.transition='none';
+ptr.style.transition='opacity .1s ease';
+},{passive:true});
+
+document.addEventListener('touchmove',e=>{
+if(!pulling||e.touches.length!==1)return;
+if(window.scrollY>0){
+pulling=false;
+return;
+}
+const currentY=e.touches[0].clientY;
+const currentX=e.touches[0].clientX;
+const dy=currentY-startY;
+const dx=currentX-startX;
+
+if(dy<=0){
+pullDistance=0;
+ptr.style.opacity='0';
+ptr.style.top='-65px';
+appContainer.style.transform='translateY(0px)';
+return;
+}
+
+if(Math.abs(dy)>Math.abs(dx)){
+if(e.cancelable)e.preventDefault();
+pullDistance=Math.min(dy*0.48,135);
+const progress=Math.min(pullDistance/threshold,1);
+const topPos=Math.min(-55+pullDistance*0.88,24);
+
+ptr.style.opacity=String(Math.min(progress*1.3,1));
+ptr.style.top=topPos+'px';
+circle.style.strokeDashoffset=String(maxCircumference-(maxCircumference*0.78*progress));
+circle.parentElement.style.transform=`rotate(${-90+progress*270}deg)`;
+appContainer.style.transform=`translateY(${pullDistance*0.42}px)`;
+}
+},{passive:false});
+
+document.addEventListener('touchend',async()=>{
+if(!pulling)return;
+pulling=false;
+
+appContainer.style.transition='transform .25s ease';
+ptr.style.transition='top .25s ease, opacity .25s ease';
+
+if(pullDistance>=threshold&&!refreshing){
+refreshing=true;
+ptr.classList.add('ptr-refreshing');
+ptr.style.top='20px';
+ptr.style.opacity='1';
+appContainer.style.transform='translateY(36px)';
+
+await refreshAll();
+toast('Refreshed successfully', 'success');
+
+setTimeout(()=>{
+ptr.classList.remove('ptr-refreshing');
+ptr.style.top='-65px';
+ptr.style.opacity='0';
+appContainer.style.transform='translateY(0px)';
+circle.style.strokeDashoffset=String(maxCircumference);
+refreshing=false;
+},350);
+}else{
+ptr.style.top='-65px';
+ptr.style.opacity='0';
+appContainer.style.transform='translateY(0px)';
+circle.style.strokeDashoffset=String(maxCircumference);
+}
+pullDistance=0;
+});
+})();
 
 async function loadSettings(){
 if(!needAdmin())return;
