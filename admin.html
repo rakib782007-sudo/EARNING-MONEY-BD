@@ -30,7 +30,8 @@ button,input,textarea{font:inherit}
 button{cursor:pointer;border:0}
 .wrap{max-width:1120px;margin:auto;padding:18px}
 .brand{display:flex;align-items:center;gap:12px}
-.brand h1{font:800 21px Inter;margin:0}
+.brand h1{font:800 21px Inter;margin:0;color:#ffffff}
+.brand h1 span{color:#c69aff}
 .brand small{display:block;color:var(--muted);font-size:12px;margin-top:3px;line-height:1.4}
 .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0 22px}
 .top-left{display:flex;align-items:center;gap:12px}
@@ -158,7 +159,8 @@ display:flex;
 align-items:center;
 gap:12px;
 }
-.sidebar-header-content h2{font:800 18px Inter;margin:0;color:var(--text)}
+.sidebar-header-content h2{font:800 18px Inter;margin:0;color:#ffffff}
+.sidebar-header-content h2 span{color:#c69aff}
 .sidebar-header-content small{display:block;color:var(--muted);font-size:11px;margin-top:3px;line-height:1.4}
 
 .sidebar-close-btn{
@@ -329,7 +331,7 @@ transform:rotate(45deg);
 
 <div class="brand">
 <div>
-<h1>EMBD Admin</h1>
+<h1>EMBD <span>ADMIN</span></h1>
 <small>Earning Money BD · Control Center</small>
 </div>
 </div>
@@ -346,7 +348,7 @@ transform:rotate(45deg);
 <div class="sidebar-header">
 <button class="sidebar-close-btn" type="button" onclick="toggleSidebar(true)" aria-label="Close sidebar">✕</button>
 <div class="sidebar-header-content">
-<h2>EMBD Admin</h2>
+<h2>EMBD <span>ADMIN</span></h2>
 <small>Earning Money BD · Control Center</small>
 </div>
 </div>
@@ -1265,7 +1267,7 @@ box.append(el);
 
 }catch(e){
 console.error(e);
-box.textContent='Could not load withdrawals — check Firestore Rules';
+box.textContent='Could not load withdrawals — check FirestoreRules';
 }
 }
 
