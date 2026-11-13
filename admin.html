@@ -151,12 +151,32 @@ flex-direction:column;
 }
 
 .sidebar-header{
-padding:20px 18px;
+padding:16px 18px;
 border-bottom:1px solid var(--line);
 background:#120f20;
+display:flex;
+align-items:center;
+gap:12px;
 }
-.sidebar-header h2{font:800 18px Inter;margin:0;color:var(--text)}
-.sidebar-header small{display:block;color:var(--muted);font-size:11px;margin-top:3px;line-height:1.4}
+.sidebar-header-content h2{font:800 18px Inter;margin:0;color:var(--text)}
+.sidebar-header-content small{display:block;color:var(--muted);font-size:11px;margin-top:3px;line-height:1.4}
+
+.sidebar-close-btn{
+width:36px;
+height:36px;
+border-radius:10px;
+background:var(--panel2);
+border:1px solid var(--line);
+color:var(--text);
+font-size:18px;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+transition:.2s;
+flex-shrink:0;
+}
+.sidebar-close-btn:hover{background:#2a2145}
 
 .sidebar.open{transform:translateX(0)}
 
@@ -324,8 +344,11 @@ transform:rotate(45deg);
 <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar(true)"></div>
 <aside id="sidebar" class="sidebar">
 <div class="sidebar-header">
+<button class="sidebar-close-btn" type="button" onclick="toggleSidebar(true)" aria-label="Close sidebar">✕</button>
+<div class="sidebar-header-content">
 <h2>EMBD Admin</h2>
 <small>Earning Money BD · Control Center</small>
+</div>
 </div>
 </aside>
 
