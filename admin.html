@@ -364,10 +364,10 @@ transform:rotate(45deg);
 <h2>Welcome</h2>
 
 <div class="login-form">
-<label for="email">GMAIL ADDRESS</label>
+<label for="email">EMAIL ADDRESS</label>
 <div class="input-wrap">
 <span class="input-icon">✉</span>
-<input id="email" class="field" type="email" placeholder="Enter admin Gmail" autocomplete="username">
+<input id="email" class="field" type="email" placeholder="Enter admin Email" autocomplete="username">
 </div>
 
 <label for="password">PASSWORD</label>
@@ -478,7 +478,7 @@ transform:rotate(45deg);
 <div class="card">
 <div class="section-head">
 <h2>👥 User Management</h2>
-<input id="userSearch" class="field search" placeholder="Search by name or Gmail" oninput="renderUsers()">
+<input id="userSearch" class="field search" placeholder="Search by name or Email" oninput="renderUsers()">
 <button class="btn" onclick="loadUsers()">Refresh</button>
 </div>
 <div id="userList" class="empty">Not loaded yet</div>
@@ -520,7 +520,6 @@ const rememberInput=document.getElementById('rememberMe');
 function toggleSidebar(forceClose=false){
 const sidebar=document.getElementById('sidebar');
 const overlay=document.getElementById('sidebarOverlay');
-const button=document.getElementById('menuBtn');
 
 const shouldOpen=forceClose?false:!sidebar.classList.contains('open');
 
@@ -536,9 +535,6 @@ history.back();
 
 sidebar.classList.toggle('open',shouldOpen);
 overlay.classList.toggle('show',shouldOpen);
-
-button.textContent=shouldOpen?'✕':'☰';
-button.setAttribute('aria-label',shouldOpen?'Close sidebar':'Open sidebar');
 }
 
 window.addEventListener('popstate',function(){
@@ -548,10 +544,6 @@ if(sidebar.classList.contains('open')){
 sidebarHistoryActive=false;
 sidebar.classList.remove('open');
 document.getElementById('sidebarOverlay').classList.remove('show');
-
-const button=document.getElementById('menuBtn');
-button.textContent='☰';
-button.setAttribute('aria-label','Open sidebar');
 }
 });
 
