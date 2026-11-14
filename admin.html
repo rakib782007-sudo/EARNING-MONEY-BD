@@ -324,7 +324,7 @@ transform:rotate(45deg);
 
 <div class="wrap">
 
-<header class="top">
+<header id="mainHeader" class="top hidden">
 <div class="top-left">
 <button id="menuBtn" class="menu-btn" type="button" onclick="toggleSidebar()" aria-label="Open sidebar">☰</button>
 
@@ -364,7 +364,7 @@ transform:rotate(45deg);
 </div>
 </aside>
 
-<section id="loginBox" class="login">
+<section id="loginBox" class="login hidden">
 <div class="login-glow"></div>
 <div class="login-card">
 <div class="login-emblem">
@@ -536,6 +536,7 @@ const db=firebase.firestore();
 let currentUser=null,usersCache=[];
 let sidebarHistoryActive=false;
 let currentActiveTab='dashboard';
+let hasRefreshed=false; // Track whether user used refresh
 
 const emailInput=document.getElementById('email');
 const passwordInput=document.getElementById('password');
@@ -568,6 +569,21 @@ if(sidebar.classList.contains('open')){
 sidebarHistoryActive=false;
 sidebar.classList.remove('open');
 document.getElementById('sidebarOverlay').classList.remove('show');
+return;
+}
+
+// Back button logic on dashboard/app
+if(currentUser && !document.getElementById('app').classList.contains('hidden')) {
+  if(hasRefreshed) {
+    // If already refreshed once, exit/go back completely
+    history.go(-1);
+  } else {
+    // If not refreshed, trigger app refresh system first and mark as refreshed
+    hasRefreshed = true;
+    history.pushState({page: 'dashboard'}, '', window.location.href);
+    refreshAll();
+    toast('Refreshed successfully', 'success');
+  }
 }
 });
 
@@ -711,6 +727,7 @@ return {allowed:false};
 
 async function gate(user){
 if(!user){
+document.getElementById('mainHeader').classList.add('hidden');
 document.getElementById('loginBox').classList.remove('hidden');
 document.getElementById('app').classList.add('hidden');
 return false;
@@ -719,6 +736,7 @@ return false;
 const permission=await checkAdminOrModPermissions(user);
 
 if(!permission.allowed){
+document.getElementById('mainHeader').classList.add('hidden');
 document.getElementById('loginBox').classList.remove('hidden');
 document.getElementById('app').classList.add('hidden');
 
@@ -732,15 +750,21 @@ return false;
 }
 
 clearLoginDraft();
+document.getElementById('mainHeader').classList.remove('hidden');
 document.getElementById('loginBox').classList.add('hidden');
 document.getElementById('app').classList.remove('hidden');
+
+// Initialize history state for back button control
+hasRefreshed = false;
+history.replaceState({page: 'dashboard'}, '', window.location.href);
+
 refreshAll();
 return true;
 }
 
-auth.onAuthStateChanged(user=>{
+auth.onAuthStateChanged(async user=>{
 currentUser=user;
-gate(user);
+await gate(user);
 });
 
 async function emailLogin(){
@@ -943,6 +967,7 @@ ptr.style.top='20px';
 ptr.style.opacity='1';
 appContainer.style.transform='translateY(36px)';
 
+hasRefreshed = true; // Mark as refreshed via pull-to-refresh
 await refreshAll();
 toast('Refreshed successfully', 'success');
 
