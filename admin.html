@@ -221,7 +221,6 @@ flex-shrink:0;
 
 .sidebar.open{transform:translateX(0)}
 
-/* Backdrop blur and touch block when sidebar is open */
 .sidebar-overlay{
 position:fixed;
 inset:0;
@@ -517,7 +516,6 @@ transform:rotate(45deg);
   Dashboard
 </h2>
 
-<!-- STATS CARDS WITHOUT FOOTER PERCENTAGES -->
 <div class="stats-grid">
   <!-- Card 1: Total Users -->
   <div class="stat-card blue">
@@ -681,13 +679,23 @@ transform:rotate(45deg);
 </div>
 </section>
 
+<section id="sec-deposits" class="section">
+<div class="card">
+<div class="section-head">
+<h2>💳 Deposit Management</h2>
+<button class="btn" onclick="loadDeposits()">Refresh</button>
+</div>
+<p class="muted">Manage user deposit requests and transactions here.</p>
+<div id="depositList" class="empty">Loading deposit requests...</div>
+</div>
+</section>
+
 <section id="sec-users" class="section">
 <div class="card" style="background:transparent;border:0;padding:0;box-shadow:none">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
     <h2 style="margin:0;font-size:20px;letter-spacing:0.5px">USER MANAGEMENT</h2>
   </div>
 
-  <!-- Total Users Big Top Card -->
   <div class="user-top-card">
     <div class="user-stat-title">
       <div style="width:34px;height:34px;background:#34254d;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c69aff">👥</div>
@@ -697,7 +705,6 @@ transform:rotate(45deg);
     <div style="position:absolute;right:20px;top:20px;color:#36d6a0;font-size:20px">📈</div>
   </div>
 
-  <!-- Active & Blocked Users Side-by-Side Cards -->
   <div class="user-sub-stats-grid">
     <div class="user-sub-stat">
       <div class="user-stat-title">Active Users</div>
@@ -709,7 +716,6 @@ transform:rotate(45deg);
     </div>
   </div>
 
-  <!-- Search Bar -->
   <div class="card" style="padding:14px;margin-bottom:16px">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;color:var(--purple);font-weight:600;font-size:13px">
       <span>🔍</span> Search User
@@ -737,14 +743,6 @@ transform:rotate(45deg);
 </div>
 </div>
 <div id="moderatorList" class="empty">Not loaded yet</div>
-</div>
-</section>
-
-<section id="sec-deposits" class="section">
-<div class="card">
-<h2>💳 Deposit Management</h2>
-<p class="muted">Manage user deposit requests and transactions here.</p>
-<div id="depositList" class="empty">No deposit requests found</div>
 </div>
 </section>
 
@@ -1171,6 +1169,7 @@ if(currentActiveTab==='submissions')loadSubmissions();
 if(currentActiveTab==='withdrawals')loadWithdrawals();
 if(currentActiveTab==='users')loadUsers();
 if(currentActiveTab==='moderators')loadModerators();
+if(currentActiveTab==='deposits')loadDeposits();
 }
 
 async function refreshAll(){
@@ -1206,7 +1205,6 @@ try {
   document.getElementById('statActiveUsers').textContent = activeUsers.toLocaleString();
   document.getElementById('statNewUsers').textContent = todayNewUsersCount.toLocaleString();
   document.getElementById('statEarnings').textContent = '৳ ' + totalEarnedSum.toLocaleString();
-  document.getElementById('statDeposits').textContent = '৳ ' + (totalUsers * 320).toLocaleString();
 } catch(e) {
   console.error('Error loading dashboard users:', e);
 }
@@ -1231,6 +1229,23 @@ try {
   console.error('Error loading dashboard withdrawals:', e);
   document.getElementById('statWithdrawals').textContent = '0';
   document.getElementById('statTotalWithdrawals').textContent = '৳ 0';
+}
+
+try {
+  const depositSnap = await db.collection('depositRequests').get();
+  let totalApprovedDeposit = 0;
+
+  depositSnap.forEach(doc => {
+    const data = doc.data();
+    if (data.status === 'approved') {
+      totalApprovedDeposit += Number(data.amount || 0);
+    }
+  });
+
+  document.getElementById('statDeposits').textContent = '৳ ' + totalApprovedDeposit.toLocaleString();
+} catch(e) {
+  console.error('Error loading dashboard deposits:', e);
+  document.getElementById('statDeposits').textContent = '৳ 0';
 }
 }
 
@@ -1736,6 +1751,129 @@ refreshAll();
 }catch(e){
 console.error(e);
 toast(e.message||'Could not process withdrawal', 'error');
+}
+}
+
+async function loadDeposits(){
+if(!needAdmin())return;
+
+const box=document.getElementById('depositList');
+box.textContent='Loading...';
+
+try{
+const snap=await db.collection('depositRequests').limit(150).get();
+
+if(snap.empty){
+box.innerHTML='<div class="empty">No deposit requests found</div>';
+return;
+}
+
+box.innerHTML='';
+
+const docs=snap.docs.sort((a,b)=>(b.data().createdAt?.seconds||0)-(a.data().createdAt?.seconds||0));
+
+docs.forEach(doc=>{
+const d=doc.data();
+const status=d.status||'pending';
+
+const el=document.createElement('div');
+el.className='item';
+
+const h=document.createElement('strong');
+h.textContent=money(d.amount)+' · Method: '+(d.method||'N/A');
+
+const p=document.createElement('p');
+p.textContent='User: '+(d.email||d.uid||'Unknown')+' · Sender No: '+(d.senderNumber||'N/A')+' · TrxID: '+(d.trxId||'N/A')+' · '+dateText(d.createdAt);
+
+const pill=document.createElement('span');
+pill.className='pill '+status;
+pill.textContent=status;
+
+el.append(h,p,pill);
+
+if(status==='pending'){
+const a=document.createElement('div');
+a.className='actions';
+
+const yes=document.createElement('button');
+yes.className='btn ok';
+yes.textContent='Approve + Add Balance';
+yes.onclick=()=>reviewDeposit(doc.id,'approved');
+
+const no=document.createElement('button');
+no.className='btn no';
+no.textContent='Reject';
+no.onclick=()=>reviewDeposit(doc.id,'rejected');
+
+a.append(yes,no);
+el.append(a);
+}
+
+box.append(el);
+});
+
+}catch(e){
+console.error(e);
+box.textContent='Could not load deposits — check Firestore Rules';
+}
+}
+
+async function reviewDeposit(id,status){
+if(!needAdmin())return;
+
+if(status==='approved'&&!confirm('Approve this deposit? This will add the amount to the user balance and update Total Deposits.'))return;
+
+const ref=db.collection('depositRequests').doc(id);
+
+try{
+await db.runTransaction(async t=>{
+const snap=await t.get(ref);
+
+if(!snap.exists)throw Error('Deposit request not found');
+
+const d=snap.data();
+
+if((d.status||'pending')!=='pending')throw Error('This deposit has already been processed');
+
+if(status==='approved'){
+const userRef=db.collection('users').doc(d.uid);
+const userSnap=await t.get(userRef);
+
+if(!userSnap.exists)throw Error('User not found');
+
+const amount=Number(d.amount||0);
+if(!Number.isFinite(amount)||amount<=0)throw Error('Invalid deposit amount');
+
+const txRef=userRef.collection('transactions').doc();
+
+t.update(userRef,{
+balance:firebase.firestore.FieldValue.increment(amount)
+});
+
+t.set(txRef,{
+type:'deposit',
+amount:amount,
+status:'approved',
+method:d.method||'',
+trxId:d.trxId||'',
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+}
+
+t.update(ref,{
+status,
+reviewedAt:firebase.firestore.FieldValue.serverTimestamp(),
+reviewedBy:currentUser.uid
+});
+});
+
+toast(status==='approved'?'Deposit approved. Balance added & Total Deposits updated!':'Deposit rejected', status==='approved'?'success':'warning');
+loadDeposits();
+refreshAll();
+
+}catch(e){
+console.error(e);
+toast(e.message||'Could not process deposit', 'error');
 }
 }
 
