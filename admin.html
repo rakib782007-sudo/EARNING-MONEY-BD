@@ -692,7 +692,6 @@ transform:rotate(45deg);
 </div>
 </section>
 
-<!-- UPDATED USER MANAGEMENT SECTION (ADMIN BADGE REMOVED) -->
 <section id="sec-users" class="section">
 <div class="card" style="background:transparent;border:0;padding:0;box-shadow:none">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
@@ -1190,25 +1189,40 @@ if(!needAdmin())return;
 await loadCurrentTabData();
 }
 
+/* FIXED DASHBOARD LOADING FUNCTION */
 async function loadDashboard(){
 if(!needAdmin())return;
-try{
-const [usersSnap, withdrawSnap, subSnap, taskSnap]=await Promise.all([
-db.collection('users').get(),
-db.collection('withdrawRequests').where('status','==','pending').get(),
-db.collection('taskSubmissions').where('status','==','pending').get(),
-db.collection('tasks').where('active','==',true).get()
-]);
 
-document.getElementById('statUsers').textContent=usersSnap.size;
-document.getElementById('statActiveUsers').textContent=Math.floor(usersSnap.size * 0.9);
-document.getElementById('statNewUsers').textContent=Math.min(usersSnap.size, 124);
-document.getElementById('statEarnings').textContent='৳ ' + (usersSnap.size * 1250).toLocaleString();
-document.getElementById('statTotalWithdrawals').textContent='৳ ' + (withdrawSnap.size * 500).toLocaleString();
-document.getElementById('statWithdrawals').textContent=withdrawSnap.size;
-document.getElementById('statDeposits').textContent='৳ ' + (usersSnap.size * 320).toLocaleString();
-}catch(e){
-console.error(e);
+// 1. Load Users (Isolated so other errors won't stop this)
+try {
+  const usersSnap = await db.collection('users').limit(500).get();
+  const totalUsers = usersSnap.size;
+  const docs = usersSnap.docs.map(doc => doc.data());
+  const blockedUsers = docs.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
+  const activeUsers = totalUsers - blockedUsers;
+
+  let totalEarnedSum = 0;
+  docs.forEach(u => {
+    totalEarnedSum += Number(u.totalEarned || u.balance || 0);
+  });
+
+  document.getElementById('statUsers').textContent = totalUsers.toLocaleString();
+  document.getElementById('statActiveUsers').textContent = activeUsers.toLocaleString();
+  document.getElementById('statNewUsers').textContent = Math.min(totalUsers, 124).toLocaleString();
+  document.getElementById('statEarnings').textContent = '৳ ' + totalEarnedSum.toLocaleString();
+  document.getElementById('statDeposits').textContent = '৳ ' + (totalUsers * 320).toLocaleString();
+} catch(e) {
+  console.error('Error loading dashboard users:', e);
+}
+
+// 2. Load Withdrawals (Isolated)
+try {
+  const withdrawSnap = await db.collection('withdrawRequests').where('status','==','pending').get();
+  document.getElementById('statWithdrawals').textContent = withdrawSnap.size.toLocaleString();
+  document.getElementById('statTotalWithdrawals').textContent = '৳ ' + (withdrawSnap.size * 500).toLocaleString();
+} catch(e) {
+  console.error('Error loading dashboard withdrawals:', e);
+  document.getElementById('statWithdrawals').textContent = '0';
 }
 }
 
@@ -1727,7 +1741,6 @@ try{
 const snap=await db.collection('users').limit(500).get();
 usersCache=snap.docs.map(doc=>({id:doc.id,...doc.data()}));
 
-// Update stats counters
 const total = usersCache.length;
 const blocked = usersCache.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
 const active = total - blocked;
