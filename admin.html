@@ -1065,7 +1065,14 @@ toast('Login successful', 'success');
 }catch(e){
 console.error(e);
 hideToast();
+
+// Specific check for wrong password or invalid credential errors
+if(e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential' || e.code === 'auth/invalid-login-credentials'){
+toast('⚠️ Incorrect password. Please try again.', 'error');
+} else {
+// Original fallback alert for unauthorized/non-existent emails or other issues
 toast('🚫 This email address is not authorized to access the Admin Panel.', 'access-denied');
+}
 }
 }
 
