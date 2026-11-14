@@ -1178,6 +1178,11 @@ function canPull(){
 if(refreshing)return false;
 if(!currentUser)return false;
 if(appContainer.classList.contains('hidden'))return false;
+
+// Disable pull-to-refresh if sidebar is open
+const sidebar=document.getElementById('sidebar');
+if(sidebar && sidebar.classList.contains('open'))return false;
+
 return window.scrollY<=0;
 }
 
