@@ -60,7 +60,7 @@ label{font-size:13px;color:#d4cce3}
 .tab.active .tab-arrow{color:rgba(255,255,255,0.8)}
 .section{display:none}
 .section.active{display:block}
-.section h2{font-size:19px;margin:0 0 13px}
+.section h2{font-size:19px;margin:0 0 13px;display:flex;align-items:center;gap:9px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .item{border-bottom:1px solid var(--line);padding:13px 0}
 .item:last-child{border:0}
@@ -415,7 +415,18 @@ transform:rotate(45deg);
 
 <section id="sec-dashboard" class="section active">
 <div class="card">
-<h2>📊 Dashboard</h2>
+<h2>
+  <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+    <path d="M 22 76 A 36 36 0 1 1 78 76" stroke="#8a2be2" stroke-width="10" stroke-linecap="round"/>
+    <line x1="15" y1="53" x2="25" y2="53" stroke="#8a2be2" stroke-width="6.5" stroke-linecap="round"/>
+    <line x1="25" y1="28" x2="32" y2="35" stroke="#8a2be2" stroke-width="6.5" stroke-linecap="round"/>
+    <line x1="50" y1="17" x2="50" y2="27" stroke="#8a2be2" stroke-width="6.5" stroke-linecap="round"/>
+    <line x1="85" y1="53" x2="75" y2="53" stroke="#8a2be2" stroke-width="6.5" stroke-linecap="round"/>
+    <circle cx="50" cy="59" r="11" fill="#8a2be2"/>
+    <path d="M 45 55 L 71 29 L 54 63 Z" fill="#8a2be2" stroke="#8a2be2" stroke-width="2" stroke-linejoin="round"/>
+  </svg>
+  Dashboard
+</h2>
 <div class="stats">
 <div class="stat"><span>Total Users</span><strong id="statUsers">-</strong></div>
 <div class="stat"><span>Pending Withdrawals</span><strong id="statWithdrawals">-</strong></div>
