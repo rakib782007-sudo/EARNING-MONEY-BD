@@ -1188,7 +1188,6 @@ try {
   const blockedUsers = docs.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
   const activeUsers = totalUsers - blockedUsers;
 
-  // আজকের রাত ১২টা থেকে শুরু করে বর্তমান সময় পর্যন্ত কাউন্ট করার জন্য
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
@@ -1213,12 +1212,25 @@ try {
 }
 
 try {
-  const withdrawSnap = await db.collection('withdrawRequests').where('status','==','pending').get();
-  document.getElementById('statWithdrawals').textContent = withdrawSnap.size.toLocaleString();
-  document.getElementById('statTotalWithdrawals').textContent = '৳ ' + (withdrawSnap.size * 500).toLocaleString();
+  const withdrawSnap = await db.collection('withdrawRequests').get();
+  let pendingCount = 0;
+  let totalApprovedAmount = 0;
+
+  withdrawSnap.forEach(doc => {
+    const data = doc.data();
+    if (data.status === 'pending') {
+      pendingCount++;
+    } else if (data.status === 'approved') {
+      totalApprovedAmount += Number(data.amount || 0);
+    }
+  });
+
+  document.getElementById('statWithdrawals').textContent = pendingCount.toLocaleString();
+  document.getElementById('statTotalWithdrawals').textContent = '৳ ' + totalApprovedAmount.toLocaleString();
 } catch(e) {
   console.error('Error loading dashboard withdrawals:', e);
   document.getElementById('statWithdrawals').textContent = '0';
+  document.getElementById('statTotalWithdrawals').textContent = '৳ 0';
 }
 }
 
