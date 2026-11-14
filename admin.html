@@ -71,6 +71,27 @@ label{font-size:13px;color:#d4cce3}
 .stat-footer.up{color:#5aff9b}
 .stat-footer.pending{color:#ffe600}
 
+/* USER MANAGEMENT SPECIFIC STYLES */
+.user-top-card{background:linear-gradient(135deg,#201738,#161026);border:1px solid #ffffff15;border-radius:18px;padding:20px;margin-bottom:12px;position:relative;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.2)}
+.user-sub-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}
+.user-sub-stat{background:linear-gradient(135deg,#1c1430,#120e1f);border:1px solid #ffffff15;border-radius:18px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 8px 20px rgba(0,0,0,0.2)}
+.user-stat-title{font-size:13px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px}
+.user-stat-value{font-size:28px;font-weight:900;color:#fff;margin:10px 0 0;letter-spacing:0.5px}
+
+.user-card-item{background:linear-gradient(145deg,#1c1630,#110e1d);border:1px solid #ffffff14;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.25)}
+.user-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #ffffff10}
+.user-info-left{display:flex;align-items:center;gap:12px}
+.user-avatar{width:42px;height:42px;background:#34254d;color:#d8bdff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
+.user-name{font-size:15px;font-weight:700;color:#fff;margin:0 0 2px}
+.user-email{font-size:12px;color:var(--muted);margin:0}
+
+.user-card-body{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.user-meta-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px}
+.user-meta-val{font-size:14px;font-weight:700;color:#fff}
+
+.user-details-btn{width:100%;padding:10px;background:#201938;border:1px solid #ffffff18;color:#d8bdff;border-radius:12px;font-weight:600;font-size:13px;text-align:center;transition:0.2s}
+.user-details-btn:hover{background:#2a2148;color:#fff}
+
 .tab{white-space:nowrap;background:#1b1630;color:#d9d1e8;border:1px solid var(--line);padding:10px 15px;border-radius:12px;font-weight:700;text-align:left;display:flex;align-items:center;justify-content:space-between;text-decoration:none;width:100%}
 .tab-content-left{display:flex;align-items:center;gap:10px}
 .tab-arrow{font-size:14px;color:var(--muted);font-weight:600}
@@ -88,13 +109,15 @@ label{font-size:13px;color:#d4cce3}
 .actions .btn{font-size:12px;padding:8px 11px}
 .ok{background:#124b3c;color:#8ff0cf}
 .no{background:#512331;color:#ffc0cb}
-.pill{font-size:11px;padding:4px 8px;border-radius:20px;background:#34254d;color:#d8bdff}
+.pill{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600}
+.pill.active{background:#124b3c;color:#8ff0cf}
+.pill.blocked{background:#512331;color:#ffc0cb}
 .pill.pending{background:#4b3b1d;color:#ffe1a1}
 .pill.approved{background:#124b3c;color:#8ff0cf}
 .pill.rejected{background:#512331;color:#ffc0cb}
 .empty{padding:22px 5px;text-align:center;color:var(--muted)}
 .section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-.search{max-width:280px;margin:0}
+.search{max-width:none;width:100%;margin:0 0 15px}
 
 /* CUSTOM PULL TO REFRESH */
 .ptr-indicator{
@@ -669,14 +692,45 @@ transform:rotate(45deg);
 </div>
 </section>
 
+<!-- UPDATED USER MANAGEMENT SECTION (ADMIN BADGE REMOVED) -->
 <section id="sec-users" class="section">
-<div class="card">
-<div class="section-head">
-<h2>👥 User Management</h2>
-<input id="userSearch" class="field search" placeholder="Search by name or Email" oninput="renderUsers()">
-<button class="btn" onclick="loadUsers()">Refresh</button>
-</div>
-<div id="userList" class="empty">Not loaded yet</div>
+<div class="card" style="background:transparent;border:0;padding:0;box-shadow:none">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <h2 style="margin:0;font-size:20px;letter-spacing:0.5px">USER MANAGEMENT</h2>
+  </div>
+
+  <!-- Total Users Big Top Card -->
+  <div class="user-top-card">
+    <div class="user-stat-title">
+      <div style="width:34px;height:34px;background:#34254d;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c69aff">👥</div>
+      Total Users
+    </div>
+    <div class="user-stat-value" id="statTotalUsersCount">-</div>
+    <div style="position:absolute;right:20px;top:20px;color:#36d6a0;font-size:20px">📈</div>
+  </div>
+
+  <!-- Active & Blocked Users Side-by-Side Cards -->
+  <div class="user-sub-stats-grid">
+    <div class="user-sub-stat">
+      <div class="user-stat-title">Active Users</div>
+      <div class="user-stat-value" id="statActiveUsersCount" style="color:#36d6a0">-</div>
+    </div>
+    <div class="user-sub-stat">
+      <div class="user-stat-title" style="color:#ff6e83">Blocked Users</div>
+      <div class="user-stat-value" id="statBlockedUsersCount" style="color:#ff6e83">-</div>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="card" style="padding:14px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;color:var(--purple);font-weight:600;font-size:13px">
+      <span>🔍</span> Search User
+    </div>
+    <input id="userSearch" class="field search" placeholder="Name / Email / User ID" oninput="renderUsers()" style="margin:0">
+  </div>
+
+  <h3 style="font-size:17px;margin:16px 0 12px;color:#fff">All Users</h3>
+  <div id="userList" class="empty">Not loaded yet</div>
 </div>
 </section>
 
@@ -1066,11 +1120,9 @@ toast('Login successful', 'success');
 console.error(e);
 hideToast();
 
-// Specific check for wrong password or invalid credential errors
 if(e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential' || e.code === 'auth/invalid-login-credentials'){
 toast('⚠️ Incorrect password. Please try again.', 'error');
 } else {
-// Original fallback alert for unauthorized/non-existent emails or other issues
 toast('🚫 This email address is not authorized to access the Admin Panel.', 'access-denied');
 }
 }
@@ -1179,7 +1231,6 @@ if(refreshing)return false;
 if(!currentUser)return false;
 if(appContainer.classList.contains('hidden'))return false;
 
-// Disable pull-to-refresh if sidebar is open
 const sidebar=document.getElementById('sidebar');
 if(sidebar && sidebar.classList.contains('open'))return false;
 
@@ -1675,6 +1726,16 @@ box.textContent='Loading...';
 try{
 const snap=await db.collection('users').limit(500).get();
 usersCache=snap.docs.map(doc=>({id:doc.id,...doc.data()}));
+
+// Update stats counters
+const total = usersCache.length;
+const blocked = usersCache.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
+const active = total - blocked;
+
+document.getElementById('statTotalUsersCount').textContent = total.toLocaleString();
+document.getElementById('statActiveUsersCount').textContent = active.toLocaleString();
+document.getElementById('statBlockedUsersCount').textContent = blocked.toLocaleString();
+
 renderUsers();
 
 }catch(e){
@@ -1695,7 +1756,8 @@ const q=(document.getElementById('userSearch').value||'').toLowerCase();
 
 const rows=usersCache.filter(u=>
 (u.name||'').toLowerCase().includes(q)||
-(u.email||'').toLowerCase().includes(q)
+(u.email||'').toLowerCase().includes(q)||
+(u.id||'').toLowerCase().includes(q)
 );
 
 box.innerHTML='';
@@ -1706,16 +1768,39 @@ return;
 }
 
 rows.forEach(u=>{
+const name = u.name || 'Unnamed User';
+const email = u.email || 'No email';
+const balance = money(u.balance || 0);
+const userId = u.id ? ('USR' + u.id.slice(-4).toUpperCase()) : 'USR001';
+const status = (u.status === 'blocked' || u.status === 'suspended') ? 'blocked' : 'active';
+const initial = name.charAt(0).toUpperCase();
+
 const el=document.createElement('div');
-el.className='item';
+el.className='user-card-item';
 
-const h=document.createElement('strong');
-h.textContent=u.name||'Unnamed User';
-
-const p=document.createElement('p');
-p.textContent=(u.email||u.id)+' · Balance '+money(u.balance);
-
-el.append(h,p);
+el.innerHTML=`
+<div class="user-card-header">
+  <div class="user-info-left">
+    <div class="user-avatar">${initial}</div>
+    <div>
+      <h4 class="user-name">${name}</h4>
+      <p class="user-email">${email}</p>
+    </div>
+  </div>
+  <span class="pill ${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+</div>
+<div class="user-card-body">
+  <div>
+    <div class="user-meta-label">User Balance</div>
+    <div class="user-meta-val">${balance}</div>
+  </div>
+  <div>
+    <div class="user-meta-label">User ID</div>
+    <div class="user-meta-val">${userId}</div>
+  </div>
+</div>
+<button class="user-details-btn" onclick="toast('Viewing details for ${name}', 'info')">View Details →</button>
+`;
 box.append(el);
 });
 }
