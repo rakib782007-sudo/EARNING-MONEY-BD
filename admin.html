@@ -52,7 +52,7 @@ label{font-size:13px;color:#d4cce3}
 
 /* DASHBOARD STATS GRID STYLE */
 .stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:14px 0}
-.stat-card{position:relative;border-radius:20px;padding:18px;color:#fff;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.3);display:flex;flex-direction:column;justify-content:space-between;min-height:145px}
+.stat-card{position:relative;border-radius:20px;padding:18px;color:#fff;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.3);display:flex;flex-direction:column;justify-content:space-between;min-height:130px}
 .stat-card.blue{background:linear-gradient(135deg,#0052D4,#4364F7,#6FB1FC)}
 .stat-card.green{background:linear-gradient(135deg,#11998e,#38ef7d)}
 .stat-card.purple{background:linear-gradient(135deg,#4e54c8,#8f94fb)}
@@ -66,10 +66,7 @@ label{font-size:13px;color:#d4cce3}
 .stat-title-group{display:flex;align-items:center;gap:10px}
 .stat-icon{width:42px;height:42px;background:rgba(255,255,255,0.2);backdrop-filter:blur(5px);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .stat-title{font-size:13px;font-weight:600;opacity:0.9}
-.stat-value{font-size:24px;font-weight:800;margin:10px 0 6px;letter-spacing:0.5px}
-.stat-footer{display:inline-flex;align-items:center;gap:5px;background:rgba(0,0,0,0.25);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;width:fit-content}
-.stat-footer.up{color:#5aff9b}
-.stat-footer.pending{color:#ffe600}
+.stat-value{font-size:24px;font-weight:800;margin:10px 0 2px;letter-spacing:0.5px}
 
 /* USER MANAGEMENT SPECIFIC STYLES */
 .user-top-card{background:linear-gradient(135deg,#201738,#161026);border:1px solid #ffffff15;border-radius:18px;padding:20px;margin-bottom:12px;position:relative;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.2)}
@@ -240,7 +237,7 @@ display:none;
 @media(max-width:720px){
 .wrap{padding:13px}
 .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.stat-card{padding:14px;min-height:130px}
+.stat-card{padding:14px;min-height:120px}
 .stat-value{font-size:20px}
 .top{align-items:center}
 .brand h1{font-size:17px}
@@ -520,7 +517,7 @@ transform:rotate(45deg);
   Dashboard
 </h2>
 
-<!-- STATS CARDS WITH FIXED ICON SIZING USING SVG -->
+<!-- STATS CARDS WITHOUT FOOTER PERCENTAGES -->
 <div class="stats-grid">
   <!-- Card 1: Total Users -->
   <div class="stat-card blue">
@@ -538,7 +535,6 @@ transform:rotate(45deg);
       </div>
     </div>
     <div class="stat-value" id="statUsers">-</div>
-    <div class="stat-footer up">↑ +12.5%</div>
   </div>
 
   <!-- Card 2: Active Users -->
@@ -550,7 +546,6 @@ transform:rotate(45deg);
       </div>
     </div>
     <div class="stat-value" id="statActiveUsers">-</div>
-    <div class="stat-footer up">↑ +11.8%</div>
   </div>
 
   <!-- Card 3: Today's New Users -->
@@ -562,7 +557,6 @@ transform:rotate(45deg);
       </div>
     </div>
     <div class="stat-value" id="statNewUsers">-</div>
-    <div class="stat-footer up">↑ +15.2%</div>
   </div>
 
   <!-- Card 4: Total Earnings -->
@@ -574,7 +568,6 @@ transform:rotate(45deg);
       </div>
     </div>
     <div class="stat-value" id="statEarnings">৳ 0</div>
-    <div class="stat-footer up">↑ +18.2%</div>
   </div>
 
   <!-- Card 5: Total Withdrawals -->
@@ -586,7 +579,6 @@ transform:rotate(45deg);
       </div>
     </div>
     <div class="stat-value" id="statTotalWithdrawals">৳ 0</div>
-    <div class="stat-footer up">↑ +15.7%</div>
   </div>
 
   <!-- Card 6: Pending Withdrawals -->
@@ -598,7 +590,6 @@ transform:rotate(45deg);
       </div>
     </div>
     <div class="stat-value" id="statWithdrawals">-</div>
-    <div class="stat-footer pending">⏳ Pending</div>
   </div>
 
   <!-- Card 7: Total Deposits -->
@@ -610,7 +601,6 @@ transform:rotate(45deg);
       </div>
     </div>
     <div class="stat-value" id="statDeposits">৳ 0</div>
-    <div class="stat-footer up">↑ +20.1%</div>
   </div>
 
   <!-- Card 8: Today's Activity -->
@@ -622,7 +612,6 @@ transform:rotate(45deg);
       </div>
     </div>
     <div class="stat-value" id="statActivity">719</div>
-    <div class="stat-footer up">📊 +14.3%</div>
   </div>
 </div>
 
@@ -1189,11 +1178,9 @@ if(!needAdmin())return;
 await loadCurrentTabData();
 }
 
-/* FIXED DASHBOARD LOADING FUNCTION */
 async function loadDashboard(){
 if(!needAdmin())return;
 
-// 1. Load Users (Isolated so other errors won't stop this)
 try {
   const usersSnap = await db.collection('users').limit(500).get();
   const totalUsers = usersSnap.size;
@@ -1215,7 +1202,6 @@ try {
   console.error('Error loading dashboard users:', e);
 }
 
-// 2. Load Withdrawals (Isolated)
 try {
   const withdrawSnap = await db.collection('withdrawRequests').where('status','==','pending').get();
   document.getElementById('statWithdrawals').textContent = withdrawSnap.size.toLocaleString();
