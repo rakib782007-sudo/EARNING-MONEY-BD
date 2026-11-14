@@ -167,6 +167,7 @@ transform:translateX(-100%);
 transition:transform .3s ease;
 display:flex;
 flex-direction:column;
+overflow-y:auto;
 }
 
 .sidebar-header{
@@ -372,11 +373,54 @@ transform:rotate(45deg);
   </div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="settings" onclick="tab('settings'); toggleSidebar(true);">⚙️ Settings</button>
-<button class="tab" data-tab="tasks" onclick="tab('tasks'); toggleSidebar(true);">📋 Tasks</button>
-<button class="tab" data-tab="submissions" onclick="tab('submissions'); toggleSidebar(true);">✅ Task Review</button>
-<button class="tab" data-tab="withdrawals" onclick="tab('withdrawals'); toggleSidebar(true);">💸 Withdraw</button>
-<button class="tab" data-tab="users" onclick="tab('users'); toggleSidebar(true);">👥 Users</button>
+<button class="tab" data-tab="users" onclick="tab('users'); toggleSidebar(true);">
+  <div class="tab-content-left">👥 User Management</div>
+  <span class="tab-arrow">›</span>
+</button>
+<button class="tab" data-tab="deposits" onclick="tab('deposits', true); toggleSidebar(true);">
+  <div class="tab-content-left">💳 Deposit Management</div>
+  <span class="tab-arrow">›</span>
+</button>
+<button class="tab" data-tab="withdrawals" onclick="tab('withdrawals'); toggleSidebar(true);">
+  <div class="tab-content-left">💸 Withdraw Management</div>
+  <span class="tab-arrow">›</span>
+</button>
+<button class="tab" data-tab="tasks" onclick="tab('tasks'); toggleSidebar(true);">
+  <div class="tab-content-left">📋 Task Management</div>
+  <span class="tab-arrow">›</span>
+</button>
+<button class="tab" data-tab="ads" onclick="tab('ads', true); toggleSidebar(true);">
+  <div class="tab-content-left">🪙 Ads Management</div>
+  <span class="tab-arrow">›</span>
+</button>
+<button class="tab" data-tab="referrals" onclick="tab('referrals', true); toggleSidebar(true);">
+  <div class="tab-content-left">👥 Referral Management</div>
+  <span class="tab-arrow">›</span>
+</button>
+<button class="tab" data-tab="notifications" onclick="tab('notifications', true); toggleSidebar(true);">
+  <div class="tab-content-left">🔔 Notifications</div>
+  <span class="tab-arrow">›</span>
+</button>
+<button class="tab" data-tab="settings" onclick="tab('settings'); toggleSidebar(true);">
+  <div class="tab-content-left">⚙️ App Settings</div>
+  <span class="tab-arrow">›</span>
+</button>
+<button class="tab" data-tab="security" onclick="tab('security', true); toggleSidebar(true);">
+  <div class="tab-content-left">🛡️ Security & Admin Logs</div>
+  <span class="tab-arrow">›</span>
+</button>
+<button class="tab" data-tab="support" onclick="tab('support', true); toggleSidebar(true);">
+  <div class="tab-content-left">🎧 Support Messages</div>
+  <span class="tab-arrow">›</span>
+</button>
+<button class="tab" data-tab="reports" onclick="tab('reports', true); toggleSidebar(true);">
+  <div class="tab-content-left">📊 Reports & Analytics</div>
+  <span class="tab-arrow">›</span>
+</button>
+<button class="tab" data-tab="submissions" onclick="tab('submissions'); toggleSidebar(true);">
+  <div class="tab-content-left">✅ Task Review</div>
+  <span class="tab-arrow">›</span>
+</button>
 <hr style="border:0; border-top:1px solid var(--line); margin:8px 0;">
 <button class="tab" style="background:#512132; color:#ffc4ce; border-color:#512132;" onclick="logout()">🚪 Logout</button>
 </div>
@@ -626,6 +670,66 @@ transform:rotate(45deg);
 <button class="btn" onclick="loadUsers()">Refresh</button>
 </div>
 <div id="userList" class="empty">Not loaded yet</div>
+</div>
+</section>
+
+<section id="sec-deposits" class="section">
+<div class="card">
+<h2>💳 Deposit Management</h2>
+<p class="muted">Manage user deposit requests and transactions here.</p>
+<div id="depositList" class="empty">No deposit requests found</div>
+</div>
+</section>
+
+<section id="sec-ads" class="section">
+<div class="card">
+<h2>🪙 Ads Management</h2>
+<p class="muted">Configure rewarded ads, interstitial placements, and ad network credentials.</p>
+<div class="field" style="padding:15px">Ad network settings and controls will appear here.</div>
+</div>
+</section>
+
+<section id="sec-referrals" class="section">
+<div class="card">
+<h2>👥 Referral Management</h2>
+<p class="muted">View referral bonuses, top referrers, and referral statistics.</p>
+<div class="field" style="padding:15px">Referral tracking data will appear here.</div>
+</div>
+</section>
+
+<section id="sec-notifications" class="section">
+<div class="card">
+<h2>🔔 Notifications</h2>
+<p class="muted">Send push notifications and broadcast messages to all app users.</p>
+<label>Notification Title</label>
+<input class="field" placeholder="Enter title">
+<label>Message Body</label>
+<textarea class="field" rows="3" placeholder="Enter message"></textarea>
+<button class="btn primary">Send Notification</button>
+</div>
+</section>
+
+<section id="sec-security" class="section">
+<div class="card">
+<h2>🛡️ Security & Admin Logs</h2>
+<p class="muted">Monitor administrator activity logs, login attempts, and security audits.</p>
+<div class="empty">No recent security logs</div>
+</div>
+</section>
+
+<section id="sec-support" class="section">
+<div class="card">
+<h2>🎧 Support Messages</h2>
+<p class="muted">Review and reply to user support tickets and chat messages.</p>
+<div class="empty">No support messages found</div>
+</div>
+</section>
+
+<section id="sec-reports" class="section">
+<div class="card">
+<h2>📊 Reports & Analytics</h2>
+<p class="muted">Detailed financial reports, earnings summaries, and platform growth metrics.</p>
+<div class="empty">Analytics data loading...</div>
 </div>
 </section>
 
@@ -970,7 +1074,8 @@ currentActiveTab=name;
 document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
 document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
 
-document.getElementById('sec-'+name).classList.add('active');
+const sec=document.getElementById('sec-'+name);
+if(sec) sec.classList.add('active');
 document.querySelectorAll(`.tab[data-tab="${name}"]`).forEach(el=>el.classList.add('active'));
 
 window.scrollTo({top: 0, behavior: 'smooth'});
