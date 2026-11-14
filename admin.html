@@ -536,7 +536,7 @@ const db=firebase.firestore();
 let currentUser=null,usersCache=[];
 let sidebarHistoryActive=false;
 let currentActiveTab='dashboard';
-let hasRefreshed=false; // Track whether user used refresh
+let hasRefreshed=false;
 
 const emailInput=document.getElementById('email');
 const passwordInput=document.getElementById('password');
@@ -572,13 +572,10 @@ document.getElementById('sidebarOverlay').classList.remove('show');
 return;
 }
 
-// Back button logic on dashboard/app
 if(currentUser && !document.getElementById('app').classList.contains('hidden')) {
   if(hasRefreshed) {
-    // If already refreshed once, exit/go back completely
     history.go(-1);
   } else {
-    // If not refreshed, trigger app refresh system first and mark as refreshed
     hasRefreshed = true;
     history.pushState({page: 'dashboard'}, '', window.location.href);
     refreshAll();
@@ -754,7 +751,10 @@ document.getElementById('mainHeader').classList.remove('hidden');
 document.getElementById('loginBox').classList.add('hidden');
 document.getElementById('app').classList.remove('hidden');
 
-// Initialize history state for back button control
+// Reset to Dashboard main view upon successful login/load
+tab('dashboard');
+window.scrollTo({top: 0, behavior: 'smooth'});
+
 hasRefreshed = false;
 history.replaceState({page: 'dashboard'}, '', window.location.href);
 
@@ -827,6 +827,9 @@ clearLoginDraft();
 rememberInput.checked=false;
 saveRememberPreference();
 
+// Close sidebar immediately upon logout
+toggleSidebar(true);
+
 try{
 await auth.signOut();
 toast('Logged out successfully', 'info');
@@ -843,7 +846,7 @@ return false;
 return true;
 }
 
-function tab(name,button){
+function tab(name){
 if(!needAdmin())return;
 
 currentActiveTab=name;
@@ -853,8 +856,20 @@ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
 document.getElementById('sec-'+name).classList.add('active');
 document.querySelectorAll(`.tab[data-tab="${name}"]`).forEach(el=>el.classList.add('active'));
 
+// Scroll to top when switching tabs
+window.scrollTo({top: 0, behavior: 'smooth'});
+
 loadCurrentTabData();
 }
+
+// Update onclick bindings on tabs to use new tab(name) function without button param error
+document.querySelectorAll('.tab[data-tab]').forEach(el => {
+  const tabName = el.getAttribute('data-tab');
+  el.onclick = () => {
+    tab(tabName);
+    toggleSidebar(true);
+  };
+});
 
 async function loadCurrentTabData(){
 if(currentActiveTab==='dashboard')loadDashboard();
@@ -967,7 +982,7 @@ ptr.style.top='20px';
 ptr.style.opacity='1';
 appContainer.style.transform='translateY(36px)';
 
-hasRefreshed = true; // Mark as refreshed via pull-to-refresh
+hasRefreshed = true;
 await refreshAll();
 toast('Refreshed successfully', 'success');
 
