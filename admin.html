@@ -1188,6 +1188,16 @@ try {
   const blockedUsers = docs.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
   const activeUsers = totalUsers - blockedUsers;
 
+  // আজকের রাত ১২টা থেকে শুরু করে বর্তমান সময় পর্যন্ত কাউন্ট করার জন্য
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+
+  const todayNewUsersCount = docs.filter(u => {
+    if (!u.createdAt) return false;
+    const joinDate = u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt);
+    return joinDate >= startOfToday;
+  }).length;
+
   let totalEarnedSum = 0;
   docs.forEach(u => {
     totalEarnedSum += Number(u.totalEarned || u.balance || 0);
@@ -1195,7 +1205,7 @@ try {
 
   document.getElementById('statUsers').textContent = totalUsers.toLocaleString();
   document.getElementById('statActiveUsers').textContent = activeUsers.toLocaleString();
-  document.getElementById('statNewUsers').textContent = Math.min(totalUsers, 124).toLocaleString();
+  document.getElementById('statNewUsers').textContent = todayNewUsersCount.toLocaleString();
   document.getElementById('statEarnings').textContent = '৳ ' + totalEarnedSum.toLocaleString();
   document.getElementById('statDeposits').textContent = '৳ ' + (totalUsers * 320).toLocaleString();
 } catch(e) {
