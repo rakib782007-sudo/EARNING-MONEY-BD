@@ -201,10 +201,13 @@ flex-shrink:0;
 
 .sidebar.open{transform:translateX(0)}
 
+/* Backdrop blur and touch block when sidebar is open */
 .sidebar-overlay{
 position:fixed;
 inset:0;
-background:#0009;
+background:rgba(9, 7, 19, 0.6);
+backdrop-filter:blur(4px);
+-webkit-backdrop-filter:blur(4px);
 z-index:100;
 display:none;
 }
@@ -377,6 +380,10 @@ transform:rotate(45deg);
   <div class="tab-content-left">👥 User Management</div>
   <span class="tab-arrow">›</span>
 </button>
+<button class="tab" data-tab="moderators" onclick="tab('moderators'); toggleSidebar(true);">
+  <div class="tab-content-left">🛡️ Moderator Management</div>
+  <span class="tab-arrow">›</span>
+</button>
 <button class="tab" data-tab="deposits" onclick="tab('deposits'); toggleSidebar(true);">
   <div class="tab-content-left">💳 Deposit Management</div>
   <span class="tab-arrow">›</span>
@@ -492,7 +499,7 @@ transform:rotate(45deg);
 
 <!-- STATS CARDS WITH FIXED ICON SIZING USING SVG -->
 <div class="stats-grid">
-  <!-- Card 1: Total Users (Using perfect inline SVG icon) -->
+  <!-- Card 1: Total Users -->
   <div class="stat-card blue">
     <div class="stat-header">
       <div class="stat-title-group">
@@ -670,6 +677,24 @@ transform:rotate(45deg);
 <button class="btn" onclick="loadUsers()">Refresh</button>
 </div>
 <div id="userList" class="empty">Not loaded yet</div>
+</div>
+</section>
+
+<section id="sec-moderators" class="section">
+<div class="card">
+<div class="section-head">
+<h2>🛡️ Moderator Management</h2>
+<button class="btn" onclick="loadModerators()">Refresh</button>
+</div>
+<p class="muted" style="margin-bottom:12px;">Add and manage moderators or sub-moderators who have access to this control center.</p>
+<div style="margin-bottom:15px;">
+<label>User Email to Assign Moderator Access</label>
+<div style="display:flex; gap:8px; margin-top:5px;">
+<input id="modEmailInput" class="field" type="email" placeholder="Enter user email" style="margin:0;">
+<button class="btn primary" onclick="addModerator()" style="white-space:nowrap;">Add Moderator</button>
+</div>
+</div>
+<div id="moderatorList" class="empty">Not loaded yet</div>
 </div>
 </section>
 
@@ -1098,6 +1123,7 @@ if(currentActiveTab==='tasks')loadTasks();
 if(currentActiveTab==='submissions')loadSubmissions();
 if(currentActiveTab==='withdrawals')loadWithdrawals();
 if(currentActiveTab==='users')loadUsers();
+if(currentActiveTab==='moderators')loadModerators();
 }
 
 async function refreshAll(){
@@ -1680,6 +1706,100 @@ p.textContent=(u.email||u.id)+' · Balance '+money(u.balance);
 el.append(h,p);
 box.append(el);
 });
+}
+
+async function loadModerators(){
+if(!needAdmin())return;
+const box=document.getElementById('moderatorList');
+box.textContent='Loading...';
+
+try{
+const snap=await db.collection('admins').get();
+if(snap.empty){
+box.innerHTML='<div class="empty">No moderators found</div>';
+return;
+}
+
+box.innerHTML='';
+snap.forEach(doc=>{
+const d=doc.data();
+const el=document.createElement('div');
+el.className='item';
+
+const h=document.createElement('strong');
+h.textContent=d.email||doc.id;
+
+const p=document.createElement('p');
+p.textContent='Role: '+(d.role||'moderator')+' · Status: '+(d.status||'active');
+
+const a=document.createElement('div');
+a.className='actions';
+
+const toggleBtn=document.createElement('button');
+const isSuspended=d.status==='suspended';
+toggleBtn.className='btn '+(isSuspended?'ok':'no');
+toggleBtn.textContent=isSuspended?'Activate':'Suspend';
+toggleBtn.onclick=()=>toggleModeratorStatus(doc.id, isSuspended?'active':'suspended');
+
+const delBtn=document.createElement('button');
+delBtn.className='btn danger';
+delBtn.textContent='Remove';
+delBtn.onclick=()=>removeModerator(doc.id);
+
+a.append(toggleBtn, delBtn);
+el.append(h, p, a);
+box.append(el);
+});
+}catch(e){
+console.error(e);
+box.textContent='Could not load moderators';
+}
+}
+
+async function addModerator(){
+if(!needAdmin())return;
+const email=document.getElementById('modEmailInput').value.trim().toLowerCase();
+if(!email||!email.includes('@')){
+toast('Please enter a valid email address', 'warning');
+return;
+}
+
+try{
+await db.collection('admins').add({
+email: email,
+role: 'moderator',
+status: 'active',
+createdAt: firebase.firestore.FieldValue.serverTimestamp()
+});
+document.getElementById('modEmailInput').value='';
+toast('Moderator added successfully', 'success');
+loadModerators();
+}catch(e){
+console.error(e);
+toast('Could not add moderator', 'error');
+}
+}
+
+async function toggleModeratorStatus(id, newStatus){
+if(!needAdmin())return;
+try{
+await db.collection('admins').doc(id).update({status: newStatus});
+toast('Moderator status updated', 'success');
+loadModerators();
+}catch(e){
+toast('Could not update status', 'error');
+}
+}
+
+async function removeModerator(id){
+if(!needAdmin()||!confirm('Are you sure you want to remove this moderator?'))return;
+try{
+await db.collection('admins').doc(id).delete();
+toast('Moderator removed', 'success');
+loadModerators();
+}catch(e){
+toast('Could not remove moderator', 'error');
+}
 }
 </script>
 </body>
