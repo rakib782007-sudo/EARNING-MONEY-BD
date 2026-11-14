@@ -601,7 +601,7 @@ transform:rotate(45deg);
     <div class="stat-value" id="statDeposits">৳ 0</div>
   </div>
 
-  <!-- Card 8: Today's Activity -->
+  <!-- Card 8: Today's Activity (Real-time % capped at 100%) -->
   <div class="stat-card deep-purple">
     <div class="stat-header">
       <div class="stat-title-group">
@@ -609,7 +609,7 @@ transform:rotate(45deg);
         <span class="stat-title">Today's Activity</span>
       </div>
     </div>
-    <div class="stat-value" id="statActivity">719</div>
+    <div class="stat-value" id="statActivity">0%</div>
   </div>
 </div>
 
@@ -1205,6 +1205,13 @@ try {
   document.getElementById('statActiveUsers').textContent = activeUsers.toLocaleString();
   document.getElementById('statNewUsers').textContent = todayNewUsersCount.toLocaleString();
   document.getElementById('statEarnings').textContent = '৳ ' + totalEarnedSum.toLocaleString();
+
+  // --- TODAY'S ACTIVITY (Real-time % Calculation capped at 100%) ---
+  // টার্গেট ডেইলি অ্যাক্টিভ ইউজার (যেমন: মোট ইউজারের ৫০% বা অন্তত ৫০ জন ইউজারকে টার্গেট ধরে হিসাব করা যেতে পারে)
+  const targetActiveCount = Math.max(totalUsers, 50); 
+  const activityPercentage = Math.min(Math.round((activeUsers / targetActiveCount) * 100), 100);
+  document.getElementById('statActivity').textContent = (totalUsers > 0 ? activityPercentage : 0) + '%';
+
 } catch(e) {
   console.error('Error loading dashboard users:', e);
 }
