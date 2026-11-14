@@ -16,14 +16,21 @@
 :root{--bg:#090713;--panel:#151126;--panel2:#1d1732;--line:#ffffff16;--text:#f8f5ff;--muted:#aaa2bd;--purple:#a66bff;--purple2:#7138d5;--gold:#ffd36b;--green:#36d6a0;--red:#ff6e83;--blue:#65b7ff}
 
 *{box-sizing:border-box}
-html,body{overscroll-behavior-y:contain}
 
-body{
-margin:0;
-background:radial-gradient(ellipse at 10% 0%,#28164a 0,transparent 35%),var(--bg);
-color:var(--text);
-font-family:Inter,sans-serif;
-min-height:100vh;
+html, body {
+margin: 0;
+padding: 0;
+width: 100%;
+height: 100%;
+overflow-x: hidden;
+background: radial-gradient(ellipse at 10% 0%, #28164a 0, transparent 35%), var(--bg);
+color: var(--text);
+font-family: Inter, sans-serif;
+overscroll-behavior-y: none;
+}
+
+body {
+padding-top: 75px;
 }
 
 button,input,textarea{font:inherit}
@@ -33,7 +40,27 @@ button{cursor:pointer;border:0}
 .brand h1{font:800 21px Inter;margin:0;color:#ffffff}
 .brand h1 span{color:#c69aff}
 .brand small{display:block;color:var(--muted);font-size:12px;margin-top:3px;line-height:1.4}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0 22px}
+
+/* HEADER PERMANENTLY FIXED STYLE */
+.top{
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 65px;
+background: rgba(9, 7, 19, 0.98);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border-bottom: 1px solid var(--line);
+z-index: 99999;
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 12px;
+padding: 0 18px;
+box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
 .top-left{display:flex;align-items:center;gap:12px}
 .top-actions{display:flex;align-items:center;gap:8px}
 .btn{padding:10px 14px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);color:var(--text);font-weight:700}
@@ -118,7 +145,7 @@ label{font-size:13px;color:#d4cce3}
 
 /* CUSTOM PULL TO REFRESH */
 .ptr-indicator{
-position:fixed;top:-65px;left:50%;transform:translateX(-50%);
+position:fixed;top:15px;left:50%;transform:translateX(-50%);
 width:48px;height:48px;border-radius:50%;
 background:#151126;border:1px solid #a66bff44;
 box-shadow:0 8px 24px #000c,0 0 15px #a66bff25;
@@ -144,7 +171,7 @@ stroke-dashoffset:18 !important;
 100%{transform:rotate(360deg)}
 }
 
-.toast{position:fixed;left:50%;top:22px;transform:translate(-50%,-20px);background:#18132ad9;color:#fff;border:1px solid #ffffff25;padding:13px 20px;border-radius:14px;opacity:0;pointer-events:none;transition:.25s;z-index:120;max-width:95%;white-space:normal;overflow:hidden;text-overflow:ellipsis;text-align:center;font-weight:600;font-size:13px;line-height:1.4;box-shadow:0 12px 35px #0008;backdrop-filter:blur(12px)}
+.toast{position:fixed;left:50%;top:85px;transform:translate(-50%,-20px);background:#18132ad9;color:#fff;border:1px solid #ffffff25;padding:13px 20px;border-radius:14px;opacity:0;pointer-events:none;transition:.25s;z-index:12000;max-width:95%;white-space:normal;overflow:hidden;text-overflow:ellipsis;text-align:center;font-weight:600;font-size:13px;line-height:1.4;box-shadow:0 12px 35px #0008;backdrop-filter:blur(12px)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .toast.success{border-color:#22C55E88;color:#22C55E;box-shadow:0 12px 35px #22C55E22}
 .toast.warning{border-color:#F59E0B88;color:#F59E0B;box-shadow:0 12px 35px #F59E0B22}
@@ -182,7 +209,7 @@ height:100vh;
 height:100dvh;
 background:#151126;
 border-right:1px solid var(--line);
-z-index:101;
+z-index:10100;
 transform:translateX(-100%);
 transition:transform .3s ease;
 display:flex;
@@ -227,7 +254,7 @@ inset:0;
 background:rgba(9, 7, 19, 0.6);
 backdrop-filter:blur(4px);
 -webkit-backdrop-filter:blur(4px);
-z-index:100;
+z-index:10000;
 display:none;
 }
 
@@ -238,7 +265,7 @@ display:none;
 .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .stat-card{padding:14px;min-height:120px}
 .stat-value{font-size:20px}
-.top{align-items:center}
+.top{padding:10px 13px}
 .brand h1{font-size:17px}
 .brand small{font-size:11px}
 .grid2{grid-template-columns:1fr}
@@ -248,12 +275,10 @@ display:none;
 
 /* Premium Login */
 body:has(#loginBox:not(.hidden)){
-background:radial-gradient(ellipse at 50% 8%,#492477 0,transparent 34%),radial-gradient(ellipse at 8% 85%,#25144a 0,transparent 30%),radial-gradient(ellipse at 92% 78%,#30184c 0,transparent 28%),#080611
+background:radial-gradient(ellipse at 50% 8%,#492477 0,transparent 34%),radial-gradient(ellipse at 8% 85%,#25144a 0,transparent 30%),radial-gradient(ellipse at 92% 78%,#30184c 0,transparent 28%),#080611;
+padding-top: 0;
 }
-body:has(#loginBox:not(.hidden)) .top{justify-content:center;margin:24px 0 8px}
-body:has(#loginBox:not(.hidden)) .top .brand{display:none}
-body:has(#loginBox:not(.hidden)) .top-left{display:none}
-body:has(#loginBox:not(.hidden)) .top-actions{display:none}
+body:has(#loginBox:not(.hidden)) .top{display:none !important}
 
 .login{position:relative;isolation:isolate;max-width:440px;margin:4vh auto 0;padding:0}
 .login-glow{position:absolute;inset:8% -7%;background:linear-gradient(135deg,#9b5cff55,#4b24a055);filter:blur(55px);z-index:-1;border-radius:50%}
@@ -363,8 +388,6 @@ transform:rotate(45deg);
 </svg>
 </div>
 
-<div class="wrap">
-
 <header id="mainHeader" class="top hidden">
 <div class="top-left">
 <button id="menuBtn" class="menu-btn" type="button" onclick="toggleSidebar()" aria-label="Open sidebar">☰</button>
@@ -377,6 +400,8 @@ transform:rotate(45deg);
 </div>
 </div>
 </header>
+
+<div class="wrap">
 
 <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar(true)"></div>
 <aside id="sidebar" class="sidebar">
@@ -601,7 +626,7 @@ transform:rotate(45deg);
     <div class="stat-value" id="statDeposits">৳ 0</div>
   </div>
 
-  <!-- Card 8: Today's Activity (Real-time % capped at 100%) -->
+  <!-- Card 8: Today's Activity -->
   <div class="stat-card deep-purple">
     <div class="stat-header">
       <div class="stat-title-group">
@@ -1206,8 +1231,6 @@ try {
   document.getElementById('statNewUsers').textContent = todayNewUsersCount.toLocaleString();
   document.getElementById('statEarnings').textContent = '৳ ' + totalEarnedSum.toLocaleString();
 
-  // --- TODAY'S ACTIVITY (Real-time % Calculation capped at 100%) ---
-  // টার্গেট ডেইলি অ্যাক্টিভ ইউজার (যেমন: মোট ইউজারের ৫০% বা অন্তত ৫০ জন ইউজারকে টার্গেট ধরে হিসাব করা যেতে পারে)
   const targetActiveCount = Math.max(totalUsers, 50); 
   const activityPercentage = Math.min(Math.round((activeUsers / targetActiveCount) * 100), 100);
   document.getElementById('statActivity').textContent = (totalUsers > 0 ? activityPercentage : 0) + '%';
@@ -1305,7 +1328,7 @@ const dx=currentX-startX;
 if(dy<=0){
 pullDistance=0;
 ptr.style.opacity='0';
-ptr.style.top='-65px';
+ptr.style.top='15px';
 appContainer.style.transform='translateY(0px)';
 return;
 }
@@ -1314,7 +1337,7 @@ if(Math.abs(dy)>Math.abs(dx)){
 if(e.cancelable)e.preventDefault();
 pullDistance=Math.min(dy*0.48,135);
 const progress=Math.min(pullDistance/threshold,1);
-const topPos=Math.min(-55+pullDistance*0.88,24);
+const topPos=Math.min(15+pullDistance*0.88,80);
 
 ptr.style.opacity=String(Math.min(progress*1.3,1));
 ptr.style.top=topPos+'px';
@@ -1334,7 +1357,7 @@ ptr.style.transition='top .25s ease, opacity .25s ease';
 if(pullDistance>=threshold&&!refreshing){
 refreshing=true;
 ptr.classList.add('ptr-refreshing');
-ptr.style.top='20px';
+ptr.style.top='75px';
 ptr.style.opacity='1';
 appContainer.style.transform='translateY(36px)';
 
@@ -1344,14 +1367,14 @@ toast('Refreshed successfully', 'success');
 
 setTimeout(()=>{
 ptr.classList.remove('ptr-refreshing');
-ptr.style.top='-65px';
+ptr.style.top='15px';
 ptr.style.opacity='0';
 appContainer.style.transform='translateY(0px)';
 circle.style.strokeDashoffset=String(maxCircumference);
 refreshing=false;
 },350);
 }else{
-ptr.style.top='-65px';
+ptr.style.top='15px';
 ptr.style.opacity='0';
 appContainer.style.transform='translateY(0px)';
 circle.style.strokeDashoffset=String(maxCircumference);
@@ -2021,20 +2044,21 @@ box.textContent='Could not load moderators';
 
 async function addModerator(){
 if(!needAdmin())return;
-const email=document.getElementById('modEmailInput').value.trim().toLowerCase();
-if(!email||!email.includes('@')){
+const emailInputEl = document.getElementById('modEmailInput');
+const targetEmail = emailInputEl ? emailInputEl.value.trim().toLowerCase() : '';
+if(!targetEmail||!targetEmail.includes('@')){
 toast('Please enter a valid email address', 'warning');
 return;
 }
 
 try{
 await db.collection('admins').add({
-email: email,
+email: targetEmail,
 role: 'moderator',
 status: 'active',
 createdAt: firebase.firestore.FieldValue.serverTimestamp()
 });
-document.getElementById('modEmailInput').value='';
+emailInputEl.value='';
 toast('Moderator added successfully', 'success');
 loadModerators();
 }catch(e){
