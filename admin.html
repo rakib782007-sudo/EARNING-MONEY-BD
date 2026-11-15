@@ -869,23 +869,33 @@ overlay.classList.toggle('show',shouldOpen);
 
 if(shouldOpen){
 menuBtn.textContent='✕';
-history.pushState({sidebarOpen:true}, '');
 } else {
 menuBtn.textContent='☰';
 }
 }
 
-// Fixed back button handler to close sidebar and reset hamburger icon
-window.addEventListener('popstate',function(e){
+// -------------------------------------------------------------
+// FIXED & ENHANCED BACK BUTTON HANDLER (PAGE-BY-PAGE BACK)
+// -------------------------------------------------------------
+window.addEventListener('popstate', function(e){
 const sidebar=document.getElementById('sidebar');
 const overlay=document.getElementById('sidebarOverlay');
 const menuBtn=document.getElementById('menuBtn');
 
+// ১. প্রথমে সাইডবার খোলা থাকলে সেটি বন্ধ করবে
 if(sidebar && sidebar.classList.contains('open')){
 sidebar.classList.remove('open');
 if(overlay) overlay.classList.remove('show');
 if(menuBtn) menuBtn.textContent='☰';
-e.preventDefault();
+return;
+}
+
+// ২. যদি হিস্টোরিতে কোনো ট্যাব স্টেট থাকে, সেই ট্যাবে ব্যাক করবে
+if(e.state && e.state.tab){
+switchToTab(e.state.tab, false);
+} else {
+// ড্যাশবোর্ডে থাকলে অথবা হিস্টোরি শেষ হলে ড্যাশবোর্ডে নিয়ে যাবে
+switchToTab('dashboard', false);
 }
 });
 
@@ -1056,7 +1066,7 @@ document.getElementById('mainHeader').classList.remove('hidden');
 document.getElementById('loginBox').classList.add('hidden');
 document.getElementById('app').classList.remove('hidden');
 
-tab('dashboard');
+switchToTab('dashboard', true);
 window.scrollTo({top: 0, behavior: 'smooth'});
 
 refreshAll();
@@ -1151,7 +1161,8 @@ return false;
 return true;
 }
 
-function tab(name){
+// Internal Tab Switcher with History Support
+function switchToTab(name, pushHistory=true){
 if(!needAdmin())return;
 
 currentActiveTab=name;
@@ -1164,7 +1175,16 @@ document.querySelectorAll(`.tab[data-tab="${name}"]`).forEach(el=>el.classList.a
 
 window.scrollTo({top: 0, behavior: 'smooth'});
 
+if(pushHistory){
+history.pushState({tab: name}, '', '#' + name);
+}
+
 loadCurrentTabData();
+}
+
+// Public tab function called on click
+function tab(name){
+switchToTab(name, true);
 }
 
 // Reliable Event Listener for sidebar menu buttons
@@ -1272,7 +1292,7 @@ try {
 }
 }
 
-/* PULL TO REFRESH GESTURE SYSTEM (FIXED & FULLY FUNCTIONAL) */
+/* PULL TO REFRESH GESTURE SYSTEM */
 (function initPullToRefresh(){
 const ptr=document.getElementById('ptrIndicator');
 const circle=document.getElementById('ptrCircle');
@@ -1354,7 +1374,6 @@ ptr.style.top='75px';
 ptr.style.opacity='1';
 appContainer.style.transform='translateY(36px)';
 
-// FIXED: Now actually calls refreshAll() to fetch fresh Firebase data for the active tab!
 await refreshAll();
 toast('Refreshed successfully', 'success');
 
@@ -2061,7 +2080,7 @@ toast('Could not add moderator', 'error');
 }
 
 async function toggleModeratorStatus(id, newStatus){
-if(-!needAdmin())return;
+if(!needAdmin())return;
 try{
 await db.collection('admins').doc(id).update({status: newStatus});
 toast('Moderator status updated', 'success');
