@@ -1220,7 +1220,7 @@ async function loadDashboard(){
 if(!needAdmin())return;
 
 try {
-  const usersSnap = await db.collection('users').limit(500).get();
+  const usersSnap = await db.collection('users').get();
   const totalUsers = usersSnap.size;
   const docs = usersSnap.docs.map(doc => doc.data());
   const blockedUsers = docs.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
@@ -1566,7 +1566,7 @@ const box=document.getElementById('submissionList');
 box.textContent='Loading...';
 
 try{
-const snap=await db.collection('taskSubmissions').limit(150).get();
+const snap=await db.collection('taskSubmissions').get();
 
 if(snap.empty){
 box.innerHTML='<div class="empty">No submissions found</div>';
@@ -1690,7 +1690,7 @@ const box=document.getElementById('withdrawList');
 box.textContent='Loading...';
 
 try{
-const snap=await db.collection('withdrawRequests').limit(150).get();
+const snap=await db.collection('withdrawRequests').get();
 
 if(snap.empty){
 box.innerHTML='<div class="empty">No withdrawal requests found</div>';
@@ -1812,7 +1812,7 @@ const box=document.getElementById('depositList');
 box.textContent='Loading...';
 
 try{
-const snap=await db.collection('depositRequests').limit(150).get();
+const snap=await db.collection('depositRequests').get();
 
 if(snap.empty){
 box.innerHTML='<div class="empty">No deposit requests found</div>';
@@ -1935,7 +1935,7 @@ const box=document.getElementById('userList');
 box.textContent='Loading...';
 
 try{
-const snap=await db.collection('users').limit(500).get();
+const snap=await db.collection('users').get();
 usersCache=snap.docs.map(doc=>({id:doc.id,...doc.data()}));
 
 const total = usersCache.length;
