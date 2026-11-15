@@ -854,6 +854,7 @@ const db=firebase.firestore();
 
 let currentUser=null,usersCache=[];
 let currentActiveTab='dashboard';
+let dashboardUnsubscribe = null; // Real-time listener unsubscriber reference
 
 const emailInput=document.getElementById('email');
 const passwordInput=document.getElementById('password');
@@ -1144,6 +1145,11 @@ saveRememberPreference();
 
 toggleSidebar(true);
 
+if(dashboardUnsubscribe){
+dashboardUnsubscribe();
+dashboardUnsubscribe = null;
+}
+
 try{
 await auth.signOut();
 toast('Logged out successfully', 'info');
@@ -1163,6 +1169,12 @@ return true;
 // Internal Tab Switcher with History Support
 function switchToTab(name, pushHistory=true){
 if(!needAdmin())return;
+
+// Clear previous real-time dashboard listener when navigating away from dashboard
+if(currentActiveTab === 'dashboard' && name !== 'dashboard' && dashboardUnsubscribe){
+dashboardUnsubscribe();
+dashboardUnsubscribe = null;
+}
 
 currentActiveTab=name;
 document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
@@ -1212,113 +1224,120 @@ if(!needAdmin())return;
 await loadCurrentTabData();
 }
 
-async function loadDashboard(){
+// -------------------------------------------------------------
+// REAL-TIME LISTENER IMPLEMENTED FOR DASHBOARD STATS
+// -------------------------------------------------------------
+function loadDashboard(){
 if(!needAdmin())return;
 
-try {
-  const usersSnap = await db.collection('users').get();
-  const totalUsers = usersSnap.size;
-  const docs = usersSnap.docs.map(doc => doc.data());
-  
-  const now = new Date();
-  const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
-  const startOfToday = new Date();
-  startOfToday.setHours(0, 0, 0, 0);
+// If a listener already exists, do not recreate it
+if(dashboardUnsubscribe) return;
 
-  const blockedUsers = docs.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
-  
-  const activeUsers = docs.filter(u => {
-    if (u.status === 'blocked' || u.status === 'suspended') return false;
-    if (!u.lastLogin) return false;
-    
-    const lastActivity = u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin);
-    return lastActivity >= twoDaysAgo;
-  }).length;
+let usersData = [];
+let withdrawalsData = [];
+let depositsData = [];
+let deletedUsersEarnedSum = 0;
 
-  const todayActiveCount = docs.filter(u => {
-    if (u.status === 'blocked' || u.status === 'suspended') return false;
-    if (!u.lastLogin) return false;
-    
-    const activityDate = u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin);
-    return activityDate >= startOfToday;
-  }).length;
-
-  const todayNewUsersCount = docs.filter(u => {
-    if (!u.createdAt) return false;
-    const joinDate = u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt);
-    return joinDate >= startOfToday;
-  }).length;
-
-  // TOTAL EARNINGS CALCULATION RULES:
-  // 1. Sum totalEarned of all users (including blocked/suspended users)
-  // 2. Never calculate using current balance
-  // 3. Treat missing totalEarned as 0
-  // 4. Preserve historical totalEarned from any deleted users if archived in appConfig/stats
-  let totalEarnedSum = 0;
-  docs.forEach(u => {
-    totalEarnedSum += Number(u.totalEarned || 0);
-  });
-
+async function updateDashboardUI(){
   try {
-    const statsDoc = await db.collection('appConfig').doc('stats').get();
-    if (statsDoc.exists && statsDoc.data().deletedUsersEarned) {
-      totalEarnedSum += Number(statsDoc.data().deletedUsersEarned || 0);
-    }
-  } catch (err) {
-    // Ignore if appConfig/stats doesn't exist yet
+    const totalUsers = usersData.length;
+    const now = new Date();
+    const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const activeUsers = usersData.filter(u => {
+      if (u.status === 'blocked' || u.status === 'suspended') return false;
+      if (!u.lastLogin) return false;
+      const lastActivity = u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin);
+      return lastActivity >= twoDaysAgo;
+    }).length;
+
+    const todayActiveCount = usersData.filter(u => {
+      if (u.status === 'blocked' || u.status === 'suspended') return false;
+      if (!u.lastLogin) return false;
+      const activityDate = u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin);
+      return activityDate >= startOfToday;
+    }).length;
+
+    const todayNewUsersCount = usersData.filter(u => {
+      if (!u.createdAt) return false;
+      const joinDate = u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt);
+      return joinDate >= startOfToday;
+    }).length;
+
+    let totalEarnedSum = deletedUsersEarnedSum;
+    usersData.forEach(u => {
+      totalEarnedSum += Number(u.totalEarned || 0);
+    });
+
+    document.getElementById('statUsers').textContent = totalUsers.toLocaleString();
+    document.getElementById('statActiveUsers').textContent = activeUsers.toLocaleString();
+    document.getElementById('statNewUsers').textContent = todayNewUsersCount.toLocaleString();
+    document.getElementById('statEarnings').textContent = '৳ ' + totalEarnedSum.toLocaleString();
+
+    const activityPercentage = totalUsers > 0 ? Math.round((todayActiveCount / totalUsers) * 100) : 0;
+    document.getElementById('statActivity').textContent = activityPercentage + '%';
+
+    let pendingCount = 0;
+    let totalApprovedAmount = 0;
+    withdrawalsData.forEach(d => {
+      if (d.status === 'pending') {
+        pendingCount++;
+      } else if (d.status === 'approved') {
+        totalApprovedAmount += Number(d.amount || 0);
+      }
+    });
+
+    document.getElementById('statWithdrawals').textContent = pendingCount.toLocaleString();
+    document.getElementById('statTotalWithdrawals').textContent = '৳ ' + totalApprovedAmount.toLocaleString();
+
+    let totalApprovedDeposit = 0;
+    depositsData.forEach(d => {
+      if (d.status === 'approved') {
+        totalApprovedDeposit += Number(d.amount || 0);
+      }
+    });
+
+    document.getElementById('statDeposits').textContent = '৳ ' + totalApprovedDeposit.toLocaleString();
+
+  } catch(e) {
+    console.error('Error updating dashboard UI:', e);
   }
-
-  document.getElementById('statUsers').textContent = totalUsers.toLocaleString();
-  document.getElementById('statActiveUsers').textContent = activeUsers.toLocaleString();
-  document.getElementById('statNewUsers').textContent = todayNewUsersCount.toLocaleString();
-  document.getElementById('statEarnings').textContent = '৳ ' + totalEarnedSum.toLocaleString();
-
-  // Today's Activity = আজকে Active User ÷ Total Users × 100
-  const activityPercentage = totalUsers > 0 ? Math.round((todayActiveCount / totalUsers) * 100) : 0;
-  document.getElementById('statActivity').textContent = activityPercentage + '%';
-
-} catch(e) {
-  console.error('Error loading dashboard users:', e);
 }
 
-try {
-  const withdrawSnap = await db.collection('withdrawRequests').get();
-  let pendingCount = 0;
-  let totalApprovedAmount = 0;
+// Fetch deleted users earned stats once from appConfig/stats
+db.collection('appConfig').doc('stats').get().then(snap => {
+  if (snap.exists && snap.data().deletedUsersEarned) {
+    deletedUsersEarnedSum = Number(snap.data().deletedUsersEarned || 0);
+  }
+  updateDashboardUI();
+}).catch(() => {
+  updateDashboardUI();
+});
 
-  withdrawSnap.forEach(doc => {
-    const data = doc.data();
-    if (data.status === 'pending') {
-      pendingCount++;
-    } else if (data.status === 'approved') {
-      totalApprovedAmount += Number(data.amount || 0);
-    }
-  });
+// Setup real-time listeners for instant updates
+const unsubUsers = db.collection('users').onSnapshot(snap => {
+  usersData = snap.docs.map(doc => doc.data());
+  updateDashboardUI();
+}, err => console.error(err));
 
-  document.getElementById('statWithdrawals').textContent = pendingCount.toLocaleString();
-  document.getElementById('statTotalWithdrawals').textContent = '৳ ' + totalApprovedAmount.toLocaleString();
-} catch(e) {
-  console.error('Error loading dashboard withdrawals:', e);
-  document.getElementById('statWithdrawals').textContent = '0';
-  document.getElementById('statTotalWithdrawals').textContent = '৳ 0';
-}
+const unsubWithdrawals = db.collection('withdrawRequests').onSnapshot(snap => {
+  withdrawalsData = snap.docs.map(doc => doc.data());
+  updateDashboardUI();
+}, err => console.error(err));
 
-try {
-  const depositSnap = await db.collection('depositRequests').get();
-  let totalApprovedDeposit = 0;
+const unsubDeposits = db.collection('depositRequests').onSnapshot(snap => {
+  depositsData = snap.docs.map(doc => doc.data());
+  updateDashboardUI();
+}, err => console.error(err));
 
-  depositSnap.forEach(doc => {
-    const data = doc.data();
-    if (data.status === 'approved') {
-      totalApprovedDeposit += Number(data.amount || 0);
-    }
-  });
-
-  document.getElementById('statDeposits').textContent = '৳ ' + totalApprovedDeposit.toLocaleString();
-} catch(e) {
-  console.error('Error loading dashboard deposits:', e);
-  document.getElementById('statDeposits').textContent = '৳ 0';
-}
+// Combine unsubscribe function
+dashboardUnsubscribe = () => {
+  unsubUsers();
+  unsubWithdrawals();
+  unsubDeposits();
+};
 }
 
 /* PULL TO REFRESH GESTURE SYSTEM */
@@ -1606,7 +1625,14 @@ return;
 
 box.innerHTML='';
 
-const docs=snap.docs.sort((a,b)=>(b.data().createdAt?.seconds||0)-(a.data().createdAt?.seconds||0));
+// -------------------------------------------------------------
+// SAFE SORTING IMPLEMENTED (Handles missing or pending timestamps)
+// -------------------------------------------------------------
+const docs=snap.docs.sort((a,b)=>{
+  const timeA = a.data().createdAt?.seconds || 0;
+  const timeB = b.data().createdAt?.seconds || 0;
+  return timeB - timeA;
+});
 
 docs.forEach(doc=>{
 const d=doc.data();
@@ -1683,7 +1709,6 @@ if(!userSnap.exists)throw Error('User not found');
 
 const txRef=userRef.collection('transactions').doc();
 
-// User earns from working -> both balance and totalEarned increase
 t.update(userRef,{
 balance:firebase.firestore.FieldValue.increment(amount),
 totalEarned:firebase.firestore.FieldValue.increment(amount)
@@ -1731,7 +1756,14 @@ return;
 
 box.innerHTML='';
 
-const docs=snap.docs.sort((a,b)=>(b.data().createdAt?.seconds||0)-(a.data().createdAt?.seconds||0));
+// -------------------------------------------------------------
+// SAFE SORTING IMPLEMENTED (Handles missing or pending timestamps)
+// -------------------------------------------------------------
+const docs=snap.docs.sort((a,b)=>{
+  const timeA = a.data().createdAt?.seconds || 0;
+  const timeB = b.data().createdAt?.seconds || 0;
+  return timeB - timeA;
+});
 
 docs.forEach(doc=>{
 const d=doc.data();
@@ -1775,7 +1807,7 @@ box.append(el);
 
 }catch(e){
 console.error(e);
-box.textContent='Could not load withdrawals — check FirestoreRules';
+box.textContent='Could not load withdrawals — check Firestore Rules';
 }
 }
 
@@ -1809,7 +1841,6 @@ if(!Number.isFinite(amount)||amount<=0||balance<amount)throw Error('Insufficient
 
 const txRef=userRef.collection('transactions').doc();
 
-// Withdraw only deducts from balance; totalEarned remains unchanged
 t.update(userRef,{balance:balance-amount});
 
 t.set(txRef,{
@@ -1930,7 +1961,6 @@ if(!Number.isFinite(amount)||amount<=0)throw Error('Invalid deposit amount');
 
 const txRef=userRef.collection('transactions').doc();
 
-// Deposit only adds to balance; totalEarned remains unchanged
 t.update(userRef,{
 balance:firebase.firestore.FieldValue.increment(amount)
 });
@@ -1962,8 +1992,6 @@ toast(e.message||'Could not process deposit', 'error');
 }
 }
 
-// Helper function if you ever delete a user from admin panel:
-// Preserves their totalEarned so overall platform Total Earnings never decreases
 async function deleteUserAccount(uid){
 if(!needAdmin()||!confirm('Are you sure you want to delete this user?'))return;
 try{
@@ -2008,7 +2036,6 @@ const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
 const total = usersCache.length;
 const blocked = usersCache.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
 
-// Active users: Not blocked/suspended and logged in within last 48 hours
 const active = usersCache.filter(u => {
   if (u.status === 'blocked' || u.status === 'suspended') return false;
   if (!u.lastLogin) return false;
