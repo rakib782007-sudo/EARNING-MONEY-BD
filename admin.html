@@ -1273,9 +1273,9 @@ try {
   document.getElementById('statNewUsers').textContent = todayNewUsersCount.toLocaleString();
   document.getElementById('statEarnings').textContent = '৳ ' + totalEarnedSum.toLocaleString();
 
-  const baseCount = Math.max(activeUsers, 1);
-  const activityPercentage = Math.min(Math.round((todayActiveCount / baseCount) * 100), 100);
-  document.getElementById('statActivity').textContent = (totalUsers > 0 ? activityPercentage : 0) + '%';
+  // Today's Activity = আজকে Active User ÷ Total Users × 100
+  const activityPercentage = totalUsers > 0 ? Math.round((todayActiveCount / totalUsers) * 100) : 0;
+  document.getElementById('statActivity').textContent = activityPercentage + '%';
 
 } catch(e) {
   console.error('Error loading dashboard users:', e);
