@@ -1220,24 +1220,21 @@ try {
   const docs = usersSnap.docs.map(doc => doc.data());
   
   const now = new Date();
-  const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000)); // ৪৮ ঘণ্টা বা ২ দিন আগের সময়
+  const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
-  // ১. ব্লOCKED ইউজার চেক
   const blockedUsers = docs.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
   
-  // ২. অ্যাক্টিভ ইউজার লজিক: ২ দিনের (৪৮ ঘণ্টা) বেশি অফলাইন থাকলে সে ইনঅ্যাক্টিভ
   const activeUsers = docs.filter(u => {
     if (u.status === 'blocked' || u.status === 'suspended') return false;
     if (!u.lastLogin && !u.createdAt) return false;
     
     const lastActivity = u.lastLogin ? (u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin)) : (u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt));
     
-    return lastActivity >= twoDaysAgo; // ৪৮ ঘণ্টার মধ্যে লগইন বা অ্যাক্টিভিটি থাকলে তবেই অ্যাক্টিভ
+    return lastActivity >= twoDaysAgo;
   }).length;
 
-  // ৩. আজকের অ্যাক্টিভ ইউজার কাউন্ট (Today's Activity)
   const todayActiveCount = docs.filter(u => {
     if (u.status === 'blocked' || u.status === 'suspended') return false;
     if (!u.lastLogin && !u.createdAt) return false;
@@ -1956,8 +1953,6 @@ const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
 const total = usersCache.length;
 const blocked = usersCache.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
 
-
-// এখানেও ৪৮ ঘণ্টার বেশি অফলাইন থাকা ইউজারদের Active Users থেকে বাদ দেওয়া হয়েছে
 const active = usersCache.filter(u => {
   if (u.status === 'blocked' || u.status === 'suspended') return false;
   if (!u.lastLogin && !u.createdAt) return false;
@@ -2009,14 +2004,34 @@ const email = u.email || 'No email';
 const balance = money(u.balance || 0);
 const userId = u.id ? ('USR' + u.id.slice(-4).toUpperCase()) : 'USR001';
 
+let lastActiveText = 'Never logged in';
 let status = 'active';
+
+if(u.lastLogin || u.createdAt){
+  const lastActivity = u.lastLogin ? (u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin)) : (u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt));
+  const diffMs = now - lastActivity;
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffMins < 1) {
+    lastActiveText = 'Active just now';
+  } else if (diffMins < 60) {
+    lastActiveText = `Active ${diffMins}m ago`;
+  } else if (diffHours < 24) {
+    lastActiveText = `Active ${diffHours}h ago`;
+  } else {
+    lastActiveText = `Active ${diffDays}d ago`;
+  }
+
+  if (diffMs > (48 * 60 * 60 * 1000)) {
+    status = 'inactive';
+  }
+}
+
 if (u.status === 'blocked' || u.status === 'suspended') {
   status = 'blocked';
-} else if (u.lastLogin || u.createdAt) {
-  const lastActivity = u.lastLogin ? (u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin)) : (u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt));
-  if (lastActivity < twoDaysAgo) {
-    status = 'inactive'; // ৪৮ ঘণ্টার বেশি অফলাইন থাকলে ইনঅ্যাক্টিভ দেখাবে
-  }
+  lastActiveText = 'Account Suspended/Blocked';
 }
 
 const initial = name.charAt(0).toUpperCase();
@@ -2033,7 +2048,10 @@ el.innerHTML=`
       <p class="user-email">${email}</p>
     </div>
   </div>
-  <span class="pill ${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+  <div style="text-align: right;">
+    <div style="font-size: 11px; color: var(--purple); font-weight: 600; margin-bottom: 3px;">${lastActiveText}</div>
+    <span class="pill ${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+  </div>
 </div>
 <div class="user-card-body">
   <div>
