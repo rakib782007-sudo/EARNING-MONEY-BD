@@ -1229,6 +1229,12 @@ try {
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
+  const todayActiveCount = docs.filter(u => {
+    if (!u.lastLogin && !u.createdAt) return false;
+    const activityDate = u.lastLogin ? (u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin)) : (u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt));
+    return activityDate >= startOfToday;
+  }).length;
+
   const todayNewUsersCount = docs.filter(u => {
     if (!u.createdAt) return false;
     const joinDate = u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt);
@@ -1245,8 +1251,8 @@ try {
   document.getElementById('statNewUsers').textContent = todayNewUsersCount.toLocaleString();
   document.getElementById('statEarnings').textContent = '৳ ' + totalEarnedSum.toLocaleString();
 
-  const targetActiveCount = Math.max(totalUsers, 50); 
-  const activityPercentage = Math.min(Math.round((activeUsers / targetActiveCount) * 100), 100);
+  const baseCount = Math.max(activeUsers, 1);
+  const activityPercentage = Math.min(Math.round((todayActiveCount / baseCount) * 100), 100);
   document.getElementById('statActivity').textContent = (totalUsers > 0 ? activityPercentage : 0) + '%';
 
 } catch(e) {
