@@ -1323,6 +1323,10 @@ let refreshing=false;
 let pullDistance=0;
 
 window.addEventListener('touchstart',e=>{
+// সাইডবার ওপেন থাকলে টাচ শুরুই হবে না
+const sidebar=document.getElementById('sidebar');
+if(sidebar && sidebar.classList.contains('open')) return;
+
 if(refreshing || e.touches.length !== 1) return;
 
 const currentScroll = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
@@ -1340,6 +1344,13 @@ pulling = false;
 },{passive:true});
 
 window.addEventListener('touchmove',e=>{
+// সাইডবার ওপেন থাকলে পুল-টু-রিফ্রেশ ড্র্যাগ সম্পূর্ণ বন্ধ থাকবে
+const sidebar=document.getElementById('sidebar');
+if(sidebar && sidebar.classList.contains('open')){
+pulling = false;
+return;
+}
+
 if(!pulling || e.touches.length !== 1) return;
 
 const currentScroll = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
@@ -2009,6 +2020,7 @@ let status = 'active';
 
 if(u.lastLogin || u.createdAt){
   const lastActivity = u.lastLogin ? (u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin)) : (u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt));
+  
   const diffMs = now - lastActivity;
   const diffMins = Math.floor(diffMs / (1000 * 60));
   const diffHours = Math.floor(diffMins / 60);
@@ -2143,14 +2155,16 @@ toast('Could not add moderator', 'error');
 }
 
 async function toggleModeratorStatus(id, newStatus){
-if(!needAdmin())return;
-try{
-await db.collection('admins').doc(id).update({status: newStatus});
-toast('Moderator status updated', 'success');
-loadModerators();
-}catch(e){
-toast('Could not update status', 'error');
-}
+(async()=>{
+  if(!needAdmin())return;
+  try{
+    await db.collection('admins').doc(id).update({status: newStatus});
+    toast('Moderator status updated', 'success');
+    loadModerators();
+  }catch(e){
+    toast('Could not update status', 'error');
+  }
+})();
 }
 
 async function removeModerator(id){
