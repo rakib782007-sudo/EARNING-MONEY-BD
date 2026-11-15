@@ -96,10 +96,13 @@ label{font-size:13px;color:#d4cce3}
 .stat-title{font-size:13px;font-weight:600;opacity:0.9}
 .stat-value{font-size:24px;font-weight:800;margin:10px 0 2px;letter-spacing:0.5px}
 
-/* USER MANAGEMENT SPECIFIC STYLES */
-.user-top-card{background:linear-gradient(135deg,#201738,#161026);border:1px solid #ffffff15;border-radius:18px;padding:20px;margin-bottom:12px;position:relative;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.2)}
+/* USER MANAGEMENT SPECIFIC STYLES UPDATED */
+.user-top-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.user-top-card{background:linear-gradient(135deg,#201738,#161026);border:1px solid #ffffff15;border-radius:18px;padding:18px;position:relative;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.2);cursor:pointer;text-align:left;color:#fff;width:100%;transition:0.2s}
+.user-top-card:hover{border-color:#a66bff}
 .user-sub-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}
-.user-sub-stat{background:linear-gradient(135deg,#1c1430,#120e1f);border:1px solid #ffffff15;border-radius:18px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 8px 20px rgba(0,0,0,0.2)}
+.user-sub-stat{background:linear-gradient(135deg,#1c1430,#120e1f);border:1px solid #ffffff15;border-radius:18px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 8px 20px rgba(0,0,0,0.2);cursor:pointer;text-align:left;color:#fff;width:100%;transition:0.2s}
+.user-sub-stat:hover{border-color:#a66bff}
 .user-stat-title{font-size:13px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px}
 .user-stat-value{font-size:28px;font-weight:900;color:#fff;margin:10px 0 0;letter-spacing:0.5px}
 
@@ -727,24 +730,33 @@ transform:rotate(45deg);
     <h2 style="margin:0;font-size:20px;letter-spacing:0.5px">USER MANAGEMENT</h2>
   </div>
 
-  <div class="user-top-card">
-    <div class="user-stat-title">
-      <div style="width:34px;height:34px;background:#34254d;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c69aff">👥</div>
-      Total Users
-    </div>
-    <div class="user-stat-value" id="statTotalUsersCount">-</div>
-    <div style="position:absolute;right:20px;top:20px;color:#36d6a0;font-size:20px">📈</div>
+  <!-- UPDATED USER STATS LAYOUT -->
+  <div class="user-top-row">
+    <button class="user-top-card" onclick="filterUserStatus('all')">
+      <div class="user-stat-title">
+        <div style="width:34px;height:34px;background:#34254d;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c69aff">👥</div>
+        Total Users
+      </div>
+      <div class="user-stat-value" id="statTotalUsersCount">-</div>
+    </button>
+    <button class="user-top-card" onclick="filterUserStatus('active')">
+      <div class="user-stat-title">
+        <div style="width:34px;height:34px;background:#133b30;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#36d6a0">👤</div>
+        Active Users
+      </div>
+      <div class="user-stat-value" id="statActiveUsersCount" style="color:#36d6a0">-</div>
+    </button>
   </div>
 
   <div class="user-sub-stats-grid">
-    <div class="user-sub-stat">
-      <div class="user-stat-title">Active Users</div>
-      <div class="user-stat-value" id="statActiveUsersCount" style="color:#36d6a0">-</div>
-    </div>
-    <div class="user-sub-stat">
+    <button class="user-sub-stat" onclick="filterUserStatus('inactive')">
+      <div class="user-stat-title" style="color:#ffe1a1">Inactive Users</div>
+      <div class="user-stat-value" id="statInactiveUsersCount" style="color:#ffe1a1">-</div>
+    </button>
+    <button class="user-sub-stat" onclick="filterUserStatus('blocked')">
       <div class="user-stat-title" style="color:#ff6e83">Blocked Users</div>
       <div class="user-stat-value" id="statBlockedUsersCount" style="color:#ff6e83">-</div>
-    </div>
+    </button>
   </div>
 
   <div class="card" style="padding:14px;margin-bottom:16px">
@@ -854,13 +866,13 @@ const db=firebase.firestore();
 
 let currentUser=null,usersCache=[];
 let currentActiveTab='dashboard';
-let dashboardUnsubscribe = null; // Real-time listener unsubscriber reference
+let dashboardUnsubscribe = null;
+let currentStatusFilter = 'all'; // Status filter state for buttons
 
 const emailInput=document.getElementById('email');
 const passwordInput=document.getElementById('password');
 const rememberInput=document.getElementById('rememberMe');
 
-// Safe toggle sidebar function with hamburger-to-cross animation
 function toggleSidebar(forceClose=false){
 const sidebar=document.getElementById('sidebar');
 const overlay=document.getElementById('sidebarOverlay');
@@ -877,9 +889,6 @@ menuBtn.textContent='☰';
 }
 }
 
-// -------------------------------------------------------------
-// FIXED & ENHANCED BACK BUTTON HANDLER (PAGE-BY-PAGE BACK)
-// -------------------------------------------------------------
 window.addEventListener('popstate', function(e){
 const sidebar=document.getElementById('sidebar');
 const overlay=document.getElementById('sidebarOverlay');
@@ -1166,11 +1175,9 @@ return false;
 return true;
 }
 
-// Internal Tab Switcher with History Support
 function switchToTab(name, pushHistory=true){
 if(!needAdmin())return;
 
-// Clear previous real-time dashboard listener when navigating away from dashboard
 if(currentActiveTab === 'dashboard' && name !== 'dashboard' && dashboardUnsubscribe){
 dashboardUnsubscribe();
 dashboardUnsubscribe = null;
@@ -1224,13 +1231,9 @@ if(!needAdmin())return;
 await loadCurrentTabData();
 }
 
-// -------------------------------------------------------------
-// REAL-TIME LISTENER IMPLEMENTED FOR DASHBOARD STATS
-// -------------------------------------------------------------
 function loadDashboard(){
 if(!needAdmin())return;
 
-// If a listener already exists, do not recreate it
 if(dashboardUnsubscribe) return;
 
 let usersData = [];
@@ -1306,7 +1309,6 @@ async function updateDashboardUI(){
   }
 }
 
-// Fetch deleted users earned stats once from appConfig/stats
 db.collection('appConfig').doc('stats').get().then(snap => {
   if (snap.exists && snap.data().deletedUsersEarned) {
     deletedUsersEarnedSum = Number(snap.data().deletedUsersEarned || 0);
@@ -1316,7 +1318,6 @@ db.collection('appConfig').doc('stats').get().then(snap => {
   updateDashboardUI();
 });
 
-// Setup real-time listeners for instant updates
 const unsubUsers = db.collection('users').onSnapshot(snap => {
   usersData = snap.docs.map(doc => doc.data());
   updateDashboardUI();
@@ -1332,7 +1333,6 @@ const unsubDeposits = db.collection('depositRequests').onSnapshot(snap => {
   updateDashboardUI();
 }, err => console.error(err));
 
-// Combine unsubscribe function
 dashboardUnsubscribe = () => {
   unsubUsers();
   unsubWithdrawals();
@@ -1340,7 +1340,6 @@ dashboardUnsubscribe = () => {
 };
 }
 
-/* PULL TO REFRESH GESTURE SYSTEM */
 (function initPullToRefresh(){
 const ptr=document.getElementById('ptrIndicator');
 const circle=document.getElementById('ptrCircle');
@@ -1625,9 +1624,6 @@ return;
 
 box.innerHTML='';
 
-// -------------------------------------------------------------
-// SAFE SORTING IMPLEMENTED (Handles missing or pending timestamps)
-// -------------------------------------------------------------
 const docs=snap.docs.sort((a,b)=>{
   const timeA = a.data().createdAt?.seconds || 0;
   const timeB = b.data().createdAt?.seconds || 0;
@@ -1756,9 +1752,6 @@ return;
 
 box.innerHTML='';
 
-// -------------------------------------------------------------
-// SAFE SORTING IMPLEMENTED (Handles missing or pending timestamps)
-// -------------------------------------------------------------
 const docs=snap.docs.sort((a,b)=>{
   const timeA = a.data().createdAt?.seconds || 0;
   const timeB = b.data().createdAt?.seconds || 0;
@@ -2043,8 +2036,11 @@ const active = usersCache.filter(u => {
   return lastActivity >= twoDaysAgo;
 }).length;
 
+const inactive = total - active - blocked;
+
 document.getElementById('statTotalUsersCount').textContent = total.toLocaleString();
 document.getElementById('statActiveUsersCount').textContent = active.toLocaleString();
+document.getElementById('statInactiveUsersCount').textContent = Math.max(0, inactive).toLocaleString();
 document.getElementById('statBlockedUsersCount').textContent = blocked.toLocaleString();
 
 renderUsers();
@@ -2053,6 +2049,11 @@ renderUsers();
 console.error(e);
 box.textContent='Could not load users — check Firestore Rules';
 }
+}
+
+function filterUserStatus(status){
+currentStatusFilter = status;
+renderUsers();
 }
 
 function renderUsers(){
@@ -2064,12 +2065,37 @@ return;
 }
 
 const q=(document.getElementById('userSearch').value||'').toLowerCase();
+const now = new Date();
+const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
 
-const rows=usersCache.filter(u=>
-(u.name||'').toLowerCase().includes(q)||
-(u.email||'').toLowerCase().includes(q)||
-(u.id||'').toLowerCase().includes(q)
-);
+const rows=usersCache.filter(u=>{
+const name=(u.name||'').toLowerCase();
+const email=(u.email||'').toLowerCase();
+const uid=(u.id||'').toLowerCase();
+const matchesQuery = name.includes(q) || email.includes(q) || uid.includes(q);
+
+if(!matchesQuery) return false;
+
+let status = 'inactive';
+if (u.status === 'blocked' || u.status === 'suspended') {
+  status = 'blocked';
+} else if (u.lastLogin) {
+  const lastActivity = u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin);
+  if (lastActivity >= twoDaysAgo) {
+    status = 'active';
+  } else {
+    status = 'inactive';
+  }
+} else {
+  status = 'inactive';
+}
+
+if(currentStatusFilter !== 'all' && status !== currentStatusFilter){
+  return false;
+}
+
+return true;
+});
 
 box.innerHTML='';
 
@@ -2077,9 +2103,6 @@ if(!rows.length){
 box.innerHTML='<div class="empty">No matching users found</div>';
 return;
 }
-
-const now = new Date();
-const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
 
 rows.forEach(u=>{
 const name = u.name || 'Unnamed User';
@@ -2244,7 +2267,7 @@ async function toggleModeratorStatus(id, newStatus){
 }
 
 async function removeModerator(id){
-if(!needAdmin()||!confirm('Are you sure you want to remove this moderator?'))return;
+if(!need_admin()||!confirm('Are you sure you want to remove this moderator?'))return;
 try{
 await db.collection('admins').doc(id).delete();
 toast('Moderator removed', 'success');
