@@ -847,53 +847,28 @@ const auth=firebase.auth();
 const db=firebase.firestore();
 
 let currentUser=null,usersCache=[];
-let sidebarHistoryActive=false;
 let currentActiveTab='dashboard';
-let hasRefreshed=false;
 
 const emailInput=document.getElementById('email');
 const passwordInput=document.getElementById('password');
 const rememberInput=document.getElementById('rememberMe');
 
+// FIXED: Removed problematic history pushState inside toggleSidebar to prevent closing the app on back/menu click
 function toggleSidebar(forceClose=false){
 const sidebar=document.getElementById('sidebar');
 const overlay=document.getElementById('sidebarOverlay');
-
 const shouldOpen=forceClose?false:!sidebar.classList.contains('open');
-
-if(shouldOpen&&!sidebarHistoryActive){
-history.pushState({embdSidebar:true},'');
-sidebarHistoryActive=true;
-}
-
-if(!shouldOpen&&sidebarHistoryActive){
-sidebarHistoryActive=false;
-history.back();
-}
 
 sidebar.classList.toggle('open',shouldOpen);
 overlay.classList.toggle('show',shouldOpen);
 }
 
-window.addEventListener('popstate',function(){
+// FIXED: Clean popstate handler that doesn't conflict with sidebar or exit app unexpectedly
+window.addEventListener('popstate',function(e){
 const sidebar=document.getElementById('sidebar');
-
 if(sidebar.classList.contains('open')){
-sidebarHistoryActive=false;
 sidebar.classList.remove('open');
 document.getElementById('sidebarOverlay').classList.remove('show');
-return;
-}
-
-if(currentUser && !document.getElementById('app').classList.contains('hidden')) {
-  if(hasRefreshed) {
-    history.go(-1);
-  } else {
-    hasRefreshed = true;
-    history.pushState({page: 'dashboard'}, '', window.location.href);
-    refreshAll();
-    toast('Refreshed successfully', 'success');
-  }
 }
 });
 
@@ -1066,9 +1041,6 @@ document.getElementById('app').classList.remove('hidden');
 
 tab('dashboard');
 window.scrollTo({top: 0, behavior: 'smooth'});
-
-hasRefreshed = false;
-history.replaceState({page: 'dashboard'}, '', window.location.href);
 
 refreshAll();
 return true;
@@ -1361,7 +1333,6 @@ ptr.style.top='75px';
 ptr.style.opacity='1';
 appContainer.style.transform='translateY(36px)';
 
-hasRefreshed = true;
 await refreshAll();
 toast('Refreshed successfully', 'success');
 
