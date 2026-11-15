@@ -136,6 +136,7 @@ label{font-size:13px;color:#d4cce3}
 .no{background:#512331;color:#ffc0cb}
 .pill{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600}
 .pill.active{background:#124b3c;color:#8ff0cf}
+.pill.inactive{background:#4b3b1d;color:#ffe1a1}
 .pill.blocked{background:#512331;color:#ffc0cb}
 .pill.pending{background:#4b3b1d;color:#ffe1a1}
 .pill.approved{background:#124b3c;color:#8ff0cf}
@@ -1228,19 +1229,17 @@ try {
   
   const activeUsers = docs.filter(u => {
     if (u.status === 'blocked' || u.status === 'suspended') return false;
-    if (!u.lastLogin && !u.createdAt) return false;
+    if (!u.lastLogin) return false;
     
-    const lastActivity = u.lastLogin ? (u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin)) : (u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt));
-    
+    const lastActivity = u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin);
     return lastActivity >= twoDaysAgo;
   }).length;
 
   const todayActiveCount = docs.filter(u => {
     if (u.status === 'blocked' || u.status === 'suspended') return false;
-    if (!u.lastLogin && !u.createdAt) return false;
+    if (!u.lastLogin) return false;
     
-    const activityDate = u.lastLogin ? (u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin)) : (u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt));
-    
+    const activityDate = u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin);
     return activityDate >= startOfToday;
   }).length;
 
@@ -1323,7 +1322,6 @@ let refreshing=false;
 let pullDistance=0;
 
 window.addEventListener('touchstart',e=>{
-// সাইডবার ওপেন থাকলে টাচ শুরুই হবে না
 const sidebar=document.getElementById('sidebar');
 if(sidebar && sidebar.classList.contains('open')) return;
 
@@ -1344,7 +1342,6 @@ pulling = false;
 },{passive:true});
 
 window.addEventListener('touchmove',e=>{
-// সাইডবার ওপেন থাকলে পুল-টু-রিফ্রেশ ড্র্যাগ সম্পূর্ণ বন্ধ থাকবে
 const sidebar=document.getElementById('sidebar');
 if(sidebar && sidebar.classList.contains('open')){
 pulling = false;
@@ -1964,10 +1961,11 @@ const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
 const total = usersCache.length;
 const blocked = usersCache.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
 
+// সঠিক লজিক: ব্লকড বা সাসপেন্ডেড নয় এবং গত ৪৮ ঘণ্টার মধ্যে লগইন করেছে
 const active = usersCache.filter(u => {
   if (u.status === 'blocked' || u.status === 'suspended') return false;
-  if (!u.lastLogin && !u.createdAt) return false;
-  const lastActivity = u.lastLogin ? (u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin)) : (u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt));
+  if (!u.lastLogin) return false;
+  const lastActivity = u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin);
   return lastActivity >= twoDaysAgo;
 }).length;
 
@@ -2016,15 +2014,26 @@ const balance = money(u.balance || 0);
 const userId = u.id ? ('USR' + u.id.slice(-4).toUpperCase()) : 'USR001';
 
 let lastActiveText = 'Never logged in';
-let status = 'active';
+let status = 'inactive';
 
-if(u.lastLogin || u.createdAt){
-  const lastActivity = u.lastLogin ? (u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin)) : (u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt));
-  
+// ১. Blocked / Suspended চেক (সর্বোচ্চ অগ্রাধিকার)
+if (u.status === 'blocked' || u.status === 'suspended') {
+  status = 'blocked';
+  lastActiveText = 'Account Suspended/Blocked';
+} 
+// ২. গত ৪৮ ঘণ্টার মধ্যে লগইন করেছে কি না চেক (Active)
+else if (u.lastLogin) {
+  const lastActivity = u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin);
   const diffMs = now - lastActivity;
   const diffMins = Math.floor(diffMs / (1000 * 60));
   const diffHours = Math.floor(diffMins / 60);
   const diffDays = Math.floor(diffHours / 24);
+
+  if (diffMs <= (48 * 60 * 60 * 1000)) {
+    status = 'active';
+  } else {
+    status = 'inactive';
+  }
 
   if (diffMins < 1) {
     lastActiveText = 'Active just now';
@@ -2035,15 +2044,11 @@ if(u.lastLogin || u.createdAt){
   } else {
     lastActiveText = `Active ${diffDays}d ago`;
   }
-
-  if (diffMs > (48 * 60 * 60 * 1000)) {
-    status = 'inactive';
-  }
-}
-
-if (u.status === 'blocked' || u.status === 'suspended') {
-  status = 'blocked';
-  lastActiveText = 'Account Suspended/Blocked';
+} 
+// ৩. নতুন অ্যাকাউন্ট, এখনো লগইন করেনি (Inactive)
+else {
+  status = 'inactive';
+  lastActiveText = 'Never logged in (New Account)';
 }
 
 const initial = name.charAt(0).toUpperCase();
