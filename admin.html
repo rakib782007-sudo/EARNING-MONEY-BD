@@ -413,62 +413,62 @@ transform:rotate(45deg);
 </div>
 </div>
 <div style="padding: 16px; display: flex; flex-direction: column; gap: 8px;">
-<button class="tab active" data-tab="dashboard" onclick="tab('dashboard'); toggleSidebar(true);">
+<button class="tab active" data-tab="dashboard">
   <div class="tab-content-left">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3V3m10 0h8v8h-8V3M3 13h8v8H3v-8m10 0h8v8h-8v-8z"/></svg>
     Dashboard
   </div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="users" onclick="tab('users'); toggleSidebar(true);">
+<button class="tab" data-tab="users">
   <div class="tab-content-left">👥 User Management</div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="moderators" onclick="tab('moderators'); toggleSidebar(true);">
+<button class="tab" data-tab="moderators">
   <div class="tab-content-left">🛡️ Moderator Management</div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="deposits" onclick="tab('deposits'); toggleSidebar(true);">
+<button class="tab" data-tab="deposits">
   <div class="tab-content-left">💳 Deposit Management</div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="withdrawals" onclick="tab('withdrawals'); toggleSidebar(true);">
+<button class="tab" data-tab="withdrawals">
   <div class="tab-content-left">💸 Withdraw Management</div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="tasks" onclick="tab('tasks'); toggleSidebar(true);">
+<button class="tab" data-tab="tasks">
   <div class="tab-content-left">📋 Task Management</div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="ads" onclick="tab('ads'); toggleSidebar(true);">
+<button class="tab" data-tab="ads">
   <div class="tab-content-left">🪙 Ads Management</div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="referrals" onclick="tab('referrals'); toggleSidebar(true);">
+<button class="tab" data-tab="referrals">
   <div class="tab-content-left">👥 Referral Management</div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="notifications" onclick="tab('notifications'); toggleSidebar(true);">
+<button class="tab" data-tab="notifications">
   <div class="tab-content-left">🔔 Notifications</div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="settings" onclick="tab('settings'); toggleSidebar(true);">
+<button class="tab" data-tab="settings">
   <div class="tab-content-left">⚙️ App Settings</div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="security" onclick="tab('security'); toggleSidebar(true);">
+<button class="tab" data-tab="security">
   <div class="tab-content-left">🛡️ Security & Admin Logs</div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="support" onclick="tab('support'); toggleSidebar(true);">
+<button class="tab" data-tab="support">
   <div class="tab-content-left">🎧 Support Messages</div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="reports" onclick="tab('reports'); toggleSidebar(true);">
+<button class="tab" data-tab="reports">
   <div class="tab-content-left">📊 Reports & Analytics</div>
   <span class="tab-arrow">›</span>
 </button>
-<button class="tab" data-tab="submissions" onclick="tab('submissions'); toggleSidebar(true);">
+<button class="tab" data-tab="submissions">
   <div class="tab-content-left">✅ Task Review</div>
   <span class="tab-arrow">›</span>
 </button>
@@ -853,7 +853,7 @@ const emailInput=document.getElementById('email');
 const passwordInput=document.getElementById('password');
 const rememberInput=document.getElementById('rememberMe');
 
-// FIXED: Removed problematic history pushState inside toggleSidebar to prevent closing the app on back/menu click
+// Safe toggle sidebar function
 function toggleSidebar(forceClose=false){
 const sidebar=document.getElementById('sidebar');
 const overlay=document.getElementById('sidebarOverlay');
@@ -861,14 +861,22 @@ const shouldOpen=forceClose?false:!sidebar.classList.contains('open');
 
 sidebar.classList.toggle('open',shouldOpen);
 overlay.classList.toggle('show',shouldOpen);
+
+// Push state when opening sidebar so back button can close it instead of exiting app
+if(shouldOpen){
+history.pushState({sidebarOpen:true}, '');
+}
 }
 
-// FIXED: Clean popstate handler that doesn't conflict with sidebar or exit app unexpectedly
+// Fixed back button handler to prevent app exit when sidebar is open
 window.addEventListener('popstate',function(e){
 const sidebar=document.getElementById('sidebar');
-if(sidebar.classList.contains('open')){
+const overlay=document.getElementById('sidebarOverlay');
+
+if(sidebar && sidebar.classList.contains('open')){
 sidebar.classList.remove('open');
-document.getElementById('sidebarOverlay').classList.remove('show');
+if(overlay) overlay.classList.remove('show');
+e.preventDefault();
 }
 });
 
@@ -1150,11 +1158,15 @@ window.scrollTo({top: 0, behavior: 'smooth'});
 loadCurrentTabData();
 }
 
+// Reliable Event Listener for sidebar menu buttons
 document.querySelectorAll('.tab[data-tab]').forEach(el => {
   const tabName = el.getAttribute('data-tab');
-  el.onclick = () => {
-    tab(tabName);
-    toggleSidebar(true);
+  el.onclick = (e) => {
+    e.preventDefault();
+    toggleSidebar(true); 
+    setTimeout(() => {
+      tab(tabName);
+    }, 150); 
   };
 });
 
