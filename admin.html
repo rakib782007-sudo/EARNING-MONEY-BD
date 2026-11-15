@@ -883,7 +883,6 @@ const sidebar=document.getElementById('sidebar');
 const overlay=document.getElementById('sidebarOverlay');
 const menuBtn=document.getElementById('menuBtn');
 
-// ১. প্রথমে সাইডবার খোলা থাকলে সেটি বন্ধ করবে
 if(sidebar && sidebar.classList.contains('open')){
 sidebar.classList.remove('open');
 if(overlay) overlay.classList.remove('show');
@@ -891,11 +890,9 @@ if(menuBtn) menuBtn.textContent='☰';
 return;
 }
 
-// ২. যদি হিস্টোরিতে কোনো ট্যাব স্টেট থাকে, সেই ট্যাবে ব্যাক করবে
 if(e.state && e.state.tab){
 switchToTab(e.state.tab, false);
 } else {
-// ড্যাশবোর্ডে থাকলে অথবা হিস্টোরি শেষ হলে ড্যাশবোর্ডে নিয়ে যাবে
 switchToTab('dashboard', false);
 }
 });
@@ -1183,12 +1180,10 @@ history.pushState({tab: name}, '', '#' + name);
 loadCurrentTabData();
 }
 
-// Public tab function called on click
 function tab(name){
 switchToTab(name, true);
 }
 
-// Reliable Event Listener for sidebar menu buttons
 document.querySelectorAll('.tab[data-tab]').forEach(el => {
   const tabName = el.getAttribute('data-tab');
   el.onclick = (e) => {
@@ -1223,15 +1218,32 @@ try {
   const usersSnap = await db.collection('users').get();
   const totalUsers = usersSnap.size;
   const docs = usersSnap.docs.map(doc => doc.data());
-  const blockedUsers = docs.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
-  const activeUsers = totalUsers - blockedUsers;
-
+  
+  const now = new Date();
+  const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000)); // ৪৮ ঘণ্টা বা ২ দিন আগের সময়
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
-  const todayActiveCount = docs.filter(u => {
+  // ১. ব্লOCKED ইউজার চেক
+  const blockedUsers = docs.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
+  
+  // ২. অ্যাক্টিভ ইউজার লজিক: ২ দিনের (৪৮ ঘণ্টা) বেশি অফলাইন থাকলে সে ইনঅ্যাক্টিভ
+  const activeUsers = docs.filter(u => {
+    if (u.status === 'blocked' || u.status === 'suspended') return false;
     if (!u.lastLogin && !u.createdAt) return false;
+    
+    const lastActivity = u.lastLogin ? (u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin)) : (u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt));
+    
+    return lastActivity >= twoDaysAgo; // ৪৮ ঘণ্টার মধ্যে লগইন বা অ্যাক্টিভিটি থাকলে তবেই অ্যাক্টিভ
+  }).length;
+
+  // ৩. আজকের অ্যাক্টিভ ইউজার কাউন্ট (Today's Activity)
+  const todayActiveCount = docs.filter(u => {
+    if (u.status === 'blocked' || u.status === 'suspended') return false;
+    if (!u.lastLogin && !u.createdAt) return false;
+    
     const activityDate = u.lastLogin ? (u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin)) : (u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt));
+    
     return activityDate >= startOfToday;
   }).length;
 
@@ -1299,7 +1311,7 @@ try {
 }
 }
 
-/* PULL TO REFRESH GESTURE SYSTEM (ULTIMATE FIX) */
+/* PULL TO REFRESH GESTURE SYSTEM */
 (function initPullToRefresh(){
 const ptr=document.getElementById('ptrIndicator');
 const circle=document.getElementById('ptrCircle');
@@ -1938,9 +1950,20 @@ try{
 const snap=await db.collection('users').get();
 usersCache=snap.docs.map(doc=>({id:doc.id,...doc.data()}));
 
+const now = new Date();
+const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
+
 const total = usersCache.length;
 const blocked = usersCache.filter(u => u.status === 'blocked' || u.status === 'suspended').length;
-const active = total - blocked;
+
+
+// এখানেও ৪৮ ঘণ্টার বেশি অফলাইন থাকা ইউজারদের Active Users থেকে বাদ দেওয়া হয়েছে
+const active = usersCache.filter(u => {
+  if (u.status === 'blocked' || u.status === 'suspended') return false;
+  if (!u.lastLogin && !u.createdAt) return false;
+  const lastActivity = u.lastLogin ? (u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin)) : (u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt));
+  return lastActivity >= twoDaysAgo;
+}).length;
 
 document.getElementById('statTotalUsersCount').textContent = total.toLocaleString();
 document.getElementById('statActiveUsersCount').textContent = active.toLocaleString();
@@ -1977,12 +2000,25 @@ box.innerHTML='<div class="empty">No matching users found</div>';
 return;
 }
 
+const now = new Date();
+const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
+
 rows.forEach(u=>{
 const name = u.name || 'Unnamed User';
 const email = u.email || 'No email';
 const balance = money(u.balance || 0);
 const userId = u.id ? ('USR' + u.id.slice(-4).toUpperCase()) : 'USR001';
-const status = (u.status === 'blocked' || u.status === 'suspended') ? 'blocked' : 'active';
+
+let status = 'active';
+if (u.status === 'blocked' || u.status === 'suspended') {
+  status = 'blocked';
+} else if (u.lastLogin || u.createdAt) {
+  const lastActivity = u.lastLogin ? (u.lastLogin.toDate ? u.lastLogin.toDate() : new Date(u.lastLogin)) : (u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt));
+  if (lastActivity < twoDaysAgo) {
+    status = 'inactive'; // ৪৮ ঘণ্টার বেশি অফলাইন থাকলে ইনঅ্যাক্টিভ দেখাবে
+  }
+}
+
 const initial = name.charAt(0).toUpperCase();
 
 const el=document.createElement('div');
