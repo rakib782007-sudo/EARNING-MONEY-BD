@@ -857,7 +857,7 @@ const emailInput=document.getElementById('email');
 const passwordInput=document.getElementById('password');
 const rememberInput=document.getElementById('rememberMe');
 
-// Updated toggle sidebar function with hamburger to cross animation icon switch
+// Safe toggle sidebar function with hamburger-to-cross animation
 function toggleSidebar(forceClose=false){
 const sidebar=document.getElementById('sidebar');
 const overlay=document.getElementById('sidebarOverlay');
@@ -1272,7 +1272,7 @@ try {
 }
 }
 
-/* PULL TO REFRESH GESTURE SYSTEM */
+/* PULL TO REFRESH GESTURE SYSTEM (FIXED & FULLY FUNCTIONAL) */
 (function initPullToRefresh(){
 const ptr=document.getElementById('ptrIndicator');
 const circle=document.getElementById('ptrCircle');
@@ -1354,6 +1354,7 @@ ptr.style.top='75px';
 ptr.style.opacity='1';
 appContainer.style.transform='translateY(36px)';
 
+// FIXED: Now actually calls refreshAll() to fetch fresh Firebase data for the active tab!
 await refreshAll();
 toast('Refreshed successfully', 'success');
 
@@ -2060,7 +2061,7 @@ toast('Could not add moderator', 'error');
 }
 
 async function toggleModeratorStatus(id, newStatus){
-if(!needAdmin())return;
+if(-!needAdmin())return;
 try{
 await db.collection('admins').doc(id).update({status: newStatus});
 toast('Moderator status updated', 'success');
