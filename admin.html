@@ -99,10 +99,10 @@ label{font-size:13px;color:#d4cce3}
 /* USER MANAGEMENT SPECIFIC STYLES UPDATED */
 .user-top-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .user-top-card{background:linear-gradient(135deg,#201738,#161026);border:1px solid #ffffff15;border-radius:18px;padding:18px;position:relative;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.2);cursor:pointer;text-align:left;color:#fff;width:100%;transition:0.2s}
-.user-top-card:hover{border-color:#a66bff}
+.user-top-card:hover, .user-top-card.active-filter{border-color:#a66bff;box-shadow:0 0 15px #a66bff44}
 .user-sub-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}
 .user-sub-stat{background:linear-gradient(135deg,#1c1430,#120e1f);border:1px solid #ffffff15;border-radius:18px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 8px 20px rgba(0,0,0,0.2);cursor:pointer;text-align:left;color:#fff;width:100%;transition:0.2s}
-.user-sub-stat:hover{border-color:#a66bff}
+.user-sub-stat:hover, .user-sub-stat.active-filter{border-color:#a66bff;box-shadow:0 0 15px #a66bff44}
 .user-stat-title{font-size:13px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px}
 .user-stat-value{font-size:28px;font-weight:900;color:#fff;margin:10px 0 0;letter-spacing:0.5px}
 
@@ -730,16 +730,15 @@ transform:rotate(45deg);
     <h2 style="margin:0;font-size:20px;letter-spacing:0.5px">USER MANAGEMENT</h2>
   </div>
 
-  <!-- UPDATED USER STATS LAYOUT -->
   <div class="user-top-row">
-    <button class="user-top-card" onclick="filterUserStatus('all')">
+    <button id="cardFilterAll" class="user-top-card active-filter" onclick="filterUserStatus('all')">
       <div class="user-stat-title">
         <div style="width:34px;height:34px;background:#34254d;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c69aff">👥</div>
         Total Users
       </div>
       <div class="user-stat-value" id="statTotalUsersCount">-</div>
     </button>
-    <button class="user-top-card" onclick="filterUserStatus('active')">
+    <button id="cardFilterActive" class="user-top-card" onclick="filterUserStatus('active')">
       <div class="user-stat-title">
         <div style="width:34px;height:34px;background:#133b30;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#36d6a0">👤</div>
         Active Users
@@ -749,11 +748,11 @@ transform:rotate(45deg);
   </div>
 
   <div class="user-sub-stats-grid">
-    <button class="user-sub-stat" onclick="filterUserStatus('inactive')">
+    <button id="cardFilterInactive" class="user-sub-stat" onclick="filterUserStatus('inactive')">
       <div class="user-stat-title" style="color:#ffe1a1">Inactive Users</div>
       <div class="user-stat-value" id="statInactiveUsersCount" style="color:#ffe1a1">-</div>
     </button>
-    <button class="user-sub-stat" onclick="filterUserStatus('blocked')">
+    <button id="cardFilterBlocked" class="user-sub-stat" onclick="filterUserStatus('blocked')">
       <div class="user-stat-title" style="color:#ff6e83">Blocked Users</div>
       <div class="user-stat-value" id="statBlockedUsersCount" style="color:#ff6e83">-</div>
     </button>
@@ -766,7 +765,7 @@ transform:rotate(45deg);
     <input id="userSearch" class="field search" placeholder="Name / Email / User ID" oninput="renderUsers()" style="margin:0">
   </div>
 
-  <h3 style="font-size:17px;margin:16px 0 12px;color:#fff">All Users</h3>
+  <h3 id="userSectionHeading" style="font-size:17px;margin:16px 0 12px;color:#fff">All Users</h3>
   <div id="userList" class="empty">Not loaded yet</div>
 </div>
 </section>
@@ -865,46 +864,60 @@ const auth=firebase.auth();
 const db=firebase.firestore();
 
 let currentUser=null,usersCache=[];
-let currentActiveTab='dashboard';
+let currentActiveTab = sessionStorage.getItem('embd_active_tab') || 'dashboard';
 let dashboardUnsubscribe = null;
-let currentStatusFilter = 'all'; // Status filter state for buttons
+let currentStatusFilter = 'all';
 
 const emailInput=document.getElementById('email');
 const passwordInput=document.getElementById('password');
 const rememberInput=document.getElementById('rememberMe');
 
-function toggleSidebar(forceClose=false){
+function closeSidebarVisuals(){
 const sidebar=document.getElementById('sidebar');
 const overlay=document.getElementById('sidebarOverlay');
 const menuBtn=document.getElementById('menuBtn');
-const shouldOpen=forceClose?false:!sidebar.classList.contains('open');
+if(sidebar) sidebar.classList.remove('open');
+if(overlay) overlay.classList.remove('show');
+if(menuBtn) menuBtn.textContent='☰';
+}
 
-sidebar.classList.toggle('open',shouldOpen);
-overlay.classList.toggle('show',shouldOpen);
+function toggleSidebar(forceClose=false, skipHistoryBack=false){
+const sidebar=document.getElementById('sidebar');
+const overlay=document.getElementById('sidebarOverlay');
+const menuBtn=document.getElementById('menuBtn');
+const isOpen = sidebar.classList.contains('open');
+const shouldOpen = forceClose ? false : !isOpen;
 
-if(shouldOpen){
-menuBtn.textContent='✕';
-} else {
-menuBtn.textContent='☰';
+if(shouldOpen && !isOpen){
+  history.pushState({sidebarOpen: true, tab: currentActiveTab}, '', '#' + currentActiveTab);
+  sidebar.classList.add('open');
+  overlay.classList.add('show');
+  menuBtn.textContent='✕';
+} else if(!shouldOpen && isOpen){
+  closeSidebarVisuals();
+  if(!skipHistoryBack && history.state && history.state.sidebarOpen){
+    history.back();
+  }
 }
 }
 
 window.addEventListener('popstate', function(e){
 const sidebar=document.getElementById('sidebar');
-const overlay=document.getElementById('sidebarOverlay');
-const menuBtn=document.getElementById('menuBtn');
 
 if(sidebar && sidebar.classList.contains('open')){
-sidebar.classList.remove('open');
-if(overlay) overlay.classList.remove('show');
-if(menuBtn) menuBtn.textContent='☰';
-return;
+  closeSidebarVisuals();
+  return;
 }
 
 if(e.state && e.state.tab){
-switchToTab(e.state.tab, false);
+  switchToTab(e.state.tab, false);
 } else {
-switchToTab('dashboard', false);
+  const hash = window.location.hash.replace('#','');
+  if(hash && document.getElementById('sec-' + hash)){
+    switchToTab(hash, false);
+  } else {
+    switchToTab('dashboard', false);
+  }
 }
 });
 
@@ -1075,10 +1088,15 @@ document.getElementById('mainHeader').classList.remove('hidden');
 document.getElementById('loginBox').classList.add('hidden');
 document.getElementById('app').classList.remove('hidden');
 
-switchToTab('dashboard', true);
-window.scrollTo({top: 0, behavior: 'smooth'});
+// Restore saved tab from sessionStorage or URL hash on refresh
+const savedTab = sessionStorage.getItem('embd_active_tab');
+const hashTab = window.location.hash.replace('#','');
+const targetTab = (hashTab && document.getElementById('sec-' + hashTab)) ? hashTab : 
+                  (savedTab && document.getElementById('sec-' + savedTab)) ? savedTab : 'dashboard';
 
-refreshAll();
+history.replaceState({tab: targetTab}, '', '#' + targetTab);
+switchToTab(targetTab, false);
+
 return true;
 }
 
@@ -1151,8 +1169,9 @@ async function logout(){
 clearLoginDraft();
 rememberInput.checked=false;
 saveRememberPreference();
+sessionStorage.removeItem('embd_active_tab');
 
-toggleSidebar(true);
+closeSidebarVisuals();
 
 if(dashboardUnsubscribe){
 dashboardUnsubscribe();
@@ -1184,6 +1203,10 @@ dashboardUnsubscribe = null;
 }
 
 currentActiveTab=name;
+try{
+  sessionStorage.setItem('embd_active_tab', name);
+}catch(e){}
+
 document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
 document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
 
@@ -1194,7 +1217,11 @@ document.querySelectorAll(`.tab[data-tab="${name}"]`).forEach(el=>el.classList.a
 window.scrollTo({top: 0, behavior: 'smooth'});
 
 if(pushHistory){
-history.pushState({tab: name}, '', '#' + name);
+  if(history.state && history.state.sidebarOpen){
+    history.replaceState({tab: name}, '', '#' + name);
+  } else {
+    history.pushState({tab: name}, '', '#' + name);
+  }
 }
 
 loadCurrentTabData();
@@ -1208,10 +1235,10 @@ document.querySelectorAll('.tab[data-tab]').forEach(el => {
   const tabName = el.getAttribute('data-tab');
   el.onclick = (e) => {
     e.preventDefault();
-    toggleSidebar(true); 
+    toggleSidebar(true, true); // Close sidebar visually without triggering history.back()
     setTimeout(() => {
       tab(tabName);
-    }, 150); 
+    }, 120); 
   };
 });
 
@@ -1878,7 +1905,7 @@ return;
 
 box.innerHTML='';
 
-const docs=snap.docs.sort((a,b)=>(b.data().createdAt?.seconds||0)-(a.data().createdAt?.seconds||0));
+const docs=snap.docs.sort((a,b)=>(b.data().createdAt?.seconds||0)-(b.data().createdAt?.seconds||0));
 
 docs.forEach(doc=>{
 const d=doc.data();
@@ -2053,6 +2080,32 @@ box.textContent='Could not load users — check Firestore Rules';
 
 function filterUserStatus(status){
 currentStatusFilter = status;
+
+document.querySelectorAll('.user-top-card, .user-sub-stat').forEach(el => el.classList.remove('active-filter'));
+
+const activeBtnMap = {
+  'all': 'cardFilterAll',
+  'active': 'cardFilterActive',
+  'inactive': 'cardFilterInactive',
+  'blocked': 'cardFilterBlocked'
+};
+
+const targetId = activeBtnMap[status];
+if(targetId){
+  document.getElementById(targetId).classList.add('active-filter');
+}
+
+const headingEl = document.getElementById('userSectionHeading');
+const headingTextMap = {
+  'all': 'All Users',
+  'active': 'Active Users',
+  'inactive': 'Inactive Users',
+  'blocked': 'Blocked Users'
+};
+if(headingEl){
+  headingEl.textContent = headingTextMap[status] || 'All Users';
+}
+
 renderUsers();
 }
 
@@ -2267,7 +2320,7 @@ async function toggleModeratorStatus(id, newStatus){
 }
 
 async function removeModerator(id){
-if(!need_admin()||!confirm('Are you sure you want to remove this moderator?'))return;
+if(!needAdmin()||!confirm('Are you sure you want to remove this moderator?'))return;
 try{
 await db.collection('admins').doc(id).delete();
 toast('Moderator removed', 'success');
