@@ -120,17 +120,17 @@ label{font-size:13px;color:#d4cce3}
 .user-details-btn{width:100%;padding:10px;background:#201938;border:1px solid #ffffff18;color:#d8bdff;border-radius:12px;font-weight:600;font-size:13px;text-align:center;transition:0.2s}
 .user-details-btn:hover{background:#2a2148;color:#fff}
 
-/* USER DETAILS MODAL CARD LOCKED POSITION STYLING */
+/* USER DETAILS FULL SCREEN MODAL STYLING */
 .modal-overlay{
-position:fixed;inset:0;background:rgba(9,7,19,0.96);backdrop-filter:blur(8px);
--webkit-backdrop-filter:blur(8px);z-index:110000;display:flex;align-items:center;justify-content:center;padding:12px 14px;overflow-y:auto;
+position:fixed;inset:0;background:rgba(9,7,19,0.98);backdrop-filter:blur(8px);
+-webkit-backdrop-filter:blur(8px);z-index:110000;display:flex;align-items:stretch;justify-content:center;padding:0;overflow:hidden;
 }
 .modal-card{
-background:linear-gradient(145deg,#1b1530,#120f20);border:1px solid #a66bff33;border-radius:24px;
-width:100%;max-width:540px;height:86vh;max-height:760px;overflow-y:auto;padding:22px;box-shadow:0 20px 50px #000d;position:relative;
-margin:auto;
+background:linear-gradient(145deg,#1b1530,#120f20);border:0;border-radius:0;
+width:100%;max-width:100%;height:100%;max-height:100%;overflow-y:auto;padding:16px 20px 30px 20px;box-shadow:none;position:relative;
+margin:0;
 }
-.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:12px}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:12px;position:sticky;top:0;background:#120f20;z-index:10;padding-top:10px}
 .modal-title{font-size:17px;font-weight:800;letter-spacing:0.5px;display:flex;align-items:center;gap:8px}
 
 .ud-profile-box{text-align:center;margin-bottom:20px}
@@ -930,8 +930,9 @@ transform:rotate(45deg);
 <div class="modal-card">
   <div class="modal-header">
     <div class="modal-title">← USER DETAILS</div>
+    <button class="btn" style="padding:6px 12px;font-size:12px;" onclick="closeUserDetailModal()">✕ Close</button>
   </div>
-  <div id="userDetailModalBody">
+  <div id="userDetailModalBody" style="max-width:540px;margin:0 auto;">
     <!-- Content will be injected dynamically -->
   </div>
 </div>
