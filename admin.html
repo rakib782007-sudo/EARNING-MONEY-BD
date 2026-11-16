@@ -903,13 +903,10 @@ measurementId:"G-JYN5BL9RJV"
 
 const ADMIN_EMAIL='rakib782007@gmail.com';
 
-// Initialize Admin App with unique named instance and isolated SESSION persistence
+// Initialize Admin App with unique named instance
 const adminApp = firebase.initializeApp(firebaseConfig, "EMBD_ADMIN_ISOLATED_PANEL");
 const auth = adminApp.auth();
 const db = adminApp.firestore();
-
-// Force session-level isolation so User App login/logout never overwrites Admin state
-auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(err => console.error(err));
 
 let currentUser=null,usersCache=[];
 let currentActiveTab = sessionStorage.getItem('embd_active_tab') || 'dashboard';
@@ -1179,8 +1176,10 @@ return;
 try{
 toast('Logging in...', 'info', 0);
 
-// Keep Admin session isolated in SESSION storage so it never collides with User App LOCAL storage
-await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+// Set Persistence to LOCAL if Remember Me is checked, otherwise SESSION
+const persistenceMode = remember ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
+await auth.setPersistence(persistenceMode);
+
 const cred=await auth.signInWithEmailAndPassword(email.toLowerCase(),pass);
 const permission=await checkAdminOrModPermissions(cred.user);
 
@@ -2330,7 +2329,7 @@ async function addModerator(){
 if(!needAdmin())return;
 const emailInputEl = document.getElementById('modEmailInput');
 const targetEmail = emailInputEl ? emailInputEl.value.trim().toLowerCase() : '';
-if(!targetEntry||!targetEmail.includes('@')){
+if(!targetEmail||!targetEmail.includes('@')){
 toast('Please enter a valid email address', 'warning');
 return;
 }
