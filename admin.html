@@ -1034,6 +1034,12 @@ if(shouldOpen && !isOpen){
 
 window.addEventListener('popstate', function(e){
 const sidebar=document.getElementById('sidebar');
+const modal=document.getElementById('userDetailModal');
+
+if(modal && !modal.classList.contains('hidden')){
+  modal.classList.add('hidden');
+  return;
+}
 
 if(sidebar && sidebar.classList.contains('open')){
   closeSidebarVisuals();
@@ -2439,11 +2445,18 @@ body.innerHTML = `
 </div>
 `;
 
+history.pushState({modalOpen: true, tab: currentActiveTab}, '', '#' + currentActiveTab);
 modal.classList.remove('hidden');
 }
 
 function closeUserDetailModal(){
-document.getElementById('userDetailModal').classList.add('hidden');
+const modal = document.getElementById('userDetailModal');
+if(modal && !modal.classList.contains('hidden')){
+  modal.classList.add('hidden');
+  if(history.state && history.state.modalOpen){
+    history.back();
+  }
+}
 }
 
 async function promptAdjustBalance(userId, mode){
