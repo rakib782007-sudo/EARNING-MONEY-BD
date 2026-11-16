@@ -977,7 +977,7 @@ transform:rotate(45deg);
 <div class="modal-card">
   <div class="modal-header">
     <div class="modal-title">
-      <button class="premium-back-btn" onclick="closeUserDetailModal()" aria-label="Go back">
+      <button class="premium-back-btn" onclick="history.back()" aria-label="Go back">
         <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
       </button>
       USER DETAILS
@@ -2467,9 +2467,6 @@ function closeUserDetailModal(){
 const modal = document.getElementById('userDetailModal');
 if(modal && !modal.classList.contains('hidden')){
   modal.classList.add('hidden');
-  if(history.state && history.state.modalOpen){
-    history.back();
-  }
 }
 }
 
