@@ -33,7 +33,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 html.auth-refresh-locked,body.auth-refresh-locked{overscroll-behavior-y:none}
 #loginScreen{overscroll-behavior-y:contain}
 
-/* CUSTOM PULL TO REFRESH (MATCHING UPLOADED DESIGN) */
+/* CUSTOM PULL TO TRERESH */
 .ptr-indicator{
 position:fixed;top:-65px;left:50%;transform:translateX(-50%);
 width:48px;height:48px;border-radius:50%;
@@ -700,6 +700,8 @@ EARNING <span>MONEY BD</span>
 <div id="toast" class="toast"></div>
 
 <script>
+const ADMIN_EMAIL = 'rakib782007@gmail.com';
+
 /* AUTH PAGE REFRESH PROTECTION */
 const AUTH_PAGE_KEY='embd_auth_page';
 const AUTH_DRAFT_KEY='embd_auth_drafts';
@@ -1048,7 +1050,7 @@ displayAuthForm(currentAuthPage);
 applyLanguage();
 }
 
-/* FIREBASE CONFIG */
+/* FIREBASE CONFIG & ISOLATED INSTANCE */
 const firebaseConfig={
 apiKey:"AIzaSyDDDwkjIa7NecN7CnpyQxPja4KH0vLqCJ4",
 authDomain:"earning-bd-1e902.firebaseapp.com",
@@ -1059,10 +1061,13 @@ appId:"1:504547016236:web:8c5b2cfc733aaf16175b89",
 measurementId:"G-JYN5BL9RJV"
 };
 
-firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth();
-const db=firebase.firestore();
-const provider=new firebase.auth.GoogleAuthProvider();
+// Unique named Firebase instance and isolated LOCAL persistence so User App never conflicts with Admin App
+const userApp = firebase.initializeApp(firebaseConfig, "EMBD_USER_ISOLATED_APP");
+const auth = userApp.auth();
+const db = userApp.firestore();
+const provider = new firebase.auth.GoogleAuthProvider();
+
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(err => console.error(err));
 
 let currentUser=null;
 let currentAppPage='homePage';
@@ -1120,7 +1125,7 @@ text.includes('যায়নি')||text.includes('পাওয়া যায়নি
 text.includes('ব্যর্থ')||text.includes('পরীক্ষা করুন')||
 text.includes('failed')||text.includes('Incorrect')||
 text.includes('Unable')||text.includes('Could not')||
-text.includes('problem')
+text.includes('problem')||text.includes('not allowed')
 )return 'error';
 
 return 'info';
@@ -1260,6 +1265,30 @@ page=event.state.embdAuthPage;
 displayAuthForm(page);
 });
 
+/* BLOCK ADMIN / MODERATOR ACCOUNTS IN USER APP */
+async function checkAndBlockAdminLogin(userObj){
+if(!userObj||!userObj.email)return false;
+const email=String(userObj.email).toLowerCase();
+
+if(email===ADMIN_EMAIL){
+await auth.signOut();
+authStatus('🚫 Admin account cannot be used to login in User App!','error');
+return true;
+}
+
+try{
+const snap=await db.collection('admins').where('email','==',email).get();
+if(!snap.empty){
+await auth.signOut();
+authStatus('🚫 Admin/Moderator accounts are not allowed in the User App!','error');
+return true;
+}
+}catch(e){
+console.error(e);
+}
+return false;
+}
+
 /* EMAIL LOGIN */
 async function emailLogin(){
 const email=document.getElementById('loginEmail').value.trim().toLowerCase();
@@ -1284,7 +1313,10 @@ const loginLoadingText = currentLanguage === 'en' ? 'Logging in...' : 'লগই
 authStatus(loginLoadingText, 'info');
 
 try{
-await auth.signInWithEmailAndPassword(email,password);
+const cred=await auth.signInWithEmailAndPassword(email,password);
+const isAdmin=await checkAndBlockAdminLogin(cred.user);
+if(isAdmin)return;
+
 clearAllAuthInputs();
 clearAuthDrafts();
 authStatus('Login সফল হয়েছে!','success');
@@ -1318,7 +1350,7 @@ return;
 }
 
 if(!isValidNameCharacters(name)){
-authStatus('নামের ঘরে শুধাত্র বাংলা, ইংরেজি অক্ষর ও স্পেস ব্যবহার করুন।','error');
+authStatus('নামের ঘরে শুধুমাত্র বাংলা, ইংরেজি অক্ষর ও স্পেস ব্যবহার করুন।','error');
 return;
 }
 
@@ -1337,6 +1369,11 @@ return;
 }
 if(!email.toLowerCase().endsWith('@gmail.com')){
 authStatus('সঠিক ইমেইল ঠিকানা লিখুন। ইমেইল অবশ্যই @gmail.com দিয়ে শেষ হতে হবে।','error');
+return;
+}
+
+if(email===ADMIN_EMAIL){
+authStatus('🚫 Admin account cannot be created here!','error');
 return;
 }
 
@@ -1434,7 +1471,10 @@ btn.disabled=true;
 authStatus('Google-এর সাথে সংযোগ হচ্ছে...','info');
 
 try{
-await auth.signInWithPopup(provider);
+const cred=await auth.signInWithPopup(provider);
+const isAdmin=await checkAndBlockAdminLogin(cred.user);
+if(isAdmin)return;
+
 clearAllAuthInputs();
 clearAuthDrafts();
 }catch(e){
@@ -1489,6 +1529,19 @@ const app=document.getElementById('appScreen');
 const nav=document.getElementById('bottomNav');
 
 if(!user){
+currentUser=null;
+loading.style.display='none';
+login.style.display='flex';
+app.style.display='none';
+nav.style.display='none';
+setAuthRefreshProtection(true);
+restoreAuthPage();
+document.getElementById('googleBtn').disabled=false;
+return;
+}
+
+const isAdmin = await checkAndBlockAdminLogin(user);
+if(isAdmin){
 currentUser=null;
 loading.style.display='none';
 login.style.display='flex';
@@ -1642,7 +1695,7 @@ toast('ডেটাবেস সংযোগে সমস্যা হয়েছ�
 }
 }
 
-/* PULL TO REFRESH GESTURE (ENABLED ONLY OUTSIDE LOGIN PAGE) */
+/* PULL TO REFRESH GESTURE */
 (function initPullToRefresh(){
 const ptr=document.getElementById('ptrIndicator');
 const circle=document.getElementById('ptrCircle');
