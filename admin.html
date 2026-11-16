@@ -17,20 +17,26 @@
 
 *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
 
-html, body {
+html {
 margin: 0;
 padding: 0;
 width: 100%;
 height: 100%;
+background: var(--bg);
+}
+
+body {
+margin: 0;
+padding: 0;
+width: 100%;
+min-height: 100%;
 overflow-x: hidden;
-background: radial-gradient(ellipse at 10% 0%, #28164a 0, transparent 35%), var(--bg);
+background: radial-gradient(ellipse at 10% 0%, #28164a 0, transparent 45%), var(--bg);
+background-attachment: fixed;
 color: var(--text);
 font-family: Inter, sans-serif;
 overscroll-behavior-y: none;
 -webkit-overflow-scrolling: touch;
-}
-
-body {
 padding-top: 75px;
 }
 
@@ -2570,7 +2576,7 @@ return;
 
 try{
 await db.collection('admins').add({
-email: targetEmail,
+email: targetEncoder,
 role: 'moderator',
 status: 'active',
 createdAt: firebase.firestore.FieldValue.serverTimestamp()
