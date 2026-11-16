@@ -1052,6 +1052,7 @@ const modal=document.getElementById('userDetailModal');
 
 if(modal && !modal.classList.contains('hidden')){
   modal.classList.add('hidden');
+  try { sessionStorage.removeItem('embd_open_user_id'); } catch(err){}
   return;
 }
 
@@ -1318,6 +1319,7 @@ clearLoginDraft();
 rememberInput.checked=false;
 saveRememberPreference();
 sessionStorage.removeItem('embd_active_tab');
+sessionStorage.removeItem('embd_open_user_id');
 
 closeSidebarVisuals();
 
@@ -2221,6 +2223,15 @@ document.getElementById('statBlockedUsersCount').textContent = blocked.toLocaleS
 
 renderUsers();
 
+// পেজ রিফ্রেশ করলে যদি কোনো ইউজার ডিটেইলস মোডাল ওপেন ছিল, তা রিকভার করার জন্য
+try {
+  const savedOpenUserId = sessionStorage.getItem('embd_open_user_id');
+  const modal = document.getElementById('userDetailModal');
+  if(savedOpenUserId && modal && modal.classList.contains('hidden')){
+    openUserDetailModal(savedOpenUserId);
+  }
+} catch(e){}
+
 }catch(e){
 console.error(e);
 box.textContent='Could not load users — check Firestore Rules';
@@ -2306,7 +2317,6 @@ box.innerHTML='<div class="empty">No matching users found</div>';
 return;
 }
 
-rows.rows=rows || [];
 rows.forEach(u=>{
 const name = u.name || 'Unnamed User';
 const email = u.email || 'No email';
@@ -2384,7 +2394,18 @@ box.append(el);
 }
 
 async function openUserDetailModal(userId){
-const user = usersCache.find(x => x.id === userId);
+let user = usersCache.find(x => x.id === userId);
+if(!user){
+  try {
+    const docSnap = await db.collection('users').doc(userId).get();
+    if(docSnap.exists){
+      user = { id: docSnap.id, ...docSnap.data() };
+    }
+  } catch(e) {
+    console.error(e);
+  }
+}
+
 if(!user){
 toast('User details not found', 'error');
 return;
@@ -2403,7 +2424,7 @@ const regDate = dateText(user.createdAt);
 const refCount = user.referralCount || 0;
 const status = (user.status === 'blocked' || user.status === 'suspended') ? 'Blocked' : 'Active';
 const initial = name.charAt(0).toUpperCase();
-const dispId = 'USR' + user.id.slice(-4).toUpperCase();
+const dispId = user.id ? ('USR' + user.id.slice(-4).toUpperCase()) : 'USR001';
 
 body.innerHTML = `
 <div class="ud-profile-box">
@@ -2459,7 +2480,11 @@ body.innerHTML = `
 </div>
 `;
 
-history.pushState({modalOpen: true, tab: currentActiveTab}, '', '#' + currentActiveTab);
+try {
+  sessionStorage.setItem('embd_open_user_id', userId);
+} catch(e){}
+
+history.pushState({modalOpen: true, userId: userId, tab: currentActiveTab}, '', '#' + currentActiveTab);
 modal.classList.remove('hidden');
 }
 
@@ -2468,6 +2493,9 @@ const modal = document.getElementById('userDetailModal');
 if(modal && !modal.classList.contains('hidden')){
   modal.classList.add('hidden');
 }
+try {
+  sessionStorage.removeItem('embd_open_user_id');
+} catch(e){}
 }
 
 async function promptAdjustBalance(userId, mode){
