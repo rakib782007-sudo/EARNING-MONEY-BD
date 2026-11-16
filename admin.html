@@ -130,7 +130,7 @@ background:linear-gradient(145deg,#1b1530,#120f20);border:0;border-radius:0;
 width:100%;max-width:100%;height:100%;max-height:100%;overflow-y:auto;padding:16px 20px 30px 20px;box-shadow:none;position:relative;
 margin:0;
 }
-.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:12px;position:sticky;top:0;background:#120f20;z-index:10;padding-top:10px}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;border-bottom:0;padding-bottom:0;position:sticky;top:0;background:transparent;z-index:10;padding-top:10px}
 .modal-title{font-size:17px;font-weight:800;letter-spacing:0.5px;display:flex;align-items:center;gap:8px}
 
 .ud-profile-box{text-align:center;margin-bottom:20px}
@@ -930,7 +930,6 @@ transform:rotate(45deg);
 <div class="modal-card">
   <div class="modal-header">
     <div class="modal-title">← USER DETAILS</div>
-    <button class="btn" style="padding:6px 12px;font-size:12px;" onclick="closeUserDetailModal()">✕ Close</button>
   </div>
   <div id="userDetailModalBody" style="max-width:540px;margin:0 auto;">
     <!-- Content will be injected dynamically -->
