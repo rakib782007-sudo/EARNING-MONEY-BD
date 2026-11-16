@@ -859,10 +859,13 @@ measurementId:"G-JYN5BL9RJV"
 
 const ADMIN_EMAIL='rakib782007@gmail.com';
 
-// Separate named Firebase instance so Admin session never conflicts with User App session
-const adminApp = firebase.initializeApp(firebaseConfig, "EMBD_ADMIN_INSTANCE");
+// Initialize Admin App with unique named instance and isolated SESSION persistence
+const adminApp = firebase.initializeApp(firebaseConfig, "EMBD_ADMIN_ISOLATED_PANEL");
 const auth = adminApp.auth();
 const db = adminApp.firestore();
+
+// Force session-level isolation so User App login/logout never overwrites Admin state
+auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(err => console.error(err));
 
 let currentUser=null,usersCache=[];
 let currentActiveTab = sessionStorage.getItem('embd_active_tab') || 'dashboard';
@@ -1132,11 +1135,8 @@ return;
 try{
 toast('Logging in...', 'info', 0);
 
-const persistence=remember
-?firebase.auth.Auth.Persistence.LOCAL
-:firebase.auth.Auth.Persistence.SESSION;
-
-await auth.setPersistence(persistence);
+// Keep Admin session isolated in SESSION storage so it never collides with User App LOCAL storage
+await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
 const cred=await auth.signInWithEmailAndPassword(email.toLowerCase(),pass);
 const permission=await checkAdminOrModPermissions(cred.user);
 
@@ -1236,7 +1236,7 @@ document.querySelectorAll('.tab[data-tab]').forEach(el => {
   const tabName = el.getAttribute('data-tab');
   el.onclick = (e) => {
     e.preventDefault();
-    toggleSidebar(true, true); // Close sidebar visually without triggering history.back()
+    toggleSidebar(true, true);
     setTimeout(() => {
       tab(tabName);
     }, 120); 
