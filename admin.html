@@ -120,6 +120,44 @@ label{font-size:13px;color:#d4cce3}
 .user-details-btn{width:100%;padding:10px;background:#201938;border:1px solid #ffffff18;color:#d8bdff;border-radius:12px;font-weight:600;font-size:13px;text-align:center;transition:0.2s}
 .user-details-btn:hover{background:#2a2148;color:#fff}
 
+/* USER DETAILS MODAL CARD LOWER DOWN STYLING UPDATED */
+.modal-overlay{
+position:fixed;inset:0;background:rgba(9,7,19,0.85);backdrop-filter:blur(8px);
+-webkit-backdrop-filter:blur(8px);z-index:11000;display:flex;align-items:flex-end;justify-content:center;padding:12px 14px 40px 14px;overflow-y:auto;
+}
+.modal-card{
+background:linear-gradient(145deg,#1b1530,#120f20);border:1px solid #a66bff33;border-radius:24px;
+width:100%;max-width:540px;max-height:82vh;overflow-y:auto;padding:22px;box-shadow:0 20px 50px #000d;position:relative;
+margin-top:auto;
+margin-bottom: 12px;
+}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:12px}
+.modal-title{font-size:17px;font-weight:800;letter-spacing:0.5px;display:flex;align-items:center;gap:8px}
+
+.ud-profile-box{text-align:center;margin-bottom:20px}
+.ud-avatar{width:76px;height:76px;margin:0 auto 12px;background:linear-gradient(135deg,#792cff,#b679ff);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;box-shadow:0 8px 25px #792cff55}
+.ud-name{font-size:20px;font-weight:800;margin:0 0 4px}
+.ud-email{font-size:13px;color:var(--muted);margin:0 0 8px}
+.ud-userid{font-size:12px;color:#a66bff;font-weight:700;margin-top:4px}
+
+.ud-balance-card{background:linear-gradient(135deg,#201738,#141022);border:1px solid #ffffff15;border-radius:20px;padding:18px;margin-bottom:18px;box-shadow:0 8px 20px rgba(0,0,0,0.3)}
+.ud-bal-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.ud-bal-val{font-size:28px;font-weight:900;color:#fff;margin:6px 0 14px;letter-spacing:0.5px}
+.ud-bal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px solid #ffffff10;padding-top:12px}
+
+.ud-info-list{background:linear-gradient(135deg,#1c1630,#110e1d);border:1px solid #ffffff12;border-radius:18px;padding:4px 16px;margin-bottom:18px}
+.ud-info-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #ffffff0a}
+.ud-info-row:last-child{border-bottom:0}
+.ud-info-k{font-size:13px;color:var(--muted);font-weight:600}
+.ud-info-v{font-size:13px;color:#fff;font-weight:700;text-align:right}
+
+.ud-controls-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.ud-ctrl-btn{padding:14px;border-radius:16px;font-weight:700;font-size:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:1px solid #ffffff15;color:#fff;transition:0.2s}
+.ud-ctrl-btn.purple{background:linear-gradient(135deg,#792cff,#5c1fcc)}
+.ud-ctrl-btn.gold{background:linear-gradient(135deg,#c27803,#915802)}
+.ud-ctrl-btn.dark{background:linear-gradient(135deg,#241c38,#161026)}
+.ud-ctrl-btn.danger-btn{background:linear-gradient(135deg,#512132,#38121f);border-color:#ff6e8344;color:#ffc0cb;grid-column:span 2}
+
 .tab{white-space:nowrap;background:#1b1630;color:#d9d1e8;border:1px solid var(--line);padding:10px 15px;border-radius:12px;font-weight:700;text-align:left;display:flex;align-items:center;justify-content:space-between;text-decoration:none;width:100%}
 .tab-content-left{display:flex;align-items:center;gap:10px}
 .tab-arrow{font-size:14px;color:var(--muted);font-weight:600}
@@ -888,6 +926,18 @@ transform:rotate(45deg);
 
 </div>
 
+<!-- USER DETAILS MODAL CONTAINER -->
+<div id="userDetailModal" class="modal-overlay hidden">
+<div class="modal-card">
+  <div class="modal-header">
+    <div class="modal-title">← USER DETAILS</div>
+  </div>
+  <div id="userDetailModalBody">
+    <!-- Content will be injected dynamically -->
+  </div>
+</div>
+</div>
+
 <div id="toast" class="toast"></div>
 
 <script>
@@ -903,7 +953,6 @@ measurementId:"G-JYN5BL9RJV"
 
 const ADMIN_EMAIL='rakib782007@gmail.com';
 
-// Initialize Admin App with unique named instance
 const adminApp = firebase.initializeApp(firebaseConfig, "EMBD_ADMIN_ISOLATED_PANEL");
 const auth = adminApp.auth();
 const db = adminApp.firestore();
@@ -1133,7 +1182,6 @@ document.getElementById('mainHeader').classList.remove('hidden');
 document.getElementById('loginBox').classList.add('hidden');
 document.getElementById('app').classList.remove('hidden');
 
-// Restore saved tab from sessionStorage or URL hash on refresh
 const savedTab = sessionStorage.getItem('embd_active_tab');
 const hashTab = window.location.hash.replace('#','');
 const targetTab = (hashTab && document.getElementById('sec-' + hashTab)) ? hashTab : 
@@ -1176,7 +1224,6 @@ return;
 try{
 toast('Logging in...', 'info', 0);
 
-// Set Persistence to LOCAL if Remember Me is checked, otherwise SESSION
 const persistenceMode = remember ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
 await auth.setPersistence(persistenceMode);
 
@@ -2078,6 +2125,7 @@ t.delete(userRef);
 toast('User deleted successfully', 'success');
 loadUsers();
 refreshAll();
+closeUserDetailModal();
 }catch(e){
 console.error(e);
 toast(e.message||'Could not delete user', 'error');
@@ -2201,6 +2249,7 @@ box.innerHTML='<div class="empty">No matching users found</div>';
 return;
 }
 
+rows.rows=rows || [];
 rows.forEach(u=>{
 const name = u.name || 'Unnamed User';
 const email = u.email || 'No email';
@@ -2271,10 +2320,145 @@ el.innerHTML=`
     <div class="user-meta-val">${userId}</div>
   </div>
 </div>
-<button class="user-details-btn" onclick="toast('Viewing details for ${name}', 'info')">View Details →</button>
+<button class="user-details-btn" onclick="openUserDetailModal('${u.id}')">View Details →</button>
 `;
 box.append(el);
 });
+}
+
+async function openUserDetailModal(userId){
+const user = usersCache.find(x => x.id === userId);
+if(!user){
+toast('User details not found', 'error');
+return;
+}
+
+const modal = document.getElementById('userDetailModal');
+const body = document.getElementById('userDetailModalBody');
+
+const name = user.name || 'Unnamed User';
+const email = user.email || 'No email';
+const phone = user.phone || '01XXXXXXXXX';
+const balance = Number(user.balance || 0);
+const totalEarned = Number(user.totalEarned || 0);
+const totalWithdraw = Number(user.totalWithdraw || 0);
+const regDate = dateText(user.createdAt);
+const refCount = user.referralCount || 0;
+const status = (user.status === 'blocked' || user.status === 'suspended') ? 'Blocked' : 'Active';
+const initial = name.charAt(0).toUpperCase();
+const dispId = 'USR' + user.id.slice(-4).toUpperCase();
+
+body.innerHTML = `
+<div class="ud-profile-box">
+  <div class="ud-avatar">${initial}</div>
+  <h3 class="ud-name">${name}</h3>
+  <p class="ud-email">${email}</p>
+  <div><span class="pill active" style="background:#133b30; color:#36d6a0;">Verified User</span></div>
+  <div class="ud-userid">User ID: ${dispId}</div>
+</div>
+
+<div class="ud-balance-card">
+  <div class="ud-bal-label">Current Balance</div>
+  <div class="ud-bal-val">৳ ${balance.toFixed(2)}</div>
+  <div class="ud-bal-grid">
+    <div>
+      <div style="font-size:11px; color:var(--muted)">Total Earnings</div>
+      <div style="font-size:15px; font-weight:800; color:#fff; margin-top:3px;">৳ ${totalEarned.toFixed(0)}</div>
+    </div>
+    <div>
+      <div style="font-size:11px; color:var(--muted)">Total Withdraw</div>
+      <div style="font-size:15px; font-weight:800; color:#fff; margin-top:3px;">৳ ${totalWithdraw.toFixed(0)}</div>
+    </div>
+  </div>
+</div>
+
+<div style="font-size:13px; font-weight:700; margin-bottom:8px; color:#fff">Account Information</div>
+<div class="ud-info-list">
+  <div class="ud-info-row"><span class="ud-info-k">User Name</span><span class="ud-info-v">${name}</span></div>
+  <div class="ud-info-row"><span class="ud-info-k">Email</span><span class="ud-info-v">${email}</span></div>
+  <div class="ud-info-row"><span class="ud-info-k">Phone</span><span class="ud-info-v">${phone}</span></div>
+  <div class="ud-info-row"><span class="ud-info-k">Registration</span><span class="ud-info-v">${regDate}</span></div>
+  <div class="ud-info-row"><span class="ud-info-k">Referral Count</span><span class="ud-info-v">${refCount}</span></div>
+  <div class="ud-info-row"><span class="ud-info-k">Account Status</span><span class="ud-info-v" style="color:${status==='Active'?'#36d6a0':'#ff6e83'}">${status}</span></div>
+</div>
+
+<div style="font-size:13px; font-weight:700; margin-bottom:8px; color:#fff">Admin Controls</div>
+<div class="ud-controls-grid">
+  <button class="ud-ctrl-btn purple" onclick="promptAdjustBalance('${user.id}', 'add')">
+    <span>➕</span> Add Balance
+  </button>
+  <button class="ud-ctrl-btn gold" onclick="promptAdjustBalance('${user.id}', 'deduct')">
+    <span>➖</span> Deduct Balance
+  </button>
+  <button class="ud-ctrl-btn dark" onclick="toggleBlockUser('${user.id}', '${status}')">
+    <span>🚫</span> ${status === 'Active' ? 'Block User' : 'Unblock User'}
+  </button>
+  <button class="ud-ctrl-btn dark" onclick="toast('Loading user transactions...', 'info')">
+    <span>🕒</span> Transaction History
+  </button>
+  <button class="ud-ctrl-btn danger-btn" onclick="deleteUserAccount('${user.id}')">
+    <span>🗑️</span> Delete User
+  </button>
+</div>
+`;
+
+modal.classList.remove('hidden');
+}
+
+function closeUserDetailModal(){
+document.getElementById('userDetailModal').classList.add('hidden');
+}
+
+async function promptAdjustBalance(userId, mode){
+const amountStr = prompt(mode === 'add' ? 'Enter amount to add (৳):' : 'Enter amount to deduct (৳):');
+if(!amountStr) return;
+const amt = Number(amountStr);
+if(!Number.isFinite(amt) || amt <= 0){
+  toast('Please enter a valid amount', 'warning');
+  return;
+}
+
+try{
+const userRef = db.collection('users').doc(userId);
+await db.runTransaction(async t => {
+  const snap = await t.get(userRef);
+  if(!snap.exists) throw Error('User not found');
+  const currentBal = Number(snap.data().balance || 0);
+  if(mode === 'deduct' && currentBal < amt){
+    throw Error('Insufficient user balance for deduction');
+  }
+  const newBal = mode === 'add' ? currentBal + amt : currentBal - amt;
+  t.update(userRef, { balance: newBal });
+  
+  const txRef = userRef.collection('transactions').doc();
+  t.set(txRef, {
+    type: mode === 'add' ? 'admin_add' : 'admin_deduct',
+    amount: mode === 'add' ? amt : -amt,
+    status: 'approved',
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+});
+
+toast(mode === 'add' ? 'Balance added successfully' : 'Balance deducted successfully', 'success');
+loadUsers();
+closeUserDetailModal();
+}catch(e){
+toast(e.message || 'Failed to update balance', 'error');
+}
+}
+
+async function toggleBlockUser(userId, currentStatus){
+const newStatus = currentStatus === 'Active' ? 'blocked' : 'active';
+if(!confirm(`Are you sure you want to ${newStatus === 'blocked' ? 'block' : 'unblock'} this user?`)) return;
+
+try{
+await db.collection('users').doc(userId).update({ status: newStatus });
+toast(newStatus === 'blocked' ? 'User blocked successfully' : 'User unblocked successfully', 'success');
+loadUsers();
+closeUserDetailModal();
+}catch(e){
+toast('Failed to update user status', 'error');
+}
 }
 
 async function loadModerators(){
