@@ -859,9 +859,10 @@ measurementId:"G-JYN5BL9RJV"
 
 const ADMIN_EMAIL='rakib782007@gmail.com';
 
-firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth();
-const db=firebase.firestore();
+// Separate named Firebase instance so Admin session never conflicts with User App session
+const adminApp = firebase.initializeApp(firebaseConfig, "EMBD_ADMIN_INSTANCE");
+const auth = adminApp.auth();
+const db = adminApp.firestore();
 
 let currentUser=null,usersCache=[];
 let currentActiveTab = sessionStorage.getItem('embd_active_tab') || 'dashboard';
@@ -1306,7 +1307,7 @@ async function updateDashboardUI(){
     document.getElementById('statNewUsers').textContent = todayNewUsersCount.toLocaleString();
     document.getElementById('statEarnings').textContent = '৳ ' + totalEarnedSum.toLocaleString();
 
-    const activityPercentage = totalUsers > 0 ? Math.round((todayActiveCount / totalUsers) * 100) : 0;
+    const activityPercentage = totalUsers > 0 ? Math.min(100, Math.round((todayActiveCount / totalUsers) * 100)) : 0;
     document.getElementById('statActivity').textContent = activityPercentage + '%';
 
     let pendingCount = 0;
