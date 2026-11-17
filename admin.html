@@ -854,9 +854,17 @@ transform:rotate(45deg);
   </div>
 
   <div class="user-top-row">
+    <!-- Updated Total Users Card with Dashboard's Total Users SVG Icon -->
     <button id="cardFilterAll" class="user-top-card active-filter" onclick="filterUserStatus('all')">
       <div class="user-stat-title">
-        <div style="width:34px;height:34px;background:#34254d;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c69aff">👥</div>
+        <div style="width:34px;height:34px;background:#172242;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#65b7ff;flex-shrink:0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#65b7ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
         Total Users
       </div>
       <div class="user-stat-value" id="statTotalUsersCount">-</div>
@@ -882,7 +890,17 @@ transform:rotate(45deg);
       <div class="user-stat-value" id="statInactiveUsersCount" style="color:#ffe1a1">-</div>
     </button>
     <button id="cardFilterBlocked" class="user-sub-stat" onclick="filterUserStatus('blocked')">
-      <div class="user-stat-title" style="color:#ff6e83">Blocked Users</div>
+      <div class="user-stat-title" style="color:#ff6e83">
+        <div style="width:30px;height:30px;background:#512331;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ff6e83;flex-shrink:0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <circle cx="19" cy="11" r="3"></circle>
+            <line x1="17" y1="9" x2="21" y2="13"></line>
+          </svg>
+        </div>
+        Blocked Users
+      </div>
       <div class="user-stat-value" id="statBlockedUsersCount" style="color:#ff6e83">-</div>
     </button>
   </div>
