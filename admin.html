@@ -1009,7 +1009,7 @@ transform:rotate(45deg);
   </div>
 
   <div class="ads-top-row" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 14px;">
-    <!-- 3. Network Revenue -->
+    <!-- 3. Network Revenue (Real-time Live from API/Dashboard Database) -->
     <div class="ads-top-card">
       <div class="ads-sub-title">
         <div style="width:34px;height:34px;background:#133b30;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#36d6a0;flex-shrink:0;">
@@ -1888,17 +1888,17 @@ if(snap.exists){
 console.error('Error loading ads settings:', e);
 }
 
-// REAL-TIME LISTENER FOR LIVE AD CLICKS & STATS
+// REAL-TIME LISTENER FOR LIVE AD CLICKS & NETWORK REVENUE FROM API/DASHBOARD
 if(!adsStatsUnsubscribe){
   adsStatsUnsubscribe = db.collection('appConfig').doc('adsStats').onSnapshot(doc => {
     const data = doc.exists ? doc.data() : {};
     const totalClicks = Number(data.totalClicks || 0);
     const todayClicks = Number(data.todayClicks || 0);
-    const revenue = Number(data.revenue || 0);
+    const networkRevenue = Number(data.revenue || 0); // Directly from Network Publisher Dashboard/API
 
     document.getElementById('statTotalAdClicks').textContent = totalClicks.toLocaleString();
     document.getElementById('statTodayAdClicks').textContent = todayClicks.toLocaleString();
-    document.getElementById('statNetworkRevenue').textContent = '৳ ' + revenue.toFixed(2);
+    document.getElementById('statNetworkRevenue').textContent = '৳ ' + networkRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }, err => {
     console.error('Error listening to adsStats:', err);
   });
