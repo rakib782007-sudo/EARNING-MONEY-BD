@@ -2597,6 +2597,11 @@ if(fieldName === 'name' && !newValue){
   return;
 }
 
+if(fieldName === 'email' && (!newValue.includes('@') || !newValue.includes('.'))){
+  toast('⚠️ Please enter a valid email address', 'warning');
+  return;
+}
+
 try{
   toast('Updating...', 'info', 0);
   
@@ -2604,7 +2609,19 @@ try{
   updateData[fieldName] = fieldName === 'email' ? newValue.toLowerCase() : newValue;
   updateData['updatedAt'] = firebase.firestore.FieldValue.serverTimestamp();
 
+  // Firestore update
   await db.collection('users').doc(userId).update(updateData);
+
+  // NOTE: If updating email, Authentication Auth email sync requires backend Firebase Admin SDK or Cloud Function.
+  // We trigger a helper document request or log so your backend / Cloud Function can sync Firebase Auth email automatically.
+  if(fieldName === 'email'){
+    await db.collection('adminAuthSyncQueue').add({
+      uid: userId,
+      newEmail: newValue.toLowerCase(),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      status: 'pending'
+    });
+  }
 
   const cachedUser = usersCache.find(x => x.id === userId);
   if(cachedUser){
