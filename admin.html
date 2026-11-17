@@ -1048,7 +1048,7 @@ transform:rotate(45deg);
     </div>
 
     <label>Network Name</label>
-    <input id="adNetworkName" class="field" value="Monetag" placeholder="Enter network name">
+    <input id="adNetworkName" class="field" placeholder="Enter network name">
 
     <label>Direct Ad Link</label>
     <input id="adDirectLink" class="field" placeholder="https://your-ad-link.com/">
@@ -1091,7 +1091,7 @@ transform:rotate(45deg);
     <div class="item">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
-          <strong id="detailNetName" style="font-size:16px; color:#fff;">Monetag Direct Link</strong>
+          <strong id="detailNetName" style="font-size:16px; color:#fff;">Network Direct Link</strong>
           <p style="margin:4px 0 0; color:var(--muted);">Revenue: <span style="color:#36d6a0; font-weight:700;" id="detailNetRev">৳ 0.00</span></p>
         </div>
         <div style="display:flex; align-items:center; gap:12px;">
@@ -1936,15 +1936,17 @@ try{
 const snap = await db.collection('appConfig').doc('adsSettings').get();
 if(snap.exists){
   const d = snap.data();
-  const netName = d.networkName || 'Monetag';
-  document.getElementById('adNetworkName').value = netName;
+  // Safe network name loading to prevent auto-clearing
+  if(d.networkName !== undefined && d.networkName !== null) {
+    document.getElementById('adNetworkName').value = d.networkName;
+  }
   document.getElementById('adDirectLink').value = d.directLink || '';
   document.getElementById('adRewardAction').value = d.rewardPerAction ?? 0.10;
   document.getElementById('adDailyLimit').value = d.dailyLimit ?? 10;
   const isEnabled = d.status !== false;
   document.getElementById('adsStatusToggle').checked = isEnabled;
   document.getElementById('detailNetToggle').checked = isEnabled;
-  document.getElementById('detailNetName').textContent = netName + ' Direct Link';
+  document.getElementById('detailNetName').textContent = (d.networkName || 'Network') + ' Direct Link';
   updateAdsStatusText();
 }
 }catch(e){
