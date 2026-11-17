@@ -854,7 +854,7 @@ transform:rotate(45deg);
   </div>
 
   <div class="user-top-row">
-    <!-- Updated Total Users Card with Dashboard's Total Users SVG Icon -->
+    <!-- Total Users Card with Clean Profile + Grid/Layers SVG Icon -->
     <button id="cardFilterAll" class="user-top-card active-filter" onclick="filterUserStatus('all')">
       <div class="user-stat-title">
         <div style="width:34px;height:34px;background:#172242;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#65b7ff;flex-shrink:0;">
@@ -869,6 +869,8 @@ transform:rotate(45deg);
       </div>
       <div class="user-stat-value" id="statTotalUsersCount">-</div>
     </button>
+
+    <!-- Active Users Card with Avatar + Check Badge SVG Icon -->
     <button id="cardFilterActive" class="user-top-card" onclick="filterUserStatus('active')">
       <div class="user-stat-title">
         <div style="width:34px;height:34px;background:#133b30;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#36d6a0">
@@ -885,10 +887,24 @@ transform:rotate(45deg);
   </div>
 
   <div class="user-sub-stats-grid">
+    <!-- Inactive Users Card with Exact Pause-Badge Avatar Style matching user's image -->
     <button id="cardFilterInactive" class="user-sub-stat" onclick="filterUserStatus('inactive')">
-      <div class="user-stat-title" style="color:#ffe1a1">Inactive Users</div>
+      <div class="user-stat-title" style="color:#ffe1a1">
+        <div style="width:30px;height:30px;background:#4b3b1d;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ffe1a1;flex-shrink:0;position:relative;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <div style="position:absolute;right:-4px;bottom:-4px;width:14px;height:14px;background:#ffe1a1;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="#4b3b1d"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+          </div>
+        </div>
+        Inactive Users
+      </div>
       <div class="user-stat-value" id="statInactiveUsersCount" style="color:#ffe1a1">-</div>
     </button>
+
+    <!-- Blocked Users Card with Avatar + Ban/Shield Badge SVG Icon -->
     <button id="cardFilterBlocked" class="user-sub-stat" onclick="filterUserStatus('blocked')">
       <div class="user-stat-title" style="color:#ff6e83">
         <div style="width:30px;height:30px;background:#512331;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ff6e83;flex-shrink:0;">
@@ -2283,7 +2299,6 @@ document.getElementById('statBlockedUsersCount').textContent = blocked.toLocaleS
 
 renderUsers();
 
-// পেজ রিফ্রেশ করলে যদি কোনো ইউজার ডিটেইলস মোডাল ওপেন ছিল, তা রিকভার করার জন্য
 try {
   const savedOpenUserId = sessionStorage.getItem('embd_open_user_id');
   if(savedOpenUserId){
@@ -2684,7 +2699,7 @@ return;
 
 try{
 await db.collection('admins').add({
-email: targetIndicator=targetEmail,
+email: targetEmail,
 role: 'moderator',
 status: 'active',
 createdAt: firebase.firestore.FieldValue.serverTimestamp()
