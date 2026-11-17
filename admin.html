@@ -2265,6 +2265,7 @@ document.getElementById('statBlockedUsersCount').textContent = blocked.toLocaleS
 
 renderUsers();
 
+// পেজ রিফ্রেশ করলে যদি কোনো ইউজার ডিটেইলস মোডাল ওপেন ছিল, তা রিকভার করার জন্য
 try {
   const savedOpenUserId = sessionStorage.getItem('embd_open_user_id');
   if(savedOpenUserId){
@@ -2498,28 +2499,10 @@ body.innerHTML = `
 </div>
 
 <div style="font-size:13px; font-weight:700; margin-bottom:8px; color:#fff">Account Information</div>
-<div class="ud-info-list" id="userInfoListContainer">
-  <div class="ud-info-row">
-    <span class="ud-info-k">User Name</span>
-    <span class="ud-info-v" style="display:flex; align-items:center; gap:8px;">
-      <span id="text_name_${user.id}">${name}</span>
-      <button class="btn" style="padding:2px 8px; font-size:10px; background:#2a2148; color:#c69aff;" onclick="inlineEditField('${user.id}', 'name', '${name}')">Edit</button>
-    </span>
-  </div>
-  <div class="ud-info-row">
-    <span class="ud-info-k">Email</span>
-    <span class="ud-info-v" style="display:flex; align-items:center; gap:8px;">
-      <span id="text_email_${user.id}">${email}</span>
-      <button class="btn" style="padding:2px 8px; font-size:10px; background:#2a2148; color:#c69aff;" onclick="inlineEditField('${user.id}', 'email', '${email}')">Edit</button>
-    </span>
-  </div>
-  <div class="ud-info-row">
-    <span class="ud-info-k">Phone</span>
-    <span class="ud-info-v" style="display:flex; align-items:center; gap:8px;">
-      <span id="text_phone_${user.id}">${phone}</span>
-      <button class="btn" style="padding:2px 8px; font-size:10px; background:#2a2148; color:#c69aff;" onclick="inlineEditField('${user.id}', 'phone', '${phone}')">Edit</button>
-    </span>
-  </div>
+<div class="ud-info-list">
+  <div class="ud-info-row"><span class="ud-info-k">User Name</span><span class="ud-info-v">${name}</span></div>
+  <div class="ud-info-row"><span class="ud-info-k">Email</span><span class="ud-info-v">${email}</span></div>
+  <div class="ud-info-row"><span class="ud-info-k">Phone</span><span class="ud-info-v">${phone}</span></div>
   <div class="ud-info-row"><span class="ud-info-k">Registration</span><span class="ud-info-v">${regDate}</span></div>
   <div class="ud-info-row"><span class="ud-info-k">Referral Count</span><span class="ud-info-v">${refCount}</span></div>
   <div class="ud-info-row"><span class="ud-info-k">Account Status</span><span class="ud-info-v" style="color:${status==='Active'?'#36d6a0':'#ff6e83'}">${status}</span></div>
@@ -2570,72 +2553,6 @@ if(titleTextEl){
 try {
   sessionStorage.removeItem('embd_open_user_id');
 } catch(e){}
-}
-
-function inlineEditField(userId, fieldName, currentValue){
-const valSpan = document.getElementById(`text_${fieldName}_${userId}`);
-if(!valSpan) return;
-
-valSpan.innerHTML = `
-  <div style="display:flex; align-items:center; gap:5px; margin:4px 0;">
-    <input id="input_${fieldName}_${userId}" class="field" type="${fieldName==='email'?'email':'text'}" value="${currentValue}" style="margin:0; padding:6px 10px; font-size:12px; height:32px;">
-    <button class="btn primary" style="padding:4px 8px; font-size:10px; white-space:nowrap;" onclick="saveInlineField('${userId}', '${fieldName}')">Save</button>
-    <button class="btn" style="padding:4px 8px; font-size:10px; background:#33284d; white-space:nowrap;" onclick="openUserDetailModal('${userId}', false)">X</button>
-  </div>
-`;
-}
-
-async function saveInlineField(userId, fieldName){
-if(!needAdmin()) return;
-
-const inputEl = document.getElementById(`input_${fieldName}_${userId}`);
-if(!inputEl) return;
-const newValue = inputEl.value.trim();
-
-if(fieldName === 'name' && !newValue){
-  toast('⚠️ Name cannot be empty', 'warning');
-  return;
-}
-
-if(fieldName === 'email' && (!newValue.includes('@') || !newValue.includes('.'))){
-  toast('⚠️ Please enter a valid email address', 'warning');
-  return;
-}
-
-try{
-  toast('Updating...', 'info', 0);
-  
-  let updateData = {};
-  updateData[fieldName] = fieldName === 'email' ? newValue.toLowerCase() : newValue;
-  updateData['updatedAt'] = firebase.firestore.FieldValue.serverTimestamp();
-
-  // Firestore update
-  await db.collection('users').doc(userId).update(updateData);
-
-  // NOTE: If updating email, Authentication Auth email sync requires backend Firebase Admin SDK or Cloud Function.
-  // We trigger a helper document request or log so your backend / Cloud Function can sync Firebase Auth email automatically.
-  if(fieldName === 'email'){
-    await db.collection('adminAuthSyncQueue').add({
-      uid: userId,
-      newEmail: newValue.toLowerCase(),
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      status: 'pending'
-    });
-  }
-
-  const cachedUser = usersCache.find(x => x.id === userId);
-  if(cachedUser){
-    cachedUser[fieldName] = updateData[fieldName];
-  }
-
-  toast('✅ Updated successfully!', 'success');
-  loadUsers();
-  openUserDetailModal(userId, false);
-
-}catch(e){
-  console.error(e);
-  toast('❌ Failed: ' + e.message, 'error');
-}
 }
 
 async function promptAdjustBalance(userId, mode){
@@ -2749,7 +2666,7 @@ return;
 
 try{
 await db.collection('admins').add({
-email: targetEmail,
+email: targetIndicator=targetEmail,
 role: 'moderator',
 status: 'active',
 createdAt: firebase.firestore.FieldValue.serverTimestamp()
