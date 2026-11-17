@@ -209,46 +209,26 @@ margin:2px 0 15px;padding:10px 2px 14px;border-bottom:1px solid #d4a34d55;
 }
 .logo{font:800 16px Poppins;letter-spacing:.1px;text-shadow:0 0 18px #ffca5544}
 .logo span{color:var(--gold)}
-.user-chip{
-display:flex;align-items:center;gap:8px;max-width:48%;
-font-size:12px;color:#f0e5ff;background:linear-gradient(135deg,#382044,#170d24);
-border:1px solid #e7bd6b99;padding:5px 10px 5px 5px;border-radius:30px;
-box-shadow:0 5px 18px #0009,0 0 15px #f5c45b20;
-}
-.user-chip img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)}
 .page{display:none;animation:fade .2s ease}
 .page.active{display:block}
 @keyframes fade{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:none}}
 
-/* WELCOME */
-.welcome-strip{
-display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:14px 15px;
-border:1px solid #b47bdf88;border-radius:21px;
-background:linear-gradient(110deg,#35164b,#160d25 65%,#24112e);
-box-shadow:0 9px 24px #0008,inset 0 1px 0 #ffffff20;
-}
-.welcome-crown{font-size:34px;filter:drop-shadow(0 0 10px #c16cff)}
-.welcome-copy{min-width:0}
-.welcome-copy strong{display:block;font:700 17px Poppins,'Hind Siliguri',sans-serif;color:#fff}
-.welcome-copy span{font-size:12px;color:#d7b8f4}
-
 /* BALANCE */
 .balance{
-position:relative;overflow:hidden;display:grid;grid-template-columns:75px 1fr;
-align-items:center;gap:10px;min-height:164px;padding:18px 15px;
+position:relative;overflow:hidden;display:grid;grid-template-columns:1fr;
+align-items:center;gap:10px;min-height:140px;padding:20px 18px;
 border:1.5px solid #ffd56d;border-radius:25px;
 background:radial-gradient(circle at 90% 10%,#f5b62d44,transparent 43%),radial-gradient(circle at 10% 100%,#8c39c955,transparent 48%),linear-gradient(125deg,#301344,#160d27 62%,#0d0a1b);
 box-shadow:0 14px 32px #000b,0 0 25px #ffc34b25,inset 0 1px 0 #fff5;
 }
 .balance:after{content:'↗';position:absolute;right:15px;top:6px;color:#ffcf4d;font:800 62px Poppins;opacity:.2}
-.wallet-icon{font-size:56px;text-align:center;filter:drop-shadow(0 6px 10px #ffbd3d88)}
 .balance-content{min-width:0;position:relative;z-index:1}
 .balance small{color:#ffe7a8;font-size:13px}
 .balance h2{color:#ffd75d;font:800 34px Poppins;margin:4px 0 8px;letter-spacing:-1px;text-shadow:0 0 20px #ffc53d55}
 .balance .muted{color:#e0cce9;font-size:11px}
-.balance-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.balance-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:6px}
 .withdraw-shortcut{
-border:1px solid #fff0a8;border-radius:30px;padding:9px 14px;
+border:1px solid #fff0a8;border-radius:30px;padding:9px 16px;
 background:linear-gradient(135deg,#ffe17b,#ffb72e 58%,#d77c13);
 color:#21120a;font-size:12px;font-weight:800;box-shadow:0 5px 15px #ffb72e55;
 }
@@ -389,8 +369,8 @@ max-width:90%;text-align:center;box-shadow:0 8px 30px #0008;
 
 @media(max-width:390px){
 .app-shell{padding-left:11px;padding-right:11px}
-.balance{grid-template-columns:58px 1fr;padding:16px 11px;gap:7px}
-.wallet-icon{font-size:45px}.balance h2{font-size:28px}
+.balance{padding:16px 11px;gap:7px}
+.balance h2{font-size:28px}
 .feature-grid{gap:10px}.feature{min-height:120px;padding:13px 7px}
 .feature b{width:48px;height:48px;font-size:25px}
 .feature span{font-size:13px}
@@ -523,25 +503,11 @@ Continue with Google
 <header>
 <div class="logo">
 EARNING <span>MONEY BD</span>
-<div style="font:500 10px 'Hind Siliguri';color:#d0bce8;margin-top:3px">Play • Earn • Withdraw</div>
-</div>
-<div class="user-chip">
-<img id="userPhoto" src="https://via.placeholder.com/80" alt="">
-<span id="userName">User</span>
 </div>
 </header>
 
-<section class="welcome-strip">
-<div class="welcome-crown">♛</div>
-<div class="welcome-copy">
-<strong>Welcome Back! 👋</strong>
-<span>Keep earning, keep growing!</span>
-</div>
-</section>
-
 <main id="homePage" class="page active">
 <section class="balance">
-<div class="wallet-icon">👛</div>
 <div class="balance-content">
 <small>Your Wallet Balance</small>
 <h2>৳ <span id="balance">0.00</span></h2>
@@ -895,9 +861,6 @@ const translations={
 'রিসেট লিংক পাঠানো যায়নি। আবার চেষ্টা করুন।':'Could not send reset link. Try again.',
 'আজকের বোনাস ইতিমধ্যে নেওয়া হয়েছে':'Today’s bonus has already been claimed',
 'Admin-এর Bonus Settings পড়া যায়নি':'Could not load admin bonus settings',
-'Welcome Back! 👋':'Welcome Back! 👋',
-'Keep earning, keep growing!':'Keep earning, keep growing!',
-'হ্যালো,':'Hello,',
 'Quick Access':'Quick Access',
 'Daily Bonus':'Daily Bonus',
 'Daily Reward':'Daily Reward',
@@ -974,16 +937,6 @@ const originalAttributes=new WeakMap();
 function translateText(value){return getTranslation(value,'en')}
 function restoreBangla(value){return getTranslation(value,'bn')}
 
-function updateWelcomeLanguage(){
-const welcomeTitle=document.querySelector('.welcome-copy strong');
-if(!welcomeTitle)return;
-const name=welcomeTitle.dataset.welcomeName;
-if(!name)return;
-welcomeTitle.textContent=currentLanguage==='en'
-?'Hello, '+name+' 👋'
-:'হ্যালো, '+name+' 👋';
-}
-
 function applyLanguage(){
 document.documentElement.lang=currentLanguage;
 document.getElementById('langBn').classList.toggle('active',currentLanguage==='bn');
@@ -1013,7 +966,6 @@ const continueBtn=document.getElementById('forgotContinueBtn');
 if(continueBtn)continueBtn.textContent=currentLanguage==='en'?'Send Reset Link':'রিসেট লিংক পাঠান';
 
 applyConfirmLanguage();
-updateWelcomeLanguage();
 }
 
 function requestLanguage(lang){
@@ -1061,7 +1013,6 @@ appId:"1:504547016236:web:8c5b2cfc733aaf16175b89",
 measurementId:"G-JYN5BL9RJV"
 };
 
-// Unique named Firebase instance and isolated LOCAL persistence so User App never conflicts with Admin App
 const userApp = firebase.initializeApp(firebaseConfig, "EMBD_USER_ISOLATED_APP");
 const auth = userApp.auth();
 const db = userApp.firestore();
@@ -1581,13 +1532,7 @@ userData=fresh.data()||{balance:0};
 renderUserData();
 
 const finalName=userData.name||user.displayName||user.email?.split('@')[0]||'User';
-document.getElementById('userName').textContent=finalName;
 
-const welcomeName=finalName.split(' ')[0];
-const welcomeTitle=document.querySelector('.welcome-copy strong');
-if(welcomeTitle)welcomeTitle.dataset.welcomeName=welcomeName;
-
-document.getElementById('userPhoto').src=user.photoURL||'https://via.placeholder.com/80';
 document.getElementById('profilePhoto').src=user.photoURL||'https://via.placeholder.com/100';
 document.getElementById('profileName').textContent=finalName;
 document.getElementById('profileEmail').textContent=user.email||'';
