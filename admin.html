@@ -987,10 +987,10 @@ transform:rotate(45deg);
         </div>
         Total Ad Clicks
       </div>
-      <div class="ads-sub-value" id="statTotalAdClicks">1,250</div>
+      <div class="ads-sub-value" id="statTotalAdClicks">0</div>
     </div>
 
-    <!-- 2. Today's Ad Clicks (Updated with Today's Activity Icon & Color) -->
+    <!-- 2. Today's Ad Clicks -->
     <div class="ads-top-card">
       <div class="ads-sub-title">
         <div style="width:34px;height:34px;background:#172242;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#65b7ff;flex-shrink:0;">
@@ -1004,7 +1004,7 @@ transform:rotate(45deg);
         </div>
         Today's Ad Clicks
       </div>
-      <div class="ads-sub-value" id="statTodayAdClicks">142</div>
+      <div class="ads-sub-value" id="statTodayAdClicks">0</div>
     </div>
   </div>
 
@@ -1020,7 +1020,7 @@ transform:rotate(45deg);
         </div>
         Network Revenue
       </div>
-      <div class="ads-sub-value" id="statNetworkRevenue">৳ 450</div>
+      <div class="ads-sub-value" id="statNetworkRevenue">৳ 0</div>
     </div>
 
     <!-- 4. Active Networks -->
@@ -1167,6 +1167,7 @@ const db = adminApp.firestore();
 let currentUser=null,usersCache=[];
 let currentActiveTab = sessionStorage.getItem('embd_active_tab') || 'dashboard';
 let dashboardUnsubscribe = null;
+let adsStatsUnsubscribe = null;
 let currentStatusFilter = 'all';
 
 const emailInput=document.getElementById('email');
@@ -1485,6 +1486,10 @@ closeSidebarVisuals();
 if(dashboardUnsubscribe){
 dashboardUnsubscribe();
 dashboardUnsubscribe = null;
+}
+if(adsStatsUnsubscribe){
+adsStatsUnsubscribe();
+adsStatsUnsubscribe = null;
 }
 
 try{
@@ -1881,6 +1886,22 @@ if(snap.exists){
 }
 }catch(e){
 console.error('Error loading ads settings:', e);
+}
+
+// REAL-TIME LISTENER FOR LIVE AD CLICKS & STATS
+if(!adsStatsUnsubscribe){
+  adsStatsUnsubscribe = db.collection('appConfig').doc('adsStats').onSnapshot(doc => {
+    const data = doc.exists ? doc.data() : {};
+    const totalClicks = Number(data.totalClicks || 0);
+    const todayClicks = Number(data.todayClicks || 0);
+    const revenue = Number(data.revenue || 0);
+
+    document.getElementById('statTotalAdClicks').textContent = totalClicks.toLocaleString();
+    document.getElementById('statTodayAdClicks').textContent = todayClicks.toLocaleString();
+    document.getElementById('statNetworkRevenue').textContent = '৳ ' + revenue.toFixed(2);
+  }, err => {
+    console.error('Error listening to adsStats:', err);
+  });
 }
 }
 
