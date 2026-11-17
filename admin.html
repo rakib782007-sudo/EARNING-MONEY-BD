@@ -129,7 +129,7 @@ label{font-size:13px;color:#d4cce3}
 
 /* USER DETAILS FULL SCREEN MODAL STYLING */
 .modal-overlay{
-position:fixed;inset:0;background:rgba(9,7,19,0.98);backdrop-filter:blur(8px);
+position:fixed;inset:0;background:rgba(9,7,19,0.99);backdrop-filter:blur(8px);
 -webkit-backdrop-filter:blur(8px);z-index:110000;display:flex;align-items:stretch;justify-content:center;padding:0;overflow:hidden;
 }
 .modal-card{
@@ -984,7 +984,7 @@ transform:rotate(45deg);
     </div>
   </div>
   <div id="userDetailModalBody" style="max-width:540px;margin:0 auto;">
-    <!-- Content will be injected dynamically -->
+    <div class="empty">Loading user details...</div>
   </div>
 </div>
 </div>
@@ -992,6 +992,14 @@ transform:rotate(45deg);
 <div id="toast" class="toast"></div>
 
 <script>
+// IMMEDIATE CHECK: Prevent User Management page flash when refreshing inside User Details
+try {
+  if (sessionStorage.getItem('embd_open_user_id')) {
+    const preModal = document.getElementById('userDetailModal');
+    if (preModal) preModal.classList.remove('hidden');
+  }
+} catch(e){}
+
 const firebaseConfig={
 apiKey:"AIzaSyDDDwkjIa7NecN7CnpyQxPja4KH0vLqCJ4",
 authDomain:"earning-bd-1e902.firebaseapp.com",
@@ -1213,6 +1221,7 @@ return {allowed:false};
 
 async function gate(user){
 if(!user){
+closeUserDetailModal();
 document.getElementById('mainHeader').classList.add('hidden');
 document.getElementById('loginBox').classList.remove('hidden');
 document.getElementById('app').classList.add('hidden');
@@ -1222,6 +1231,7 @@ return false;
 const permission=await checkAdminOrModPermissions(user);
 
 if(!permission.allowed){
+closeUserDetailModal();
 document.getElementById('mainHeader').classList.add('hidden');
 document.getElementById('loginBox').classList.remove('hidden');
 document.getElementById('app').classList.add('hidden');
@@ -1321,6 +1331,7 @@ saveRememberPreference();
 sessionStorage.removeItem('embd_active_tab');
 sessionStorage.removeItem('embd_open_user_id');
 
+closeUserDetailModal();
 closeSidebarVisuals();
 
 if(dashboardUnsubscribe){
@@ -2226,9 +2237,8 @@ renderUsers();
 // পেজ রিফ্রেশ করলে যদি কোনো ইউজার ডিটেইলস মোডাল ওপেন ছিল, তা রিকভার করার জন্য
 try {
   const savedOpenUserId = sessionStorage.getItem('embd_open_user_id');
-  const modal = document.getElementById('userDetailModal');
-  if(savedOpenUserId && modal && modal.classList.contains('hidden')){
-    openUserDetailModal(savedOpenUserId);
+  if(savedOpenUserId){
+    openUserDetailModal(savedOpenUserId, false);
   }
 } catch(e){}
 
@@ -2393,7 +2403,7 @@ box.append(el);
 });
 }
 
-async function openUserDetailModal(userId){
+async function openUserDetailModal(userId, pushHistoryState=true){
 let user = usersCache.find(x => x.id === userId);
 if(!user){
   try {
@@ -2408,6 +2418,7 @@ if(!user){
 
 if(!user){
 toast('User details not found', 'error');
+closeUserDetailModal();
 return;
 }
 
@@ -2484,7 +2495,9 @@ try {
   sessionStorage.setItem('embd_open_user_id', userId);
 } catch(e){}
 
-history.pushState({modalOpen: true, userId: userId, tab: currentActiveTab}, '', '#' + currentActiveTab);
+if(pushHistoryState){
+  history.pushState({modalOpen: true, userId: userId, tab: currentActiveTab}, '', '#' + currentActiveTab);
+}
 modal.classList.remove('hidden');
 }
 
