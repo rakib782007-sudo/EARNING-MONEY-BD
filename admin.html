@@ -134,7 +134,7 @@ position:fixed;inset:0;background:rgba(9,7,19,0.99);backdrop-filter:blur(8px);
 }
 .modal-card{
 background:linear-gradient(145deg,#1b1530,#120f20);border:0;border-radius:0;
-width:100%;max-width:100%;height:100%;max-height:100%;overflow-y:auto;padding:16px 20px 30px 20px;box-shadow:none;position:relative;
+width:100%;max-width:100%;height:100%;max-height:100%;overflow-y:auto;overscroll-behavior-y:none;padding:16px 20px 30px 20px;box-shadow:none;position:relative;
 margin:0;
 }
 .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;border-bottom:0;padding-bottom:0;background:transparent;z-index:10;padding-top:10px}
@@ -236,7 +236,7 @@ width:48px;height:48px;border-radius:50%;
 background:#151126;border:1px solid #a66bff44;
 box-shadow:0 8px 24px #000c,0 0 15px #a66bff25;
 display:flex;align-items:center;justify-content:center;
-z-index:10500;pointer-events:none;opacity:0;
+z-index:115000;pointer-events:none;opacity:0;
 transition:opacity .15s ease;
 }
 .ptr-svg{width:30px;height:30px;transform:rotate(-90deg)}
@@ -974,7 +974,7 @@ transform:rotate(45deg);
 
 <!-- USER DETAILS MODAL CONTAINER -->
 <div id="userDetailModal" class="modal-overlay hidden">
-<div class="modal-card">
+<div id="userDetailModalCard" class="modal-card">
   <div class="modal-header">
     <div class="modal-title">
       <button class="premium-back-btn" onclick="history.back()" aria-label="Go back">
@@ -1416,6 +1416,15 @@ if(currentActiveTab==='deposits')loadDeposits();
 
 async function refreshAll(){
 if(!needAdmin())return;
+const modal = document.getElementById('userDetailModal');
+if(modal && !modal.classList.contains('hidden')){
+  const openUid = sessionStorage.getItem('embd_open_user_id');
+  if(openUid){
+    await loadUsers();
+    await openUserDetailModal(openUid, false);
+    return;
+  }
+}
 await loadCurrentTabData();
 }
 
@@ -1532,6 +1541,8 @@ dashboardUnsubscribe = () => {
 const ptr=document.getElementById('ptrIndicator');
 const circle=document.getElementById('ptrCircle');
 const appContainer=document.getElementById('app');
+const modal=document.getElementById('userDetailModal');
+const modalCard=document.getElementById('userDetailModalCard');
 const maxCircumference=66;
 const threshold=82;
 
@@ -1540,6 +1551,21 @@ let startX=0;
 let pulling=false;
 let refreshing=false;
 let pullDistance=0;
+let isModalActive=false;
+
+function getActiveScrollTop(){
+  if(modal && !modal.classList.contains('hidden') && modalCard){
+    return modalCard.scrollTop || 0;
+  }
+  return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+}
+
+function getTargetElement(){
+  if(modal && !modal.classList.contains('hidden') && modalCard){
+    return modalCard;
+  }
+  return appContainer;
+}
 
 window.addEventListener('touchstart',e=>{
 const sidebar=document.getElementById('sidebar');
@@ -1547,14 +1573,16 @@ if(sidebar && sidebar.classList.contains('open')) return;
 
 if(refreshing || e.touches.length !== 1) return;
 
-const currentScroll = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+isModalActive = modal && !modal.classList.contains('hidden');
+const currentScroll = getActiveScrollTop();
 
 if(currentScroll <= 0){
 startY = e.touches[0].clientY;
 startX = e.touches[0].clientX;
 pulling = true;
 pullDistance = 0;
-appContainer.style.transition = 'none';
+const targetEl = getTargetElement();
+targetEl.style.transition = 'none';
 ptr.style.transition = 'opacity .1s ease';
 } else {
 pulling = false;
@@ -1570,14 +1598,15 @@ return;
 
 if(!pulling || e.touches.length !== 1) return;
 
-const currentScroll = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+const currentScroll = getActiveScrollTop();
+const targetEl = getTargetElement();
 
 if(currentScroll > 0){
 pulling = false;
 pullDistance = 0;
 ptr.style.opacity = '0';
 ptr.style.top = '15px';
-appContainer.style.transform = 'translateY(0px)';
+targetEl.style.transform = 'translateY(0px)';
 return;
 }
 
@@ -1591,13 +1620,13 @@ if(currentScroll <= 0){
 if(e.cancelable) e.preventDefault();
 pullDistance = Math.min(dy * 0.48, 135);
 const progress = Math.min(pullDistance / threshold, 1);
-const topPos = Math.min(15 + pullDistance * 0.88, 80);
+const topPos = isModalActive ? Math.min(15 + pullDistance * 0.5, 50) : Math.min(15 + pullDistance * 0.88, 80);
 
 ptr.style.opacity = String(Math.min(progress * 1.3, 1));
 ptr.style.top = topPos + 'px';
 circle.style.strokeDashoffset = String(maxCircumference - (maxCircumference * 0.78 * progress));
 circle.parentElement.style.transform = `rotate(${-90 + progress * 270}deg)`;
-appContainer.style.transform = `translateY(${pullDistance * 0.42}px)`;
+targetEl.style.transform = `translateY(${pullDistance * 0.42}px)`;
 }
 } else {
 pulling = false;
@@ -1608,17 +1637,18 @@ window.addEventListener('touchend',async()=>{
 if(!pulling) return;
 pulling = false;
 
-const currentScroll = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+const currentScroll = getActiveScrollTop();
+const targetEl = getTargetElement();
 
-appContainer.style.transition = 'transform .25s ease';
+targetEl.style.transition = 'transform .25s ease';
 ptr.style.transition = 'top .25s ease, opacity .25s ease';
 
 if(pullDistance >= threshold && !refreshing && currentScroll <= 0){
 refreshing = true;
 ptr.classList.add('ptr-refreshing');
-ptr.style.top = '75px';
+ptr.style.top = isModalActive ? '35px' : '75px';
 ptr.style.opacity = '1';
-appContainer.style.transform = 'translateY(36px)';
+targetEl.style.transform = 'translateY(36px)';
 
 await refreshAll();
 toast('Refreshed successfully', 'success');
@@ -1627,14 +1657,14 @@ setTimeout(()=>{
 ptr.classList.remove('ptr-refreshing');
 ptr.style.top = '15px';
 ptr.style.opacity = '0';
-appContainer.style.transform = 'translateY(0px)';
+targetEl.style.transform = 'translateY(0px)';
 circle.style.strokeDashoffset = String(maxCircumference);
 refreshing = false;
 },350);
 } else {
 ptr.style.top = '15px';
 ptr.style.opacity = '0';
-appContainer.style.transform = 'translateY(0px)';
+targetEl.style.transform = 'translateY(0px)';
 circle.style.strokeDashoffset = String(maxCircumference);
 }
 pullDistance = 0;
@@ -2423,6 +2453,7 @@ return;
 }
 
 const modal = document.getElementById('userDetailModal');
+const modalCard = document.getElementById('userDetailModalCard');
 const body = document.getElementById('userDetailModalBody');
 
 const name = user.name || 'Unnamed User';
@@ -2499,6 +2530,9 @@ if(pushHistoryState){
   history.pushState({modalOpen: true, userId: userId, tab: currentActiveTab}, '', '#' + currentActiveTab);
 }
 modal.classList.remove('hidden');
+if(pushHistoryState && modalCard){
+  modalCard.scrollTop = 0;
+}
 }
 
 function closeUserDetailModal(){
