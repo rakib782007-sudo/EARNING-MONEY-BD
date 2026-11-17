@@ -138,7 +138,7 @@ width:100%;max-width:100%;height:100%;max-height:100%;overflow-y:auto;overscroll
 margin:0;
 }
 .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;border-bottom:0;padding-bottom:0;background:transparent;z-index:10;padding-top:10px}
-.modal-title{font-size:17px;font-weight:800;letter-spacing:0.5px;display:flex;align-items:center;gap:12px;color:#fff}
+.modal-title{font-size:17px;font-weight:800;letter-spacing:0.5px;display:flex;align-items:center;gap:12px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* DIRECT SVG CIRCULAR BACK BUTTON STYLING */
 .premium-back-btn {
@@ -158,6 +158,7 @@ margin:0;
   -webkit-tap-highlight-color: transparent;
   padding: 0;
   color: #fff;
+  flex-shrink: 0;
 }
 
 .premium-back-btn svg {
@@ -980,7 +981,7 @@ transform:rotate(45deg);
       <button class="premium-back-btn" onclick="history.back()" aria-label="Go back">
         <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
       </button>
-      USER DETAILS
+      <span id="modalHeaderTitleText">USER DETAILS</span>
     </div>
   </div>
   <div id="userDetailModalBody" style="max-width:540px;margin:0 auto;">
@@ -2455,6 +2456,7 @@ return;
 const modal = document.getElementById('userDetailModal');
 const modalCard = document.getElementById('userDetailModalCard');
 const body = document.getElementById('userDetailModalBody');
+const titleTextEl = document.getElementById('modalHeaderTitleText');
 
 const name = user.name || 'Unnamed User';
 const email = user.email || 'No email';
@@ -2467,6 +2469,10 @@ const refCount = user.referralCount || 0;
 const status = (user.status === 'blocked' || user.status === 'suspended') ? 'Blocked' : 'Active';
 const initial = name.charAt(0).toUpperCase();
 const dispId = user.id ? ('USR' + user.id.slice(-4).toUpperCase()) : 'USR001';
+
+if(titleTextEl){
+  titleTextEl.textContent = name + ' Details';
+}
 
 body.innerHTML = `
 <div class="ud-profile-box">
@@ -2537,8 +2543,12 @@ if(pushHistoryState && modalCard){
 
 function closeUserDetailModal(){
 const modal = document.getElementById('userDetailModal');
+const titleTextEl = document.getElementById('modalHeaderTitleText');
 if(modal && !modal.classList.contains('hidden')){
   modal.classList.add('hidden');
+}
+if(titleTextEl){
+  titleTextEl.textContent = 'USER DETAILS';
 }
 try {
   sessionStorage.removeItem('embd_open_user_id');
@@ -2656,7 +2666,7 @@ return;
 
 try{
 await db.collection('admins').add({
-email: targetEmail,
+email: targetIndicator=targetEmail,
 role: 'moderator',
 status: 'active',
 createdAt: firebase.firestore.FieldValue.serverTimestamp()
