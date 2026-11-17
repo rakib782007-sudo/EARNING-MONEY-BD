@@ -887,17 +887,16 @@ transform:rotate(45deg);
   </div>
 
   <div class="user-sub-stats-grid">
-    <!-- Inactive Users Card with Exact Pause-Badge Avatar Style matching user's image -->
+    <!-- Inactive Users Card with Exact User-Pause SVG Icon Matching Your Image -->
     <button id="cardFilterInactive" class="user-sub-stat" onclick="filterUserStatus('inactive')">
       <div class="user-stat-title" style="color:#ffe1a1">
-        <div style="width:30px;height:30px;background:#4b3b1d;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ffe1a1;flex-shrink:0;position:relative;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
+        <div style="width:34px;height:34px;background:#4b3b1d;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ffe1a1;flex-shrink:0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <line x1="17" y1="8" x2="17" y2="16"></line>
+            <line x1="21" y1="8" x2="21" y2="16"></line>
           </svg>
-          <div style="position:absolute;right:-4px;bottom:-4px;width:14px;height:14px;background:#ffe1a1;border-radius:50%;display:flex;align-items:center;justify-content:center;">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="#4b3b1d"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
-          </div>
         </div>
         Inactive Users
       </div>
@@ -907,8 +906,8 @@ transform:rotate(45deg);
     <!-- Blocked Users Card with Avatar + Ban/Shield Badge SVG Icon -->
     <button id="cardFilterBlocked" class="user-sub-stat" onclick="filterUserStatus('blocked')">
       <div class="user-stat-title" style="color:#ff6e83">
-        <div style="width:30px;height:30px;background:#512331;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ff6e83;flex-shrink:0;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <div style="width:34px;height:34px;background:#512331;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ff6e83;flex-shrink:0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
             <circle cx="9" cy="7" r="4"></circle>
             <circle cx="19" cy="11" r="3"></circle>
