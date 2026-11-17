@@ -1009,7 +1009,7 @@ transform:rotate(45deg);
   </div>
 
   <div class="ads-top-row" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 14px;">
-    <!-- 3. Network Revenue (Real-time Live from API/Dashboard Database) -->
+    <!-- 3. Network Revenue -->
     <div class="ads-top-card">
       <div class="ads-sub-title">
         <div style="width:34px;height:34px;background:#133b30;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#36d6a0;flex-shrink:0;">
@@ -1023,15 +1023,18 @@ transform:rotate(45deg);
       <div class="ads-sub-value" id="statNetworkRevenue">৳ 0</div>
     </div>
 
-    <!-- 4. Active Networks -->
-    <div class="ads-top-card">
-      <div class="ads-sub-title">
-        <div style="width:34px;height:34px;background:#3d2715;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ffd36b;flex-shrink:0;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffd36b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-          </svg>
+    <!-- 4. Active Networks (Interactive Clickable Card) -->
+    <div class="ads-top-card" style="cursor:pointer;" onclick="switchActiveNetworksView()">
+      <div class="ads-sub-title" style="justify-content: space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="width:34px;height:34px;background:#3d2715;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ffd36b;flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffd36b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          Active Networks
         </div>
-        Active Networks
+        <span style="font-size:12px; color:#ffd36b; font-weight:700;">Manage ›</span>
       </div>
       <div class="ads-sub-value" id="statActiveNetworks">1 Network</div>
     </div>
@@ -1068,6 +1071,38 @@ transform:rotate(45deg);
     </div>
 
     <button class="btn primary" style="width:100%; padding:14px; font-size:15px;" onclick="saveAdsSettings()">Save Ads Settings</button>
+  </div>
+</div>
+</section>
+
+<!-- Active Networks Detailed Management Section -->
+<section id="sec-active-networks-detail" class="section">
+<div class="card">
+  <div class="section-head">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <button class="btn" onclick="tab('ads')" style="padding:8px 12px;">← Back</button>
+      <h2 style="margin:0;">🌐 Ad Networks Control Center</h2>
+    </div>
+    <button class="btn primary" onclick="toast('Add Network feature coming soon', 'info')">+ Add Network</button>
+  </div>
+  <p class="muted">Manage all integrated advertising networks, monitor individual network revenues, and enable/disable them instantly.</p>
+  
+  <div id="networksListContainer" style="margin-top:15px;">
+    <div class="item">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <strong id="detailNetName" style="font-size:16px; color:#fff;">Monetag Direct Link</strong>
+          <p style="margin:4px 0 0; color:var(--muted);">Revenue: <span style="color:#36d6a0; font-weight:700;" id="detailNetRev">৳ 0.00</span></p>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span class="pill active" id="detailNetStatusPill">Enabled</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="detailNetToggle" checked onchange="toggleNetworkStatus(this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 </section>
@@ -1582,6 +1617,31 @@ if(modal && !modal.classList.contains('hidden')){
 await loadCurrentTabData();
 }
 
+function switchActiveNetworksView() {
+  if(!needAdmin()) return;
+  document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  
+  const sec = document.getElementById('sec-active-networks-detail');
+  if(sec) sec.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+async function toggleNetworkStatus(isEnabled) {
+  if(!needAdmin()) return;
+  try {
+    await db.collection('appConfig').doc('adsSettings').set({
+      status: isEnabled,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, {merge: true});
+
+    toast(`Network has been ${isEnabled ? 'Enabled' : 'Disabled'}`, isEnabled ? 'success' : 'warning');
+  } catch(e) {
+    console.error(e);
+    toast('Failed to update network status', 'error');
+  }
+}
+
 function loadDashboard(){
 if(!needAdmin())return;
 
@@ -1876,12 +1936,15 @@ try{
 const snap = await db.collection('appConfig').doc('adsSettings').get();
 if(snap.exists){
   const d = snap.data();
-  document.getElementById('adNetworkName').value = d.networkName || 'Monetag';
+  const netName = d.networkName || 'Monetag';
+  document.getElementById('adNetworkName').value = netName;
   document.getElementById('adDirectLink').value = d.directLink || '';
   document.getElementById('adRewardAction').value = d.rewardPerAction ?? 0.10;
   document.getElementById('adDailyLimit').value = d.dailyLimit ?? 10;
   const isEnabled = d.status !== false;
   document.getElementById('adsStatusToggle').checked = isEnabled;
+  document.getElementById('detailNetToggle').checked = isEnabled;
+  document.getElementById('detailNetName').textContent = netName + ' Direct Link';
   updateAdsStatusText();
 }
 }catch(e){
@@ -1894,11 +1957,12 @@ if(!adsStatsUnsubscribe){
     const data = doc.exists ? doc.data() : {};
     const totalClicks = Number(data.totalClicks || 0);
     const todayClicks = Number(data.todayClicks || 0);
-    const networkRevenue = Number(data.revenue || 0); // Directly from Network Publisher Dashboard/API
+    const networkRevenue = Number(data.revenue || 0);
 
     document.getElementById('statTotalAdClicks').textContent = totalClicks.toLocaleString();
     document.getElementById('statTodayAdClicks').textContent = todayClicks.toLocaleString();
     document.getElementById('statNetworkRevenue').textContent = '৳ ' + networkRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('detailNetRev').textContent = '৳ ' + networkRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }, err => {
     console.error('Error listening to adsStats:', err);
   });
@@ -1908,9 +1972,19 @@ if(!adsStatsUnsubscribe){
 function updateAdsStatusText(){
 const isChecked = document.getElementById('adsStatusToggle').checked;
 const badge = document.getElementById('adNetStatusBadge');
+const detailBadge = document.getElementById('detailNetStatusPill');
+const detailToggle = document.getElementById('detailNetToggle');
+
 if(badge){
   badge.textContent = isChecked ? 'Enabled' : 'Disabled';
   badge.className = isChecked ? 'pill active' : 'pill blocked';
+}
+if(detailBadge){
+  detailBadge.textContent = isChecked ? 'Enabled' : 'Disabled';
+  detailBadge.className = isChecked ? 'pill active' : 'pill blocked';
+}
+if(detailToggle){
+  detailToggle.checked = isChecked;
 }
 }
 
@@ -1933,6 +2007,7 @@ await db.collection('appConfig').doc('adsSettings').set({
 }, {merge: true});
 
 toast('Ads settings saved successfully', 'success');
+loadAdsSettings();
 }catch(e){
 console.error(e);
 toast('Could not save ads settings', 'error');
